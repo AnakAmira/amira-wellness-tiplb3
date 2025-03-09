@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  Define file paths that can be shared with other applications through FileProvider
+  This configuration supports the voice journal export functionality and ensures
+  secure sharing of encrypted content
+-->
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Path for sharing audio recordings -->
+    <files-path name="audio" path="audio/" />
+    
+    <!-- Path for sharing exported files (like encrypted journal packages) -->
+    <files-path name="exports" path="exports/" />
+    
+    <!-- Path for sharing tool content files -->
+    <files-path name="tools" path="tools/" />
+    
+    <!-- Path for sharing temporary files from cache -->
+    <cache-path name="cache" path="." />
+    
+    <!-- Path for sharing files from external storage (requires proper permissions) -->
+    <external-path name="external" path="." />
+</paths>
