@@ -1,0 +1,184 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'  # Run weekly on Sunday at midnight
+
+jobs:
+  dependency_scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: pip install safety bandit
+        
+      - name: Scan Python dependencies
+        run: safety check -r src/backend/requirements.txt --full-report
+        
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Set up Android SDK
+        run: echo "sdk.dir=$ANDROID_HOME" > src/android/local.properties
+        
+      - name: Run OWASP Dependency Check for Android
+        working-directory: src/android
+        run: ./gradlew dependencyCheckAnalyze
+        
+      - name: Upload dependency check reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-reports
+          path: |
+            src/android/app/build/reports/dependency-check-report.html
+            safety-report.json
+
+  codeql_analysis:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'python', 'javascript', 'java' ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+          
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+        
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+
+  container_scan:
+    name: Container Image Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Build backend image
+        run: docker build -t amirawellness/backend:${{ github.sha }} -f src/backend/Dockerfile src/backend
+        
+      - name: Scan backend image with Trivy
+        uses: aquasecurity/trivy-action@0.10.0
+        with:
+          image-ref: 'amirawellness/backend:${{ github.sha }}'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  mobile_security_scan:
+    name: Mobile Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install MobSF CLI
+        run: pip install mobsfscan
+        
+      - name: Scan iOS code
+        run: mobsfscan src/ios --json --output ios-security-report.json
+        
+      - name: Scan Android code
+        run: mobsfscan src/android --json --output android-security-report.json
+        
+      - name: Upload mobile security scan reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: mobile-security-reports
+          path: |
+            ios-security-report.json
+            android-security-report.json
+
+  secret_scanning:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          
+      - name: Install Gitleaks
+        run: |
+          wget https://github.com/zricethezav/gitleaks/releases/download/v8.16.1/gitleaks_8.16.1_linux_x64.tar.gz
+          tar -xzf gitleaks_8.16.1_linux_x64.tar.gz
+          chmod +x gitleaks
+          sudo mv gitleaks /usr/local/bin/
+          
+      - name: Run Gitleaks
+        run: gitleaks detect --source . --report-format json --report-path gitleaks-report.json
+        
+      - name: Upload Gitleaks report
+        uses: actions/upload-artifact@v3
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json
+
+  security_report:
+    name: Security Report Generation
+    needs: [dependency_scan, codeql_analysis, container_scan, mobile_security_scan, secret_scanning]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install report generation dependencies
+        run: pip install jinja2 markdown
+        
+      - name: Generate consolidated security report
+        run: python scripts/security-scan.sh --generate-report
+        
+      - name: Upload consolidated report
+        uses: actions/upload-artifact@v3
+        with:
+          name: consolidated-security-report
+          path: security-report.html
+          
+      - name: Check for critical vulnerabilities
+        run: python scripts/security-scan.sh --check-critical
+        continue-on-error: true
