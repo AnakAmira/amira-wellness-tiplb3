@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: amira-backend
+  namespace: amira
+  labels:
+    app: amira-backend
+    component: api
+    part-of: amira-wellness
+  annotations:
+    kubernetes.io/description: "Amira Wellness Backend API Services"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/api/v1/metrics"
+spec:
+  selector:
+    app: amira-backend
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+      name: http
+  type: ClusterIP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
