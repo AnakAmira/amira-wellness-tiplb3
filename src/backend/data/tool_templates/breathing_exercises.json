@@ -1,0 +1,641 @@
+[
+  {
+    "name": "Respiración 4-7-8",
+    "description": "Una técnica de respiración desarrollada por el Dr. Andrew Weil que ayuda a reducir la ansiedad, controlar la ira y conciliar el sueño mediante un patrón específico de inhalación, retención y exhalación.",
+    "category": "BREATHING",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 5,
+    "difficulty": "BEGINNER",
+    "target_emotions": ["ANXIETY", "STRESS", "ANGER", "OVERWHELM"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración 4-7-8",
+      "instructions": "Esta técnica de respiración actúa como un tranquilizante natural para el sistema nervioso. Practica inicialmente en posición sentada con la espalda recta y, con el tiempo, podrás realizarla en cualquier posición.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate cómodamente con la espalda recta. Coloca la punta de la lengua justo detrás de los dientes superiores, donde el paladar se encuentra con los dientes, y mantenla allí durante todo el ejercicio.",
+          "duration": 15
+        },
+        {
+          "order": 2,
+          "title": "Exhala completamente",
+          "description": "Exhala completamente por la boca, haciendo un sonido de viento suave.",
+          "duration": 5
+        },
+        {
+          "order": 3,
+          "title": "Inhala por la nariz",
+          "description": "Cierra la boca e inhala silenciosamente por la nariz mientras cuentas mentalmente hasta 4.",
+          "duration": 4
+        },
+        {
+          "order": 4,
+          "title": "Retén la respiración",
+          "description": "Mantén la respiración mientras cuentas mentalmente hasta 7.",
+          "duration": 7
+        },
+        {
+          "order": 5,
+          "title": "Exhala completamente",
+          "description": "Exhala completamente por la boca, haciendo un sonido de viento suave, mientras cuentas mentalmente hasta 8.",
+          "duration": 8
+        },
+        {
+          "order": 6,
+          "title": "Repite el ciclo",
+          "description": "Repite este ciclo tres veces más, para un total de cuatro ciclos completos.",
+          "duration": 57
+        }
+      ],
+      "benefits": [
+        "Reduce la ansiedad y el estrés",
+        "Ayuda a conciliar el sueño",
+        "Controla la respuesta de ira",
+        "Mejora la concentración",
+        "Reduce la tensión corporal"
+      ],
+      "tips": [
+        "Mantén la proporción 4:7:8 incluso si necesitas acortar los tiempos al principio",
+        "Practica dos veces al día para mejores resultados",
+        "Es normal sentir un ligero mareo las primeras veces",
+        "Con práctica regular, notarás efectos más rápidos y duraderos"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/4-7-8.svg",
+    "audio_url": "/assets/audio/tools/breathing/4-7-8-guide.mp3",
+    "metadata": {
+      "author": "Dr. Andrew Weil",
+      "tags": ["ansiedad", "sueño", "principiante", "relajación"],
+      "created_date": "2023-01-15",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Respiración Cuadrada",
+    "description": "Una técnica de respiración equilibrada que crea un ritmo constante para calmar la mente y el cuerpo, especialmente útil durante momentos de estrés o ansiedad.",
+    "category": "BREATHING",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 3,
+    "difficulty": "BEGINNER",
+    "target_emotions": ["ANXIETY", "STRESS", "OVERWHELM"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración Cuadrada",
+      "instructions": "También conocida como respiración de caja, esta técnica utiliza un patrón de cuatro tiempos iguales que forma un 'cuadrado' de respiración, ayudando a equilibrar el sistema nervioso y calmar la mente.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate cómodamente con la espalda recta o acuéstate en una posición cómoda. Relaja los hombros y coloca una mano sobre el abdomen si lo deseas.",
+          "duration": 15
+        },
+        {
+          "order": 2,
+          "title": "Inhala",
+          "description": "Inhala lentamente por la nariz mientras cuentas mentalmente hasta 4, sintiendo cómo el aire llena tus pulmones.",
+          "duration": 4
+        },
+        {
+          "order": 3,
+          "title": "Retén",
+          "description": "Mantén el aire en tus pulmones mientras cuentas mentalmente hasta 4.",
+          "duration": 4
+        },
+        {
+          "order": 4,
+          "title": "Exhala",
+          "description": "Exhala lentamente por la boca mientras cuentas mentalmente hasta 4, sintiendo cómo tu cuerpo libera tensión.",
+          "duration": 4
+        },
+        {
+          "order": 5,
+          "title": "Pausa",
+          "description": "Mantén los pulmones vacíos mientras cuentas mentalmente hasta 4.",
+          "duration": 4
+        },
+        {
+          "order": 6,
+          "title": "Repite el ciclo",
+          "description": "Repite este ciclo durante 3 minutos o hasta que sientas que tu cuerpo y mente se han calmado.",
+          "duration": 149
+        }
+      ],
+      "benefits": [
+        "Equilibra el sistema nervioso",
+        "Reduce la ansiedad rápidamente",
+        "Mejora la concentración y claridad mental",
+        "Ayuda a manejar momentos de estrés agudo",
+        "Puede utilizarse discretamente en cualquier situación"
+      ],
+      "tips": [
+        "Visualiza un cuadrado mientras respiras, siguiendo cada lado con cada fase",
+        "Ajusta la duración de las cuentas según tu comodidad, manteniendo los cuatro lados iguales",
+        "Practica en momentos de calma para utilizarla eficazmente durante situaciones estresantes",
+        "Puedes usar esta técnica antes de situaciones que te generen ansiedad"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/square.svg",
+    "audio_url": "/assets/audio/tools/breathing/square-guide.mp3",
+    "metadata": {
+      "author": "Técnica de respiración tradicional",
+      "tags": ["ansiedad", "equilibrio", "principiante", "concentración"],
+      "created_date": "2023-01-15",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Respiración Diafragmática",
+    "description": "Una técnica fundamental que enseña a respirar profundamente utilizando el diafragma, promoviendo la relajación, reduciendo el estrés y mejorando la oxigenación.",
+    "category": "BREATHING",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 5,
+    "difficulty": "BEGINNER",
+    "target_emotions": ["STRESS", "ANXIETY", "OVERWHELM", "FEAR"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración Diafragmática",
+      "instructions": "La respiración diafragmática o abdominal es la base de muchas técnicas de relajación. Aprende a respirar utilizando tu diafragma para activar la respuesta de relajación del cuerpo.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Acuéstate boca arriba o siéntate cómodamente con la espalda apoyada. Coloca una mano sobre el pecho y otra sobre el abdomen, justo debajo de las costillas.",
+          "duration": 20
+        },
+        {
+          "order": 2,
+          "title": "Inhala profundamente",
+          "description": "Inhala lentamente por la nariz, sintiendo cómo tu abdomen se expande y empuja tu mano hacia arriba. La mano sobre tu pecho debe moverse muy poco.",
+          "duration": 4
+        },
+        {
+          "order": 3,
+          "title": "Exhala completamente",
+          "description": "Exhala por la boca con los labios ligeramente fruncidos, sintiendo cómo tu abdomen se contrae. Utiliza los músculos abdominales para expulsar todo el aire de los pulmones.",
+          "duration": 6
+        },
+        {
+          "order": 4,
+          "title": "Establece un ritmo",
+          "description": "Continúa respirando con este patrón, estableciendo un ritmo cómodo y constante. Concéntrate en la sensación del aire entrando y saliendo de tu cuerpo.",
+          "duration": 60
+        },
+        {
+          "order": 5,
+          "title": "Profundiza la práctica",
+          "description": "A medida que te sientas cómodo, intenta hacer tus inhalaciones y exhalaciones más profundas y lentas, manteniendo la respiración abdominal.",
+          "duration": 120
+        },
+        {
+          "order": 6,
+          "title": "Conclusión",
+          "description": "Gradualmente, regresa a tu respiración normal. Nota la diferencia en cómo te sientes antes y después del ejercicio.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Reduce los niveles de estrés y ansiedad",
+        "Disminuye la presión arterial y la frecuencia cardíaca",
+        "Mejora la oxigenación de la sangre",
+        "Fortalece el diafragma y reduce el trabajo respiratorio",
+        "Ayuda a manejar condiciones como el asma o la EPOC"
+      ],
+      "tips": [
+        "Practica inicialmente acostado para sentir mejor el movimiento del diafragma",
+        "Mantén los hombros, cuello y rostro relajados mientras respiras",
+        "Practica diariamente durante 5-10 minutos para desarrollar el hábito",
+        "Con el tiempo, podrás utilizar esta respiración en cualquier posición y situación"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/diaphragmatic.svg",
+    "audio_url": "/assets/audio/tools/breathing/diaphragmatic-guide.mp3",
+    "metadata": {
+      "author": "Técnica fundamental de respiración",
+      "tags": ["diafragma", "relajación", "principiante", "fundamental"],
+      "created_date": "2023-01-20",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Respiración Alterna por Fosas Nasales",
+    "description": "Una técnica de respiración del yoga (Nadi Shodhana) que equilibra los hemisferios cerebrales, calma la mente y reduce el estrés mediante la respiración alternada por cada fosa nasal.",
+    "category": "BREATHING",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 7,
+    "difficulty": "INTERMEDIATE",
+    "target_emotions": ["ANXIETY", "STRESS", "OVERWHELM", "FRUSTRATION"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración Alterna por Fosas Nasales",
+      "instructions": "Esta técnica de yoga, conocida como Nadi Shodhana, equilibra los hemisferios cerebrales y el sistema nervioso mediante la respiración alternada por cada fosa nasal.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate cómodamente con la espalda recta. Descansa tu mano izquierda sobre tu rodilla y lleva tu mano derecha hacia la nariz.",
+          "duration": 15
+        },
+        {
+          "order": 2,
+          "title": "Posición de la mano",
+          "description": "Con tu mano derecha, dobla los dedos índice y medio hacia la palma. Utilizarás el pulgar para cerrar la fosa nasal derecha y el anular y meñique para cerrar la fosa nasal izquierda.",
+          "duration": 15
+        },
+        {
+          "order": 3,
+          "title": "Comienza por la izquierda",
+          "description": "Cierra la fosa nasal derecha con el pulgar y exhala completamente por la fosa izquierda. Luego, inhala lentamente por la fosa izquierda.",
+          "duration": 8
+        },
+        {
+          "order": 4,
+          "title": "Cambia de lado",
+          "description": "Ahora cierra la fosa nasal izquierda con el anular y meñique, libera la fosa derecha y exhala por la fosa derecha. Luego, inhala por la fosa derecha.",
+          "duration": 8
+        },
+        {
+          "order": 5,
+          "title": "Continúa alternando",
+          "description": "Cierra la fosa nasal derecha y exhala por la izquierda. Este es un ciclo completo. Continúa alternando las fosas nasales para la inhalación y exhalación.",
+          "duration": 300
+        },
+        {
+          "order": 6,
+          "title": "Conclusión",
+          "description": "Después de completar los ciclos, baja la mano y respira normalmente. Observa cómo te sientes, notando la calma y el equilibrio.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Equilibra los hemisferios cerebrales",
+        "Calma el sistema nervioso",
+        "Mejora la concentración y claridad mental",
+        "Reduce el estrés y la ansiedad",
+        "Prepara la mente para la meditación"
+      ],
+      "tips": [
+        "Mantén una presión suave al cerrar cada fosa nasal",
+        "Respira de manera natural, sin forzar o retener la respiración al principio",
+        "Practica inicialmente durante 5 minutos, aumentando gradualmente hasta 10-15 minutos",
+        "Evita esta práctica si tienes congestión nasal severa",
+        "Practica preferiblemente con el estómago vacío"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/alternate-nostril.svg",
+    "audio_url": "/assets/audio/tools/breathing/alternate-nostril-guide.mp3",
+    "metadata": {
+      "author": "Técnica de yoga Nadi Shodhana",
+      "tags": ["yoga", "equilibrio", "intermedio", "concentración"],
+      "created_date": "2023-01-25",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Respiración para Calmar la Ansiedad",
+    "description": "Una técnica rápida y efectiva diseñada específicamente para reducir la ansiedad aguda y prevenir ataques de pánico mediante un patrón de respiración controlada.",
+    "category": "BREATHING",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 4,
+    "difficulty": "BEGINNER",
+    "target_emotions": ["ANXIETY", "FEAR", "PANIC", "OVERWHELM"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración para Calmar la Ansiedad",
+      "instructions": "Esta técnica está diseñada para activar rápidamente la respuesta de relajación del cuerpo y reducir los síntomas físicos de ansiedad, como el corazón acelerado o la respiración entrecortada.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Reconoce la ansiedad",
+          "description": "Primero, reconoce que estás experimentando ansiedad. Recuerda que las sensaciones físicas de ansiedad no son peligrosas, aunque sean incómodas.",
+          "duration": 10
+        },
+        {
+          "order": 2,
+          "title": "Encuentra una posición cómoda",
+          "description": "Siéntate si es posible, o mantente de pie en una posición estable. Coloca una mano sobre tu abdomen para sentir tu respiración.",
+          "duration": 10
+        },
+        {
+          "order": 3,
+          "title": "Exhala completamente",
+          "description": "Comienza exhalando todo el aire de tus pulmones a través de la boca, haciendo un sonido suave de 'whoosh'.",
+          "duration": 4
+        },
+        {
+          "order": 4,
+          "title": "Inhala por la nariz",
+          "description": "Inhala tranquilamente por la nariz durante 4 segundos. Si es difícil llegar a 4 segundos, inhala lo que puedas cómodamente.",
+          "duration": 4
+        },
+        {
+          "order": 5,
+          "title": "Mantén brevemente",
+          "description": "Mantén la respiración durante 1-2 segundos. Si esto aumenta tu ansiedad, puedes omitir este paso.",
+          "duration": 2
+        },
+        {
+          "order": 6,
+          "title": "Exhala lentamente",
+          "description": "Exhala lentamente por la boca durante 6 segundos, como si estuvieras soplando suavemente a través de una pajita.",
+          "duration": 6
+        },
+        {
+          "order": 7,
+          "title": "Repite el ciclo",
+          "description": "Repite este patrón de respiración durante 2-5 minutos, o hasta que sientas que tu ansiedad comienza a disminuir.",
+          "duration": 180
+        },
+        {
+          "order": 8,
+          "title": "Regresa gradualmente",
+          "description": "Gradualmente, regresa a tu respiración normal, manteniendo la calma y la conciencia de tu cuerpo.",
+          "duration": 20
+        }
+      ],
+      "benefits": [
+        "Reduce rápidamente los síntomas físicos de ansiedad",
+        "Previene la hiperventilación durante momentos de pánico",
+        "Activa el sistema nervioso parasimpático (respuesta de relajación)",
+        "Proporciona un ancla de atención durante momentos de ansiedad intensa",
+        "Puede detener la escalada hacia un ataque de pánico"
+      ],
+      "tips": [
+        "Practica esta técnica regularmente, no solo durante episodios de ansiedad",
+        "La exhalación más larga que la inhalación es clave para activar la relajación",
+        "Si te sientes mareado, regresa a tu respiración normal y luego intenta de nuevo más lentamente",
+        "Combina con la afirmación mental: 'Estoy a salvo, esto pasará'",
+        "Puedes usar esta técnica discretamente en situaciones sociales"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/anxiety-relief.svg",
+    "audio_url": "/assets/audio/tools/breathing/anxiety-relief-guide.mp3",
+    "metadata": {
+      "author": "Desarrollado por terapeutas especializados en ansiedad",
+      "tags": ["ansiedad", "pánico", "emergencia", "principiante", "rápido"],
+      "created_date": "2023-02-01",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Respiración 4-4-4-4 (Respiración de Coherencia)",
+    "description": "Una técnica de respiración rítmica que ayuda a sincronizar la respiración, el ritmo cardíaco y la presión arterial, creando un estado de coherencia fisiológica que reduce el estrés y mejora el bienestar.",
+    "category": "BREATHING",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 5,
+    "difficulty": "BEGINNER",
+    "target_emotions": ["STRESS", "ANXIETY", "FRUSTRATION", "OVERWHELM"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración 4-4-4-4 (Respiración de Coherencia)",
+      "instructions": "Esta técnica, también conocida como respiración de coherencia, crea un ritmo respiratorio que ayuda a sincronizar varios sistemas corporales, incluyendo el ritmo cardíaco y la presión arterial.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate cómodamente con la espalda recta o acuéstate en una posición relajada. Coloca una mano sobre tu abdomen para sentir el movimiento de tu respiración.",
+          "duration": 15
+        },
+        {
+          "order": 2,
+          "title": "Establece el ritmo",
+          "description": "Comienza a respirar con un ritmo constante y cómodo. Inhala por la nariz y exhala por la nariz o la boca, lo que te resulte más natural.",
+          "duration": 15
+        },
+        {
+          "order": 3,
+          "title": "Inhala contando hasta 4",
+          "description": "Inhala lentamente mientras cuentas mentalmente hasta 4. Intenta que la inhalación sea suave y constante durante todo el conteo.",
+          "duration": 4
+        },
+        {
+          "order": 4,
+          "title": "Mantén contando hasta 4",
+          "description": "Mantén el aire en tus pulmones mientras cuentas mentalmente hasta 4, sin tensión ni esfuerzo.",
+          "duration": 4
+        },
+        {
+          "order": 5,
+          "title": "Exhala contando hasta 4",
+          "description": "Exhala completamente mientras cuentas mentalmente hasta 4, manteniendo un flujo constante de aire.",
+          "duration": 4
+        },
+        {
+          "order": 6,
+          "title": "Pausa contando hasta 4",
+          "description": "Mantén los pulmones vacíos mientras cuentas mentalmente hasta 4, antes de comenzar el siguiente ciclo.",
+          "duration": 4
+        },
+        {
+          "order": 7,
+          "title": "Continúa el patrón",
+          "description": "Continúa este patrón de respiración 4-4-4-4 durante 5 minutos, manteniendo un ritmo constante y cómodo.",
+          "duration": 240
+        },
+        {
+          "order": 8,
+          "title": "Conclusión",
+          "description": "Gradualmente, regresa a tu respiración normal. Observa cómo te sientes, notando la sensación de calma y equilibrio en tu cuerpo.",
+          "duration": 15
+        }
+      ],
+      "benefits": [
+        "Sincroniza el ritmo cardíaco y la respiración (coherencia cardíaca)",
+        "Reduce la presión arterial y la frecuencia cardíaca",
+        "Disminuye las hormonas del estrés en el cuerpo",
+        "Mejora la concentración y claridad mental",
+        "Promueve un estado de calma alerta"
+      ],
+      "tips": [
+        "Mantén un ritmo constante y cómodo, ajustando la velocidad si es necesario",
+        "Practica diariamente durante 5-10 minutos para obtener beneficios duraderos",
+        "Puedes usar un metrónomo o una aplicación de respiración para mantener el ritmo",
+        "Si 4 segundos es demasiado, comienza con 3 segundos y aumenta gradualmente",
+        "Esta técnica es excelente para practicar antes de situaciones estresantes"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/coherent.svg",
+    "audio_url": "/assets/audio/tools/breathing/coherent-guide.mp3",
+    "metadata": {
+      "author": "Basado en investigaciones del Instituto HeartMath",
+      "tags": ["coherencia", "ritmo", "principiante", "equilibrio", "corazón"],
+      "created_date": "2023-02-05",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Respiración para Dormir",
+    "description": "Una técnica de respiración relajante diseñada específicamente para calmar la mente y el cuerpo antes de dormir, ayudando a combatir el insomnio y mejorar la calidad del sueño.",
+    "category": "BREATHING",
+    "content_type": "AUDIO",
+    "estimated_duration": 10,
+    "difficulty": "BEGINNER",
+    "target_emotions": ["ANXIETY", "STRESS", "OVERWHELM"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración para Dormir",
+      "instructions": "Esta técnica de respiración está diseñada para practicarse en la cama, ayudando a relajar el cuerpo y la mente para facilitar la transición al sueño.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Preparación",
+          "description": "Acuéstate cómodamente en tu cama, preferiblemente en posición supina (boca arriba). Asegúrate de que la habitación esté oscura y a una temperatura agradable.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Relajación inicial",
+          "description": "Cierra los ojos y toma un momento para sentir tu cuerpo apoyado en la cama. Realiza un breve escaneo corporal, notando cualquier área de tensión y permitiendo que se relaje.",
+          "duration": 60
+        },
+        {
+          "order": 3,
+          "title": "Respiración profunda inicial",
+          "description": "Toma tres respiraciones profundas, inhalando por la nariz y exhalando lentamente por la boca, liberando cualquier tensión residual del día.",
+          "duration": 30
+        },
+        {
+          "order": 4,
+          "title": "Respiración 4-7",
+          "description": "Comienza a inhalar por la nariz durante 4 segundos y exhalar por la nariz durante 7 segundos. La exhalación más larga que la inhalación ayuda a activar el sistema nervioso parasimpático.",
+          "duration": 110
+        },
+        {
+          "order": 5,
+          "title": "Visualización",
+          "description": "Mientras mantienes este ritmo de respiración, imagina que cada exhalación libera tensión, preocupaciones y pensamientos del día. Visualiza tu cuerpo hundiéndose cómodamente en la cama.",
+          "duration": 120
+        },
+        {
+          "order": 6,
+          "title": "Ralentizar gradualmente",
+          "description": "Gradualmente, permite que tu respiración se vuelva más lenta y superficial, como naturalmente ocurre cuando te estás quedando dormido. No fuerces este proceso.",
+          "duration": 180
+        },
+        {
+          "order": 7,
+          "title": "Transición al sueño",
+          "description": "Deja que tu atención a la respiración se desvanezca suavemente. Si tu mente comienza a divagar, gentilmente regresa a la sensación de tu respiración sin frustración.",
+          "duration": 60
+        }
+      ],
+      "benefits": [
+        "Reduce el tiempo necesario para conciliar el sueño",
+        "Calma la mente activa y los pensamientos recurrentes",
+        "Disminuye la activación del sistema nervioso simpático",
+        "Mejora la calidad general del sueño",
+        "Ayuda a establecer una rutina de sueño saludable"
+      ],
+      "tips": [
+        "Practica esta técnica como parte de una rutina regular antes de dormir",
+        "Si te encuentras contando los segundos con demasiada atención, simplemente enfócate en hacer las exhalaciones más largas que las inhalaciones",
+        "No te preocupes si no te quedas dormido inmediatamente; el beneficio viene también de la relajación",
+        "Evita mirar pantallas al menos 30 minutos antes de practicar esta técnica",
+        "Si los pensamientos persisten, imagina que los colocas en nubes que se alejan con cada exhalación"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/sleep.svg",
+    "audio_url": "/assets/audio/tools/breathing/sleep-guide.mp3",
+    "metadata": {
+      "author": "Desarrollado por especialistas en medicina del sueño",
+      "tags": ["sueño", "insomnio", "noche", "relajación", "principiante"],
+      "created_date": "2023-02-10",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Respiración para Liberar la Ira",
+    "description": "Una técnica de respiración dinámica diseñada específicamente para procesar y liberar sentimientos de ira y frustración de manera saludable, combinando respiración intensa con visualización.",
+    "category": "BREATHING",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 6,
+    "difficulty": "INTERMEDIATE",
+    "target_emotions": ["ANGER", "FRUSTRATION", "RESENTMENT"],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Respiración para Liberar la Ira",
+      "instructions": "Esta técnica combina respiración dinámica con visualización para ayudarte a procesar y liberar la ira de manera saludable, sin suprimirla ni expresarla destructivamente.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Espacio seguro",
+          "description": "Encuentra un espacio privado donde puedas expresarte libremente sin interrupciones. Puedes estar de pie o sentado con la espalda recta.",
+          "duration": 15
+        },
+        {
+          "order": 2,
+          "title": "Reconoce tu ira",
+          "description": "Toma un momento para reconocer y validar tu ira. Recuerda que la ira es una emoción natural y tiene un propósito. No es 'mala', sino una señal de que algo importante para ti ha sido amenazado o violado.",
+          "duration": 30
+        },
+        {
+          "order": 3,
+          "title": "Respiración activadora",
+          "description": "Comienza con 10 respiraciones rápidas y profundas por la nariz, exhalando con fuerza también por la nariz. Imagina que estás avivando el fuego de tu ira, dándole permiso para estar presente.",
+          "duration": 30
+        },
+        {
+          "order": 4,
+          "title": "Respiración de fuego",
+          "description": "Realiza 20 respiraciones de 'fuego': inhalaciones y exhalaciones rápidas y potentes por la nariz, moviendo el abdomen activamente. Visualiza tu ira como un fuego que quema lo que ya no necesitas.",
+          "duration": 45
+        },
+        {
+          "order": 5,
+          "title": "Exhalación sonora",
+          "description": "Inhala profundamente por la nariz y exhala con fuerza por la boca, haciendo un sonido audible (suspiro, gruñido o incluso un grito controlado si el espacio lo permite). Repite 5 veces.",
+          "duration": 45
+        },
+        {
+          "order": 6,
+          "title": "Visualización de liberación",
+          "description": "Inhala profundamente y visualiza tu ira como un color intenso (rojo, naranja o el que resuene contigo). Al exhalar lentamente, imagina que este color sale de tu cuerpo, transformándose en una luz más clara y neutra.",
+          "duration": 60
+        },
+        {
+          "order": 7,
+          "title": "Respiración equilibradora",
+          "description": "Regresa a una respiración más lenta y profunda. Inhala por 4 segundos, mantén por 2, exhala por 6 segundos. Con cada ciclo, siente cómo tu cuerpo se equilibra nuevamente.",
+          "duration": 90
+        },
+        {
+          "order": 8,
+          "title": "Integración",
+          "description": "Respira normalmente y toma un momento para notar cómo te sientes. Reconoce la sabiduría que puede haber en tu ira y considera qué acción constructiva podrías tomar, si es necesario.",
+          "duration": 45
+        }
+      ],
+      "benefits": [
+        "Proporciona una salida física segura para la energía de la ira",
+        "Reduce la intensidad emocional para permitir un pensamiento más claro",
+        "Previene la supresión de la ira, que puede llevar a problemas de salud",
+        "Ayuda a transformar la energía de la ira en determinación constructiva",
+        "Reduce la probabilidad de reacciones impulsivas que luego lamentemos"
+      ],
+      "tips": [
+        "Esta práctica es para procesar la ira, no para suprimirla o negarla",
+        "Si te sientes mareado durante las respiraciones rápidas, reduce la intensidad o haz una pausa",
+        "Puedes combinar esta técnica con movimiento físico como sacudir las manos o dar golpes al aire",
+        "Practica regularmente, no solo cuando estés extremadamente enojado",
+        "Después de la práctica, considera escribir sobre lo que desencadenó tu ira y qué necesidades no satisfechas podría estar señalando"
+      ]
+    },
+    "image_url": "/assets/images/tools/breathing/anger-release.svg",
+    "audio_url": "/assets/audio/tools/breathing/anger-release-guide.mp3",
+    "metadata": {
+      "author": "Basado en prácticas de terapia somática y yoga",
+      "tags": ["ira", "frustración", "liberación", "intermedio", "emociones"],
+      "created_date": "2023-02-15",
+      "version": "1.0"
+    }
+  }
+]
