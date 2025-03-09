@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer shape: stylized leaf/drop form representing wellness and the letter 'A' -->
+    <path
+        android:pathData="M54,28C40,28 32,45 32,54C32,69 42,80 54,80C66,80 76,69 76,54C76,45 68,28 54,28Z"
+        android:fillColor="@color/primary"/>
+    
+    <!-- Middle layer for depth and visual interest -->
+    <path
+        android:pathData="M54,38C44,38 42,49 42,54C42,64 47,70 54,70C61,70 66,64 66,54C66,49 64,38 54,38Z"
+        android:fillColor="@color/primary_light"/>
+    
+    <!-- Center element representing focus and calm -->
+    <path
+        android:pathData="M54,48C50,48 48,51 48,54C48,58 50,62 54,62C58,62 60,58 60,54C60,51 58,48 54,48Z"
+        android:fillColor="@color/white"/>
+</vector>
