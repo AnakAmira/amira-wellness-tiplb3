@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108"
+    android:tint="@color/white">
+
+    <!-- Outer circle of the logo -->
+    <path
+        android:name="logo_outer_circle"
+        android:fillColor="@color/primary"
+        android:pathData="M54,28C40.19,28 29,39.19 29,53C29,66.81 40.19,78 54,78C67.81,78 79,66.81 79,53C79,39.19 67.81,28 54,28ZM54,74C42.4,74 33,64.6 33,53C33,41.4 42.4,32 54,32C65.6,32 75,41.4 75,53C75,64.6 65.6,74 54,74Z" />
+
+    <!-- Inner circle of the logo -->
+    <path
+        android:name="logo_inner_circle"
+        android:fillColor="@color/primary_light"
+        android:pathData="M54,36C44.61,36 37,43.61 37,53C37,62.39 44.61,70 54,70C63.39,70 71,62.39 71,53C71,43.61 63.39,36 54,36ZM54,66C46.82,66 41,60.18 41,53C41,45.82 46.82,40 54,40C61.18,40 67,45.82 67,53C67,60.18 61.18,66 54,66Z" />
+
+    <!-- Center circle of the logo -->
+    <path
+        android:name="logo_center"
+        android:fillColor="@color/white"
+        android:pathData="M54,44C48.48,44 44,48.48 44,54C44,59.52 48.48,64 54,64C59.52,64 64,59.52 64,54C64,48.48 59.52,44 54,44ZM54,60C50.69,60 48,57.31 48,54C48,50.69 50.69,48 54,48C57.31,48 60,50.69 60,54C60,57.31 57.31,60 54,60Z" />
+
+    <!-- Small wave or element in the center -->
+    <path
+        android:name="logo_wave_1"
+        android:fillColor="@color/primary"
+        android:pathData="M54,50C51.79,50 50,51.79 50,54C50,56.21 51.79,58 54,58C56.21,58 58,56.21 58,54C58,51.79 56.21,50 54,50Z" />
+
+</vector>
