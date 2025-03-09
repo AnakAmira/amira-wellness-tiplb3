@@ -1,0 +1,64 @@
+.gradle/
+build/
+*/build/
+gradle-app.setting
+.gradletasknamecache
+gradle-wrapper.jar
+!gradle-wrapper.jar
+
+# Local configuration
+local.properties
+*.properties
+!gradle.properties
+!gradle/wrapper/gradle-wrapper.properties
+
+# IDE files
+.idea/
+*.iml
+*.iws
+.externalNativeBuild/
+.cxx/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+bin/
+gen/
+out/
+captures/
+
+# Proguard
+proguard/
+
+# Logs and profiling
+*.log
+*.hprof
+
+# Lint
+lint/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services
+google-services.json
+
+# Amira Wellness specific
+encryption-keys.properties
+signing-config.properties
+api-keys.properties
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
