@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: amira
+  labels:
+    app: amira-backend
+    component: config
+  annotations:
+    kubernetes.io/change-cause: "Initial configuration"
+    description: "Configuration for Amira Wellness backend services"
+data:
+  # Application basics
+  PROJECT_NAME: "Amira Wellness"
+  API_V1_STR: "/api/v1"
+  ENVIRONMENT: "production"
+  
+  # Authentication settings (non-sensitive)
+  ALGORITHM: "HS256"
+  ACCESS_TOKEN_EXPIRE_MINUTES: "60"
+  REFRESH_TOKEN_EXPIRE_DAYS: "7"
+  
+  # Database settings (non-sensitive)
+  POSTGRES_SERVER: "amira-db.amira.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "amira"
+  
+  # AWS settings
+  AWS_REGION: "us-east-1"
+  S3_BUCKET_NAME: "amira-wellness-audio"
+  USE_AWS_KMS: "true"
+  
+  # Security settings
+  CORS_ORIGINS: "https://amirawellness.com,https://www.amirawellness.com,https://app.amirawellness.com"
+  RATE_LIMIT_PER_MINUTE: "100"
+  
+  # Logging
+  LOG_LEVEL: "INFO"
+  
+  # Python settings
+  PYTHONPATH: "/app"
+  TZ: "UTC"
+  
+  # Audio processing settings
+  MAX_AUDIO_SIZE_MB: "10"
+  AUDIO_FORMAT: "AAC"
+  AUDIO_BITRATE: "128000"
+  AUDIO_SAMPLE_RATE: "44100"
+  AUDIO_CHANNELS: "1"
+  MAX_UPLOAD_RETRIES: "3"
+  
+  # API documentation
+  ENABLE_SWAGGER: "true"
+  
+  # Monitoring
+  ENABLE_METRICS: "true"
+  METRICS_PATH: "/metrics"
+  
+  # Database connection pooling
+  POOL_SIZE: "5"
+  MAX_OVERFLOW: "10" 
+  POOL_RECYCLE: "3600"
+  POOL_TIMEOUT: "30"
+  
+  # Caching
+  TOOL_CACHE_TTL: "3600"
+  
+  # Background job schedules (cron format)
+  EMOTIONAL_ANALYSIS_SCHEDULE: "0 */3 * * *"
+  STREAK_CALCULATION_SCHEDULE: "0 0 * * *"
+  NOTIFICATION_DELIVERY_SCHEDULE: "*/15 * * * *"
+  STORAGE_CLEANUP_SCHEDULE: "0 2 * * *"
+  RECOMMENDATION_ENGINE_SCHEDULE: "0 */6 * * *"
