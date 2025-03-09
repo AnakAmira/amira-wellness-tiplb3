@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: amira-backend-config
+  namespace: amira-wellness
+  labels:
+    app: amira-backend
+    component: api
+    part-of: amira-wellness
+  annotations:
+    kubernetes.io/description: "Configuration for Amira Wellness Backend API Services"
+data:
+  ENVIRONMENT: "production"
+  PROJECT_NAME: "Amira Wellness"
+  API_V1_STR: "/api/v1"
+  ALGORITHM: "HS256"
+  ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+  REFRESH_TOKEN_EXPIRE_DAYS: "7"
+  POSTGRES_SERVER: "amira-postgres.amira-wellness.svc.cluster.local"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "amira_wellness"
+  AWS_REGION: "us-east-1"
+  S3_BUCKET_NAME: "amira-wellness-audio"
+  USE_AWS_KMS: "true"
+  CORS_ORIGINS: "https://app.amirawellness.com"
+  RATE_LIMIT_PER_MINUTE: "100"
+  LOG_LEVEL: "INFO"
+  SMTP_SERVER: "smtp.sendgrid.net"
+  SMTP_PORT: "587"
+  SMTP_FROM_EMAIL: "noreply@amirawellness.com"
