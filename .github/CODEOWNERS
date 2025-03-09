@@ -1,0 +1,33 @@
+# Each line contains a file pattern followed by one or more owners.
+# These owners will be automatically requested for review when someone opens a pull request.
+# For more information, see: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Project leads have oversight over all code changes
+* @project-leads
+
+# Backend team is responsible for all backend code
+src/backend/ @backend-team
+
+# Both security and backend teams must review encryption-related code
+src/backend/app/services/encryption.py @security-team @backend-team
+
+# iOS team is responsible for all iOS code
+src/ios/ @ios-team
+
+# Android team is responsible for all Android code
+src/android/ @android-team
+
+# Service team reviews all service-related code across platforms
+src/*/app/services/ @service-team
+
+# DevOps team is responsible for infrastructure code
+infrastructure/ @devops-team
+
+# DevOps team is responsible for CI/CD workflows
+.github/workflows/ @devops-team
+
+# Documentation team is responsible for all documentation
+docs/ @documentation-team
+
+# Documentation team reviews all markdown files
+*.md @documentation-team
