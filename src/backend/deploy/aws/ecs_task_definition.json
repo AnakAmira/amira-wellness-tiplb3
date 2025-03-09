@@ -1,0 +1,186 @@
+{
+  "family": "amira-wellness-${ENVIRONMENT}",
+  "executionRoleArn": "${ECS_EXECUTION_ROLE_ARN}",
+  "taskRoleArn": "${ECS_TASK_ROLE_ARN}",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "2048",
+  "containerDefinitions": [
+    {
+      "name": "amira-api",
+      "image": "${ECR_REPOSITORY_URI}:${IMAGE_TAG}",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:8000/api/v1/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      },
+      "environment": [
+        {
+          "name": "ENVIRONMENT",
+          "value": "${ENVIRONMENT}"
+        },
+        {
+          "name": "LOG_LEVEL",
+          "value": "${LOG_LEVEL}"
+        },
+        {
+          "name": "API_V1_STR",
+          "value": "/api/v1"
+        },
+        {
+          "name": "PROJECT_NAME",
+          "value": "Amira Wellness"
+        },
+        {
+          "name": "ALGORITHM",
+          "value": "HS256"
+        },
+        {
+          "name": "ACCESS_TOKEN_EXPIRE_MINUTES",
+          "value": "30"
+        },
+        {
+          "name": "REFRESH_TOKEN_EXPIRE_DAYS",
+          "value": "7"
+        },
+        {
+          "name": "AWS_REGION",
+          "value": "${AWS_REGION}"
+        },
+        {
+          "name": "S3_BUCKET_NAME",
+          "value": "${S3_BUCKET_NAME}"
+        },
+        {
+          "name": "USE_AWS_KMS",
+          "value": "true"
+        },
+        {
+          "name": "CORS_ORIGINS",
+          "value": "${CORS_ORIGINS}"
+        },
+        {
+          "name": "RATE_LIMIT_PER_MINUTE",
+          "value": "${RATE_LIMIT_PER_MINUTE}"
+        },
+        {
+          "name": "GUNICORN_WORKERS",
+          "value": "4"
+        },
+        {
+          "name": "GUNICORN_WORKER_CLASS",
+          "value": "uvicorn.workers.UvicornWorker"
+        },
+        {
+          "name": "GUNICORN_BIND",
+          "value": "0.0.0.0:8000"
+        },
+        {
+          "name": "PYTHONPATH",
+          "value": "/app"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "POSTGRES_SERVER",
+          "valueFrom": "${POSTGRES_SERVER_SECRET_ARN}"
+        },
+        {
+          "name": "POSTGRES_USER",
+          "valueFrom": "${POSTGRES_USER_SECRET_ARN}"
+        },
+        {
+          "name": "POSTGRES_PASSWORD",
+          "valueFrom": "${POSTGRES_PASSWORD_SECRET_ARN}"
+        },
+        {
+          "name": "POSTGRES_DB",
+          "valueFrom": "${POSTGRES_DB_SECRET_ARN}"
+        },
+        {
+          "name": "SECRET_KEY",
+          "valueFrom": "${SECRET_KEY_SECRET_ARN}"
+        },
+        {
+          "name": "ENCRYPTION_KEY_ID",
+          "valueFrom": "${ENCRYPTION_KEY_ID_SECRET_ARN}"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/amira-wellness-${ENVIRONMENT}",
+          "awslogs-region": "${AWS_REGION}",
+          "awslogs-stream-prefix": "api",
+          "awslogs-create-group": "true"
+        }
+      },
+      "mountPoints": [
+        {
+          "sourceVolume": "tmp-volume",
+          "containerPath": "/tmp",
+          "readOnly": false
+        }
+      ],
+      "ulimits": [
+        {
+          "name": "nofile",
+          "softLimit": 65536,
+          "hardLimit": 65536
+        }
+      ],
+      "command": [
+        "supervisord",
+        "-c",
+        "/app/supervisord.conf",
+        "-n"
+      ],
+      "workingDirectory": "/app",
+      "linuxParameters": {
+        "initProcessEnabled": true
+      }
+    }
+  ],
+  "volumes": [
+    {
+      "name": "tmp-volume",
+      "host": {}
+    }
+  ],
+  "placementConstraints": [],
+  "tags": [
+    {
+      "key": "Name",
+      "value": "amira-wellness-${ENVIRONMENT}"
+    },
+    {
+      "key": "Environment",
+      "value": "${ENVIRONMENT}"
+    },
+    {
+      "key": "Project",
+      "value": "Amira Wellness"
+    },
+    {
+      "key": "ManagedBy",
+      "value": "ECS"
+    }
+  ],
+  "propagateTags": "TASK_DEFINITION"
+}
