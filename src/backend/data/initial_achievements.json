@@ -1,0 +1,304 @@
+[
+  {
+    "id": "first_step",
+    "name": "First Step",
+    "name_es": "Primer Paso",
+    "description": "Complete your first emotional check-in",
+    "description_es": "Completa tu primer check-in emocional",
+    "category": "MILESTONE",
+    "icon": "first_step",
+    "requirement": {
+      "type": "CHECK_IN_COUNT",
+      "count": 1
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "voice_explorer",
+    "name": "Voice Explorer",
+    "name_es": "Explorador de Voz",
+    "description": "Record your first voice journal",
+    "description_es": "Graba tu primer diario de voz",
+    "category": "JOURNALING",
+    "icon": "voice_explorer",
+    "requirement": {
+      "type": "JOURNAL_COUNT",
+      "count": 1
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "tool_explorer",
+    "name": "Tool Explorer",
+    "name_es": "Explorador de Herramientas",
+    "description": "Try 5 different tools from the library",
+    "description_es": "Prueba 5 herramientas diferentes de la biblioteca",
+    "category": "TOOL_USAGE",
+    "icon": "tool_explorer",
+    "requirement": {
+      "type": "UNIQUE_TOOL_USAGE",
+      "count": 5
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "streak_3",
+    "name": "3-Day Streak",
+    "name_es": "Racha de 3 días",
+    "description": "Use the app for 3 consecutive days",
+    "description_es": "Usa la aplicación durante 3 días consecutivos",
+    "category": "STREAK",
+    "icon": "streak_3",
+    "requirement": {
+      "type": "STREAK_DAYS",
+      "count": 3
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "streak_7",
+    "name": "7-Day Streak",
+    "name_es": "Racha de 7 días",
+    "description": "Use the app for 7 consecutive days",
+    "description_es": "Usa la aplicación durante 7 días consecutivos",
+    "category": "STREAK",
+    "icon": "streak_7",
+    "requirement": {
+      "type": "STREAK_DAYS",
+      "count": 7
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "streak_14",
+    "name": "14-Day Streak",
+    "name_es": "Racha de 14 días",
+    "description": "Use the app for 14 consecutive days",
+    "description_es": "Usa la aplicación durante 14 días consecutivos",
+    "category": "STREAK",
+    "icon": "streak_14",
+    "requirement": {
+      "type": "STREAK_DAYS",
+      "count": 14
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "streak_30",
+    "name": "30-Day Streak",
+    "name_es": "Racha de 30 días",
+    "description": "Use the app for 30 consecutive days",
+    "description_es": "Usa la aplicación durante 30 días consecutivos",
+    "category": "STREAK",
+    "icon": "streak_30",
+    "requirement": {
+      "type": "STREAK_DAYS",
+      "count": 30
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "breathing_master",
+    "name": "Breathing Master",
+    "name_es": "Maestro de la Respiración",
+    "description": "Complete 10 breathing exercises",
+    "description_es": "Completa 10 ejercicios de respiración",
+    "category": "TOOL_USAGE",
+    "icon": "breathing_master",
+    "requirement": {
+      "type": "CATEGORY_TOOL_USAGE",
+      "category": "breathing",
+      "count": 10
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "meditation_guru",
+    "name": "Meditation Guru",
+    "name_es": "Gurú de la Meditación",
+    "description": "Complete 10 meditation sessions",
+    "description_es": "Completa 10 sesiones de meditación",
+    "category": "TOOL_USAGE",
+    "icon": "meditation_guru",
+    "requirement": {
+      "type": "CATEGORY_TOOL_USAGE",
+      "category": "meditation",
+      "count": 10
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "journaling_enthusiast",
+    "name": "Journaling Enthusiast",
+    "name_es": "Entusiasta del Journaling",
+    "description": "Record 10 voice journals",
+    "description_es": "Graba 10 diarios de voz",
+    "category": "JOURNALING",
+    "icon": "journaling_enthusiast",
+    "requirement": {
+      "type": "JOURNAL_COUNT",
+      "count": 10
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "emotional_awareness",
+    "name": "Emotional Awareness",
+    "name_es": "Conciencia Emocional",
+    "description": "Complete 20 emotional check-ins",
+    "description_es": "Completa 20 check-ins emocionales",
+    "category": "EMOTIONAL_AWARENESS",
+    "icon": "emotional_awareness",
+    "requirement": {
+      "type": "CHECK_IN_COUNT",
+      "count": 20
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "gratitude_practitioner",
+    "name": "Gratitude Practitioner",
+    "name_es": "Practicante de Gratitud",
+    "description": "Complete 5 gratitude exercises",
+    "description_es": "Completa 5 ejercicios de gratitud",
+    "category": "TOOL_USAGE",
+    "icon": "gratitude_practitioner",
+    "requirement": {
+      "type": "CATEGORY_TOOL_USAGE",
+      "category": "gratitude",
+      "count": 5
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "somatic_explorer",
+    "name": "Somatic Explorer",
+    "name_es": "Explorador Somático",
+    "description": "Complete 5 somatic exercises",
+    "description_es": "Completa 5 ejercicios somáticos",
+    "category": "TOOL_USAGE",
+    "icon": "somatic_explorer",
+    "requirement": {
+      "type": "CATEGORY_TOOL_USAGE",
+      "category": "somatic",
+      "count": 5
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "emotional_growth",
+    "name": "Emotional Growth",
+    "name_es": "Crecimiento Emocional",
+    "description": "Show positive emotional shift in 5 journal sessions",
+    "description_es": "Muestra un cambio emocional positivo en 5 sesiones de diario",
+    "category": "EMOTIONAL_AWARENESS",
+    "icon": "emotional_growth",
+    "requirement": {
+      "type": "POSITIVE_EMOTIONAL_SHIFTS",
+      "count": 5
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "night_owl",
+    "name": "Night Owl",
+    "name_es": "Búho Nocturno",
+    "description": "Complete 5 activities between 10 PM and 4 AM",
+    "description_es": "Completa 5 actividades entre las 10 PM y las 4 AM",
+    "category": "MILESTONE",
+    "icon": "night_owl",
+    "requirement": {
+      "type": "TIME_BASED_ACTIVITY",
+      "time_start": "22:00",
+      "time_end": "04:00",
+      "count": 5
+    },
+    "is_hidden": true
+  },
+  {
+    "id": "early_bird",
+    "name": "Early Bird",
+    "name_es": "Madrugador",
+    "description": "Complete 5 activities between 5 AM and 8 AM",
+    "description_es": "Completa 5 actividades entre las 5 AM y las 8 AM",
+    "category": "MILESTONE",
+    "icon": "early_bird",
+    "requirement": {
+      "type": "TIME_BASED_ACTIVITY",
+      "time_start": "05:00",
+      "time_end": "08:00",
+      "count": 5
+    },
+    "is_hidden": true
+  },
+  {
+    "id": "weekend_warrior",
+    "name": "Weekend Warrior",
+    "name_es": "Guerrero de Fin de Semana",
+    "description": "Complete activities on 4 consecutive weekends",
+    "description_es": "Completa actividades en 4 fines de semana consecutivos",
+    "category": "STREAK",
+    "icon": "weekend_warrior",
+    "requirement": {
+      "type": "WEEKEND_ACTIVITY",
+      "count": 4
+    },
+    "is_hidden": true
+  },
+  {
+    "id": "tool_master",
+    "name": "Tool Master",
+    "name_es": "Maestro de Herramientas",
+    "description": "Try at least one tool from each category",
+    "description_es": "Prueba al menos una herramienta de cada categoría",
+    "category": "TOOL_USAGE",
+    "icon": "tool_master",
+    "requirement": {
+      "type": "ALL_CATEGORIES_USAGE",
+      "count": 1
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "favorite_collector",
+    "name": "Favorite Collector",
+    "name_es": "Coleccionista de Favoritos",
+    "description": "Add 5 tools to your favorites",
+    "description_es": "Añade 5 herramientas a tus favoritos",
+    "category": "TOOL_USAGE",
+    "icon": "favorite_collector",
+    "requirement": {
+      "type": "FAVORITE_COUNT",
+      "count": 5
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "consistency_champion",
+    "name": "Consistency Champion",
+    "name_es": "Campeón de Consistencia",
+    "description": "Complete at least one activity every day for 21 days",
+    "description_es": "Completa al menos una actividad cada día durante 21 días",
+    "category": "STREAK",
+    "icon": "consistency_champion",
+    "requirement": {
+      "type": "STREAK_DAYS",
+      "count": 21
+    },
+    "is_hidden": false
+  },
+  {
+    "id": "emotional_explorer",
+    "name": "Emotional Explorer",
+    "name_es": "Explorador Emocional",
+    "description": "Record 10 different emotions in your check-ins",
+    "description_es": "Registra 10 emociones diferentes en tus check-ins",
+    "category": "EMOTIONAL_AWARENESS",
+    "icon": "emotional_explorer",
+    "requirement": {
+      "type": "UNIQUE_EMOTIONS",
+      "count": 10
+    },
+    "is_hidden": false
+  }
+]
