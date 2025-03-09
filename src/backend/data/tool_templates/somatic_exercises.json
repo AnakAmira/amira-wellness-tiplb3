@@ -1,0 +1,1394 @@
+/**
+ * Somatic Exercises Collection
+ * 
+ * This file contains a collection of somatic exercises that focus on body-centered
+ * practices for emotional regulation, stress reduction, and body awareness.
+ * 
+ * @version 1.0.0
+ */
+
+/**
+ * Types of emotions that can be targeted by exercises
+ */
+export type EmotionType = 
+  'ANXIETY' | 'STRESS' | 'OVERWHELM' | 'DISCONNECTION' | 'TENSION' | 
+  'FRUSTRATION' | 'STUCKNESS' | 'FEAR' | 'GRIEF' | 'ANGER' | 
+  'SUPPRESSION' | 'INSECURITY' | 'POWERLESSNESS' | 'SHYNESS' | 
+  'SHAME' | 'SELF_CRITICISM' | 'SADNESS' | 'LONELINESS' | 
+  'DISTRACTION';
+
+/**
+ * Difficulty levels for exercises
+ */
+export type DifficultyLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+
+/**
+ * Exercise content types
+ */
+export type ContentType = 'GUIDED_EXERCISE' | 'ROUTINE' | 'TECHNIQUE';
+
+/**
+ * Exercise categories
+ */
+export type ExerciseCategory = 'SOMATIC' | 'BREATHING' | 'MEDITATION' | 'MOVEMENT';
+
+/**
+ * Step in a guided exercise
+ */
+export interface ExerciseStep {
+  order: number;
+  title: string;
+  description: string;
+  duration: number; // in seconds
+}
+
+/**
+ * Content for a somatic exercise
+ */
+export interface ExerciseContent {
+  title: string;
+  instructions: string;
+  steps: ExerciseStep[];
+  benefits: string[];
+  tips: string[];
+}
+
+/**
+ * Metadata for a somatic exercise
+ */
+export interface ExerciseMetadata {
+  author: string;
+  tags: string[];
+  created_date: string;
+  version: string;
+}
+
+/**
+ * Somatic exercise definition
+ */
+export interface SomaticExercise {
+  name: string;
+  description: string;
+  category: ExerciseCategory;
+  content_type: ContentType;
+  estimated_duration: number; // in minutes
+  difficulty: DifficultyLevel;
+  target_emotions: EmotionType[];
+  is_active: boolean;
+  is_premium: boolean;
+  content: ExerciseContent;
+  image_url: string;
+  audio_url: string;
+  metadata: ExerciseMetadata;
+}
+
+/**
+ * Collection of somatic exercises
+ */
+export const somaticExercises: SomaticExercise[] = [
+  {
+    name: "Escaneo Corporal Consciente",
+    description: "Una práctica somática que te guía a través de un proceso de atención sistemática a diferentes partes del cuerpo, promoviendo la conexión mente-cuerpo, la relajación profunda y la liberación de tensión.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 15,
+    difficulty: "BEGINNER",
+    target_emotions: ["ANXIETY", "STRESS", "OVERWHELM", "DISCONNECTION"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Escaneo Corporal Consciente",
+      instructions: "Esta práctica te guía a través de un proceso de atención sistemática a cada parte de tu cuerpo, ayudándote a reconocer y liberar tensión, desarrollar mayor conciencia corporal y restablecer la conexión mente-cuerpo.",
+      steps: [
+        {
+          order: 1,
+          title: "Posición inicial",
+          description: "Acuéstate boca arriba en una superficie cómoda, con los brazos a los lados y las palmas hacia arriba. Si prefieres, puedes sentarte en una silla con la espalda apoyada y los pies en el suelo.",
+          duration: 30
+        },
+        {
+          order: 2,
+          title: "Establece la intención",
+          description: "Toma un momento para establecer tu intención de estar presente con tu cuerpo y notar las sensaciones tal como son, sin juicio ni expectativas.",
+          duration: 20
+        },
+        {
+          order: 3,
+          title: "Conciencia de la respiración",
+          description: "Comienza llevando tu atención a la respiración. Observa cómo el abdomen se eleva con cada inhalación y desciende con cada exhalación. Siente el ritmo natural de tu respiración.",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Pies y piernas",
+          description: "Lleva tu atención a los dedos de los pies, luego a las plantas, los talones, los tobillos, las pantorrillas, las rodillas y los muslos. Observa cualquier sensación presente: hormigueo, calor, frío, tensión, ligereza o pesadez.",
+          duration: 120
+        },
+        {
+          order: 5,
+          title: "Pelvis y abdomen",
+          description: "Continúa el escaneo hacia la pelvis, las caderas, la parte baja de la espalda y el abdomen. Nota cómo estas áreas se mueven sutilmente con la respiración. Observa cualquier tensión o incomodidad sin intentar cambiarla.",
+          duration: 90
+        },
+        {
+          order: 6,
+          title: "Pecho y espalda",
+          description: "Dirige tu atención al pecho, la parte superior de la espalda, los hombros y las clavículas. Observa cualquier tensión y permite que se disuelva con cada exhalación. Nota cómo se expande el pecho con cada inhalación.",
+          duration: 90
+        },
+        {
+          order: 7,
+          title: "Brazos y manos",
+          description: "Escanea tus brazos, desde los hombros hasta los codos, antebrazos, muñecas, palmas y dedos. Nota cualquier sensación de hormigueo, calor, frío o pesadez. Observa si hay áreas de tensión o relajación.",
+          duration: 90
+        },
+        {
+          order: 8,
+          title: "Cuello y cabeza",
+          description: "Lleva tu atención al cuello, la garganta, la mandíbula, los labios, las mejillas, la nariz, los ojos, las sienes, la frente y el cuero cabelludo. Nota cualquier tensión, especialmente en la mandíbula y el entrecejo.",
+          duration: 120
+        },
+        {
+          order: 9,
+          title: "Cuerpo completo",
+          description: "Finalmente, expande tu conciencia para incluir todo el cuerpo como una unidad. Siente la totalidad de tu presencia física en este momento. Observa cómo todo tu cuerpo respira como un organismo integrado.",
+          duration: 60
+        },
+        {
+          order: 10,
+          title: "Conclusión",
+          description: "Gradualmente, comienza a mover suavemente los dedos de las manos y los pies. Toma una respiración profunda y, cuando estés listo, abre los ojos y regresa lentamente a una posición sentada, llevando contigo esta conciencia corporal renovada.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Promueve la relajación profunda y reduce la tensión física",
+        "Desarrolla una mayor conciencia de las sensaciones corporales",
+        "Ayuda a reconocer y liberar el estrés almacenado en el cuerpo",
+        "Mejora la calidad del sueño",
+        "Fortalece la conexión mente-cuerpo",
+        "Aumenta la capacidad de autorregulación emocional"
+      ],
+      tips: [
+        "Si te quedas dormido durante la práctica, no te preocupes; es una respuesta común a la relajación profunda",
+        "Puedes practicar el escaneo corporal en posición sentada si prefieres mantenerte alerta",
+        "Observa las sensaciones con curiosidad, sin juzgarlas como 'buenas' o 'malas'",
+        "Si encuentras áreas de incomodidad, envía tu respiración hacia ellas",
+        "Practica regularmente para desarrollar una relación más consciente con tu cuerpo"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/body-scan.svg",
+    audio_url: "/assets/audio/tools/somatic/body-scan-guide.mp3",
+    metadata: {
+      author: "Basado en prácticas de conciencia corporal y mindfulness",
+      tags: ["cuerpo", "relajación", "principiante", "tensión", "conciencia"],
+      created_date: "2023-01-15",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Liberación de Tensión Progresiva",
+    description: "Una técnica somática que alterna entre tensionar y relajar diferentes grupos musculares, ayudando a identificar y liberar la tensión acumulada y promoviendo un estado de relajación profunda.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 12,
+    difficulty: "BEGINNER",
+    target_emotions: ["ANXIETY", "STRESS", "TENSION", "OVERWHELM"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Liberación de Tensión Progresiva",
+      instructions: "Esta práctica te guía a través de un proceso sistemático de tensión y relajación de diferentes grupos musculares. Al crear deliberadamente tensión y luego liberarla, aprenderás a reconocer la diferencia entre un estado de tensión y uno de relajación, desarrollando mayor control sobre tu estado físico.",
+      steps: [
+        {
+          order: 1,
+          title: "Posición inicial",
+          description: "Siéntate en una silla cómoda con la espalda apoyada o acuéstate en una superficie firme. Asegúrate de que tu cuerpo esté bien apoyado y que puedas permanecer en esta posición durante toda la práctica.",
+          duration: 30
+        },
+        {
+          order: 2,
+          title: "Respiración inicial",
+          description: "Toma unas respiraciones profundas y lentas. Inhala por la nariz contando hasta 4, mantén brevemente, y exhala por la boca contando hasta 6. Repite 3 veces para centrarte.",
+          duration: 45
+        },
+        {
+          order: 3,
+          title: "Manos y brazos",
+          description: "Comienza con tus manos. Cierra los puños fuertemente, tensando los músculos de las manos y antebrazos. Mantén esta tensión durante 5 segundos, notando la sensación. Luego, libera completamente, dejando que tus manos se relajen. Observa la diferencia entre tensión y relajación.",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Brazos superiores",
+          description: "Ahora, dobla los codos y tensa los bíceps. Mantén durante 5 segundos, sintiendo la tensión. Luego, libera y deja que tus brazos descansen cómodamente. Nota la sensación de calor y relajación que fluye por tus brazos.",
+          duration: 60
+        },
+        {
+          order: 5,
+          title: "Hombros y cuello",
+          description: "Eleva tus hombros hacia las orejas, creando tensión en los hombros y el cuello. Mantén durante 5 segundos. Luego, suelta completamente, dejando que tus hombros caigan. Siente cómo la tensión se disuelve.",
+          duration: 60
+        },
+        {
+          order: 6,
+          title: "Rostro",
+          description: "Tensa todos los músculos de tu rostro: frunce el ceño, aprieta los ojos, arruga la nariz, aprieta los labios. Mantén durante 5 segundos. Luego, relaja completamente, dejando que tu rostro se suavice. Siente la diferencia.",
+          duration: 60
+        },
+        {
+          order: 7,
+          title: "Pecho y abdomen",
+          description: "Inhala profundamente, llenando tus pulmones, y tensa los músculos del pecho y abdomen. Mantén durante 5 segundos. Luego, exhala completamente y relaja estos músculos. Nota cómo tu respiración se vuelve más libre.",
+          duration: 60
+        },
+        {
+          order: 8,
+          title: "Espalda",
+          description: "Arquea ligeramente la espalda, tensando los músculos a lo largo de la columna vertebral. Mantén durante 5 segundos. Luego, relaja y permite que tu espalda se apoye cómodamente. Siente la liberación de tensión.",
+          duration: 60
+        },
+        {
+          order: 9,
+          title: "Glúteos y muslos",
+          description: "Tensa los glúteos y los muslos, presionándolos contra la superficie donde estás sentado o acostado. Mantén durante 5 segundos. Luego, libera completamente, permitiendo que se relajen profundamente.",
+          duration: 60
+        },
+        {
+          order: 10,
+          title: "Pantorrillas y pies",
+          description: "Apunta los dedos de los pies hacia tu cara, tensando las pantorrillas. Mantén durante 5 segundos. Luego, relaja. A continuación, apunta los dedos de los pies hacia abajo, tensando la parte superior de los pies. Mantén y luego relaja.",
+          duration: 90
+        },
+        {
+          order: 11,
+          title: "Cuerpo completo",
+          description: "Finalmente, tensa todo tu cuerpo a la vez: cierra los puños, tensa brazos, hombros, rostro, pecho, abdomen, glúteos, piernas y pies. Mantén durante 5 segundos. Luego, libera toda la tensión de una vez, dejando que tu cuerpo se hunda en la superficie de apoyo.",
+          duration: 60
+        },
+        {
+          order: 12,
+          title: "Relajación final",
+          description: "Permanece en este estado de relajación durante unos minutos. Siente la pesadez y calidez en tu cuerpo. Observa cómo tu respiración es más profunda y tranquila. Disfruta de esta sensación de calma y relajación completa.",
+          duration: 120
+        },
+        {
+          order: 13,
+          title: "Conclusión",
+          description: "Cuando estés listo, comienza a mover suavemente los dedos de las manos y los pies. Toma una respiración profunda y, gradualmente, abre los ojos y regresa a una posición sentada, llevando contigo esta sensación de relajación.",
+          duration: 45
+        }
+      ],
+      benefits: [
+        "Reduce significativamente la tensión muscular crónica",
+        "Disminuye los síntomas de ansiedad y estrés",
+        "Mejora la calidad del sueño",
+        "Aumenta la conciencia de las señales corporales de tensión",
+        "Proporciona una herramienta efectiva para la autorregulación",
+        "Puede reducir ciertos tipos de dolor relacionados con la tensión"
+      ],
+      tips: [
+        "Practica en un lugar tranquilo donde no serás interrumpido",
+        "No tenses los músculos hasta el punto de dolor o calambre",
+        "Mantén una respiración regular durante toda la práctica",
+        "Si tienes alguna lesión o condición médica, consulta con un profesional antes de tensar esas áreas",
+        "Con la práctica regular, aprenderás a relajarte más rápidamente",
+        "Puedes adaptar esta técnica para usarla en situaciones de estrés, enfocándote en las áreas donde sueles acumular tensión"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/progressive-relaxation.svg",
+    audio_url: "/assets/audio/tools/somatic/progressive-relaxation-guide.mp3",
+    metadata: {
+      author: "Basado en la Relajación Muscular Progresiva de Edmund Jacobson",
+      tags: ["tensión", "relajación", "músculos", "principiante", "estrés"],
+      created_date: "2023-01-20",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Enraizamiento Somático",
+    description: "Una práctica de conexión consciente con el cuerpo y la tierra que ayuda a estabilizar el sistema nervioso, promover la sensación de seguridad y desarrollar presencia en momentos de ansiedad o desconexión.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 8,
+    difficulty: "BEGINNER",
+    target_emotions: ["ANXIETY", "FEAR", "OVERWHELM", "DISCONNECTION"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Enraizamiento Somático",
+      instructions: "Esta práctica te ayuda a 'enraizarte' o conectarte con tu cuerpo y con la tierra cuando te sientes ansioso, abrumado o desconectado. El enraizamiento es una forma de regular el sistema nervioso a través de la atención consciente a las sensaciones físicas, especialmente las relacionadas con el contacto con el suelo.",
+      steps: [
+        {
+          order: 1,
+          title: "Posición inicial",
+          description: "Siéntate en una silla con los pies apoyados firmemente en el suelo, o ponte de pie en una posición estable. Si es posible, quítate los zapatos para sentir mejor la conexión con el suelo.",
+          duration: 30
+        },
+        {
+          order: 2,
+          title: "Contacto con el suelo",
+          description: "Lleva tu atención a los puntos donde tu cuerpo hace contacto con el suelo o la silla. Siente el peso de tu cuerpo siendo sostenido. Nota la solidez y estabilidad de la superficie debajo de ti.",
+          duration: 60
+        },
+        {
+          order: 3,
+          title: "Presión y peso",
+          description: "Presiona ligeramente los pies contra el suelo. Siente la resistencia, la solidez. Luego, nota el peso de tu cuerpo siendo atraído hacia la tierra por la gravedad. Permite que tu cuerpo se hunda un poco más en esta sensación de apoyo.",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Visualización de raíces",
+          description: "Imagina que desde la base de tus pies o desde tu coxis, si estás sentado, crecen raíces que se extienden hacia el suelo. Visualiza estas raíces penetrando profundamente en la tierra, anclándote y estabilizándote.",
+          duration: 90
+        },
+        {
+          order: 5,
+          title: "Respiración enraizada",
+          description: "Con cada inhalación, imagina que estás absorbiendo energía estabilizadora desde la tierra a través de tus raíces. Con cada exhalación, libera cualquier tensión, ansiedad o energía inquieta hacia la tierra, que puede absorberla y transformarla.",
+          duration: 90
+        },
+        {
+          order: 6,
+          title: "Exploración sensorial",
+          description: "Expande tu atención para incluir otros sentidos. Nota 5 cosas que puedes ver, 4 cosas que puedes tocar o sentir, 3 cosas que puedes oír, 2 cosas que puedes oler, y 1 cosa que puedes saborear. Esto te ayuda a anclarte en el momento presente.",
+          duration: 120
+        },
+        {
+          order: 7,
+          title: "Movimiento enraizado",
+          description: "Realiza algunos movimientos lentos y conscientes mientras mantienes la sensación de conexión con el suelo. Puedes balancearte suavemente de lado a lado, hacer pequeños círculos con el torso, o simplemente flexionar y extender los dedos de los pies.",
+          duration: 60
+        },
+        {
+          order: 8,
+          title: "Conclusión",
+          description: "Toma unas respiraciones profundas, sintiendo la estabilidad y presencia que has cultivado. Lleva esta sensación de enraizamiento contigo mientras regresas a tus actividades, sabiendo que puedes volver a esta práctica en cualquier momento que necesites estabilizarte.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Calma rápidamente el sistema nervioso en momentos de ansiedad",
+        "Ayuda a reconectarse con el cuerpo durante estados de disociación",
+        "Promueve una sensación de seguridad y estabilidad",
+        "Desarrolla recursos internos para manejar el estrés",
+        "Mejora la capacidad de estar presente en el momento actual",
+        "Puede ayudar a manejar síntomas de trauma y ansiedad"
+      ],
+      tips: [
+        "Practica este ejercicio regularmente, no solo en momentos de estrés",
+        "Puedes adaptar esta práctica para realizarla discretamente en situaciones sociales",
+        "Experimenta con diferentes superficies: hierba, arena, suelo de madera",
+        "Si te resulta difícil visualizar, enfócate en las sensaciones físicas concretas",
+        "Combina con respiración profunda para mayor efectividad",
+        "Crea un recordatorio visual (como una imagen de raíces) para ayudarte a recordar esta práctica"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/grounding.svg",
+    audio_url: "/assets/audio/tools/somatic/grounding-guide.mp3",
+    metadata: {
+      author: "Basado en técnicas de terapia somática y trabajo con trauma",
+      tags: ["enraizamiento", "ansiedad", "presencia", "principiante", "seguridad"],
+      created_date: "2023-01-25",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Sacudida Somática",
+    description: "Una práctica dinámica de liberación de tensión y energía estancada a través de movimientos de sacudida natural, inspirada en cómo los animales liberan el estrés y regulan su sistema nervioso.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 10,
+    difficulty: "BEGINNER",
+    target_emotions: ["STRESS", "ANXIETY", "TENSION", "FRUSTRATION", "STUCKNESS"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Sacudida Somática",
+      instructions: "Esta práctica utiliza movimientos de sacudida natural para liberar tensión, estrés y energía estancada del cuerpo. Está inspirada en cómo los animales naturalmente sacuden sus cuerpos para liberar el estrés después de experiencias intensas, ayudando a completar el ciclo de respuesta al estrés.",
+      steps: [
+        {
+          order: 1,
+          title: "Preparación",
+          description: "Ponte de pie en un espacio donde puedas moverte libremente. Asegúrate de tener suficiente espacio a tu alrededor. Quítate los zapatos si es posible para sentir mejor la conexión con el suelo.",
+          duration: 30
+        },
+        {
+          order: 2,
+          title: "Conexión con el suelo",
+          description: "Siente tus pies firmemente apoyados en el suelo. Flexiona ligeramente las rodillas para mantener una postura relajada y estable. Toma unas respiraciones profundas para centrarte.",
+          duration: 30
+        },
+        {
+          order: 3,
+          title: "Sacudida suave de manos",
+          description: "Comienza sacudiendo suavemente tus manos y muñecas, como si estuvieras secándolas después de lavarlas. Permite que el movimiento sea suelto y relajado. Nota las sensaciones en tus manos mientras las sacudes.",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Sacudida de brazos",
+          description: "Extiende la sacudida a tus brazos, permitiendo que el movimiento fluya desde tus hombros hasta las puntas de los dedos. Deja que tus brazos se muevan libremente, sin controlar demasiado el movimiento.",
+          duration: 60
+        },
+        {
+          order: 5,
+          title: "Sacudida de hombros y pecho",
+          description: "Permite que la sacudida se extienda a tus hombros y pecho. Puedes rotar suavemente los hombros o dejar que se muevan de arriba abajo. Nota cómo la respiración se vuelve más libre con este movimiento.",
+          duration: 60
+        },
+        {
+          order: 6,
+          title: "Sacudida de piernas",
+          description: "Transfiere el peso a una pierna y sacude la otra, luego cambia. Siente cómo la tensión se libera desde las caderas hasta los pies. Mantén las rodillas flexibles y los movimientos sueltos.",
+          duration: 90
+        },
+        {
+          order: 7,
+          title: "Sacudida de todo el cuerpo",
+          description: "Ahora, permite que todo tu cuerpo participe en la sacudida. Deja que el movimiento surja naturalmente, sin forzarlo. Puede ser suave o vigoroso, según lo que tu cuerpo necesite. Permite sonidos si surgen naturalmente.",
+          duration: 120
+        },
+        {
+          order: 8,
+          title: "Variación de intensidad",
+          description: "Experimenta con diferentes intensidades de sacudida. Alterna entre movimientos más suaves y más vigorosos. Observa qué se siente mejor para tu cuerpo en este momento.",
+          duration: 90
+        },
+        {
+          order: 9,
+          title: "Atención a sensaciones",
+          description: "Mientras continúas con la sacudida, presta atención a las sensaciones en tu cuerpo. ¿Dónde sientes calor, hormigueo, liberación? ¿Hay áreas que se sienten más vivas o despiertas?",
+          duration: 60
+        },
+        {
+          order: 10,
+          title: "Reducción gradual",
+          description: "Comienza a reducir gradualmente la intensidad de la sacudida. Permite que los movimientos se vuelvan más pequeños y sutiles, hasta que eventualmente te detengas por completo.",
+          duration: 60
+        },
+        {
+          order: 11,
+          title: "Integración",
+          description: "Quédate de pie, con los ojos cerrados si te sientes cómodo, y nota las sensaciones en tu cuerpo. Observa si hay cambios en tu estado energético, tu respiración o tu nivel de tensión.",
+          duration: 60
+        },
+        {
+          order: 12,
+          title: "Conclusión",
+          description: "Toma unas respiraciones profundas, sintiendo la energía renovada y la liberación de tensión. Cuando estés listo, abre los ojos y lleva esta sensación de vitalidad y relajación contigo.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Libera tensión física y energía estancada",
+        "Ayuda a completar el ciclo de respuesta al estrés",
+        "Regula el sistema nervioso después de experiencias estresantes",
+        "Aumenta la sensación de vitalidad y presencia",
+        "Promueve la conexión mente-cuerpo",
+        "Puede ayudar a liberar emociones contenidas"
+      ],
+      tips: [
+        "Permite que el movimiento surja naturalmente, sin forzarlo demasiado",
+        "No hay una forma 'correcta' de sacudirse; sigue lo que se sienta bien para tu cuerpo",
+        "Si te sientes cohibido, comienza con movimientos más pequeños o practica a solas",
+        "Mantén las rodillas flexibles y la respiración fluida durante toda la práctica",
+        "Si tienes alguna lesión o condición médica, adapta los movimientos según sea necesario",
+        "Esta práctica puede ser especialmente útil después de situaciones estresantes o al final del día"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/shaking.svg",
+    audio_url: "/assets/audio/tools/somatic/shaking-guide.mp3",
+    metadata: {
+      author: "Basado en TRE (Trauma Release Exercises) y prácticas somáticas",
+      tags: ["sacudida", "liberación", "estrés", "energía", "principiante"],
+      created_date: "2023-02-01",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Respiración Somática Profunda",
+    description: "Una práctica de respiración consciente que involucra todo el cuerpo, expandiendo la capacidad respiratoria, liberando tensión y promoviendo una profunda regulación del sistema nervioso.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 10,
+    difficulty: "BEGINNER",
+    target_emotions: ["ANXIETY", "STRESS", "TENSION", "OVERWHELM"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Respiración Somática Profunda",
+      instructions: "Esta práctica te guía a través de una forma de respiración que involucra todo el cuerpo, expandiendo tu capacidad respiratoria y utilizando el movimiento consciente para liberar tensión y regular el sistema nervioso. A diferencia de las técnicas de respiración más mentales, esta práctica enfatiza la experiencia somática de la respiración.",
+      steps: [
+        {
+          order: 1,
+          title: "Posición inicial",
+          description: "Siéntate en una silla con la espalda separada del respaldo, o en el suelo sobre un cojín. Mantén la columna erguida pero no rígida. Coloca las manos suavemente sobre el abdomen.",
+          duration: 30
+        },
+        {
+          order: 2,
+          title: "Observación de la respiración natural",
+          description: "Comienza observando tu respiración natural sin intentar cambiarla. Nota el ritmo, la profundidad y las áreas del cuerpo que se mueven cuando respiras. Simplemente observa durante unas cuantas respiraciones.",
+          duration: 60
+        },
+        {
+          order: 3,
+          title: "Respiración abdominal",
+          description: "Lleva tu atención al abdomen. Al inhalar, permite que el abdomen se expanda como un globo que se llena de aire. Al exhalar, deja que el abdomen se contraiga suavemente. Siente el movimiento bajo tus manos.",
+          duration: 90
+        },
+        {
+          order: 4,
+          title: "Expansión de la respiración",
+          description: "Ahora, expande tu respiración para incluir la zona de las costillas. Al inhalar, siente cómo el abdomen se expande primero y luego la expansión continúa hacia las costillas, que se abren hacia los lados. Al exhalar, siente cómo las costillas se contraen y luego el abdomen.",
+          duration: 90
+        },
+        {
+          order: 5,
+          title: "Respiración completa",
+          description: "Expande aún más tu respiración para incluir la parte superior del pecho. La inhalación comienza en el abdomen, continúa hacia las costillas y finalmente llega hasta el pecho. La exhalación sigue el camino inverso: pecho, costillas, abdomen.",
+          duration: 90
+        },
+        {
+          order: 6,
+          title: "Movimiento con la respiración",
+          description: "Incorpora un suave movimiento de la columna. Al inhalar, permite que la columna se extienda ligeramente hacia arriba y se arquee suavemente hacia adelante. Al exhalar, deja que la columna se flexione ligeramente hacia atrás. El movimiento debe ser sutil y cómodo.",
+          duration: 90
+        },
+        {
+          order: 7,
+          title: "Respiración con brazos",
+          description: "Añade movimiento de brazos. Al inhalar, levanta los brazos lentamente hacia los lados y arriba, como si estuvieras abrazando el cielo. Al exhalar, baja los brazos lentamente. Sincroniza el movimiento con tu respiración completa.",
+          duration: 90
+        },
+        {
+          order: 8,
+          title: "Respiración sonora",
+          description: "En las próximas exhalaciones, permite que surja un sonido suave, como un 'ahhh' o un suspiro. Siente cómo el sonido ayuda a liberar tensión adicional y profundiza la exhalación.",
+          duration: 60
+        },
+        {
+          order: 9,
+          title: "Atención a sensaciones",
+          description: "Mientras continúas con esta respiración completa, nota las sensaciones en tu cuerpo. ¿Dónde sientes expansión, movimiento, liberación? ¿Hay áreas que se resisten al flujo de la respiración?",
+          duration: 60
+        },
+        {
+          order: 10,
+          title: "Respiración autónoma",
+          description: "Gradualmente, deja de controlar la respiración. Permite que tu cuerpo respire a su propio ritmo natural, pero mantén la conciencia de la respiración como un movimiento que involucra todo el cuerpo.",
+          duration: 60
+        },
+        {
+          order: 11,
+          title: "Conclusión",
+          description: "Toma unas respiraciones finales, sintiendo la apertura y vitalidad en tu cuerpo. Cuando estés listo, regresa lentamente a tu estado normal de actividad, llevando contigo esta conciencia respiratoria expandida.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Aumenta la capacidad respiratoria y la oxigenación",
+        "Libera tensión crónica en el diafragma y los músculos respiratorios",
+        "Activa el sistema nervioso parasimpático, promoviendo la relajación",
+        "Mejora la postura y la conciencia corporal",
+        "Aumenta la energía vital y la sensación de expansión",
+        "Puede ayudar con problemas respiratorios y ansiedad"
+      ],
+      tips: [
+        "No fuerces la respiración; busca un ritmo cómodo y natural",
+        "Si sientes mareo en algún momento, regresa a tu respiración normal",
+        "Practica inicialmente sentado antes de explorar esta respiración de pie o en movimiento",
+        "Observa si tiendes a contener la respiración cuando estás estresado y usa esta práctica como recurso",
+        "La respiración somática puede ser más efectiva que las técnicas puramente mentales para algunas personas",
+        "Considera practicar al aire libre para combinar con los beneficios de la naturaleza"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/deep-breathing.svg",
+    audio_url: "/assets/audio/tools/somatic/deep-breathing-guide.mp3",
+    metadata: {
+      author: "Basado en prácticas de respiración somática y trabajo corporal",
+      tags: ["respiración", "cuerpo", "expansión", "principiante", "regulación"],
+      created_date: "2023-02-05",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Movimiento Auténtico",
+    description: "Una práctica de movimiento libre y no estructurado que permite al cuerpo moverse siguiendo sus impulsos naturales, facilitando la expresión emocional, la liberación de patrones de tensión y el desarrollo de una relación más intuitiva con el cuerpo.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 15,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["STUCKNESS", "TENSION", "SUPPRESSION", "DISCONNECTION", "ANXIETY"],
+    is_active: true,
+    is_premium: true,
+    content: {
+      title: "Movimiento Auténtico",
+      instructions: "Esta práctica te invita a explorar el movimiento libre y no estructurado, permitiendo que tu cuerpo se mueva siguiendo sus impulsos naturales en lugar de movimientos planeados o coreografiados. Es una forma de 'escuchar' al cuerpo y permitirle expresarse a través del movimiento espontáneo.",
+      steps: [
+        {
+          order: 1,
+          title: "Preparación del espacio",
+          description: "Crea un espacio seguro donde puedas moverte libremente sin obstáculos. Asegúrate de tener suficiente espacio a tu alrededor. Puedes poner música suave sin letra o practicar en silencio.",
+          duration: 60
+        },
+        {
+          order: 2,
+          title: "Centrado inicial",
+          description: "Comienza de pie, sentado o acostado, según lo que te resulte más cómodo. Cierra los ojos si te sientes seguro haciéndolo. Toma unas respiraciones profundas y lleva tu atención al interior de tu cuerpo.",
+          duration: 60
+        },
+        {
+          order: 3,
+          title: "Escucha interna",
+          description: "Comienza a 'escuchar' tu cuerpo desde dentro. ¿Dónde sientes energía, impulso, deseo de movimiento? No planees ni pienses en qué movimiento hacer; simplemente atiende a las sensaciones e impulsos sutiles.",
+          duration: 90
+        },
+        {
+          order: 4,
+          title: "Seguir el impulso",
+          description: "Cuando notes un impulso de movimiento, por pequeño que sea, permítete seguirlo. Podría ser tan sutil como un dedo que quiere moverse, o tan amplio como un impulso de girar o estirarte. No juzgues el movimiento, simplemente síguelo.",
+          duration: 120
+        },
+        {
+          order: 5,
+          title: "Desarrollo del movimiento",
+          description: "Permite que el movimiento evolucione naturalmente. Un pequeño gesto puede convertirse en un movimiento más amplio, o puede desvanecerse y dar paso a otro impulso. No hay necesidad de mantener un movimiento si surge un nuevo impulso.",
+          duration: 180
+        },
+        {
+          order: 6,
+          title: "Exploración completa",
+          description: "Continúa siguiendo los impulsos de movimiento, permitiendo que todo tu cuerpo participe. Puedes moverte en el espacio, cambiar de nivel (de pie, agachado, en el suelo), usar diferentes velocidades y cualidades de movimiento.",
+          duration: 240
+        },
+        {
+          order: 7,
+          title: "Atención a sensaciones y emociones",
+          description: "Mientras te mueves, nota las sensaciones físicas y cualquier emoción que pueda surgir. El movimiento puede despertar sentimientos de alegría, tristeza, frustración o liberación. Permite que estas emociones se expresen a través del movimiento.",
+          duration: 120
+        },
+        {
+          order: 8,
+          title: "Exploración de cualidades",
+          description: "Sin planificar, permite que tu cuerpo explore diferentes cualidades de movimiento: puede ser fluido como el agua, fuerte y directo, ligero como el aire, o lento y sostenido. Deja que estas cualidades surjan naturalmente.",
+          duration: 120
+        },
+        {
+          order: 9,
+          title: "Pausa y escucha",
+          description: "En algún momento, permite que el movimiento te lleve a una pausa natural. En esta quietud, escucha nuevamente. ¿Qué impulso surge ahora? La pausa es parte del movimiento, no una interrupción.",
+          duration: 60
+        },
+        {
+          order: 10,
+          title: "Conclusión gradual",
+          description: "Comienza a llevar tu exploración hacia un cierre. Permite que los movimientos se vuelvan más pequeños y sutiles, hasta encontrar una posición de descanso que se sienta completa para esta práctica.",
+          duration: 90
+        },
+        {
+          order: 11,
+          title: "Integración",
+          description: "Descansa en quietud por unos momentos. Siente las reverberaciones del movimiento en tu cuerpo. Nota si hay cambios en tu estado físico, emocional o energético después de la práctica.",
+          duration: 60
+        },
+        {
+          order: 12,
+          title: "Reflexión",
+          description: "Cuando estés listo, abre los ojos lentamente. Considera tomar algunas notas sobre tu experiencia: ¿Qué descubriste? ¿Hubo movimientos o temas recurrentes? ¿Qué emociones surgieron?",
+          duration: 90
+        }
+      ],
+      benefits: [
+        "Desarrolla una relación más intuitiva y confiada con el cuerpo",
+        "Facilita la liberación de emociones contenidas",
+        "Disuelve patrones habituales de tensión y movimiento",
+        "Promueve la expresión auténtica y la creatividad",
+        "Desarrolla mayor conciencia de las señales internas del cuerpo",
+        "Puede revelar insights psicológicos a través del movimiento"
+      ],
+      tips: [
+        "No hay movimientos 'correctos' o 'incorrectos' en esta práctica",
+        "Si te sientes bloqueado, comienza con movimientos muy pequeños o simplemente observa tu respiración",
+        "Es normal sentirse cohibido al principio; la práctica regular desarrolla mayor libertad",
+        "Puedes explorar con ojos abiertos si cerrarlos te genera incomodidad",
+        "Considera grabar tus reflexiones después de la práctica para notar patrones con el tiempo",
+        "Esta práctica puede ser profunda; honra cualquier emoción que surja sin juicio"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/authentic-movement.svg",
+    audio_url: "/assets/audio/tools/somatic/authentic-movement-guide.mp3",
+    metadata: {
+      author: "Basado en la práctica de Movimiento Auténtico desarrollada por Mary Starks Whitehouse",
+      tags: ["movimiento", "expresión", "libertad", "intermedio", "creatividad"],
+      created_date: "2023-02-10",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Liberación Emocional Somática",
+    description: "Una práctica que combina movimiento, respiración y sonido para facilitar la liberación de emociones contenidas en el cuerpo, especialmente útil para procesar emociones intensas como la ira, el miedo o la tristeza.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 15,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["ANGER", "FEAR", "GRIEF", "FRUSTRATION", "SUPPRESSION"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Liberación Emocional Somática",
+      instructions: "Esta práctica te guía a través de un proceso de liberación emocional utilizando el cuerpo como vehículo de expresión. Combina movimiento, respiración y sonido para ayudar a procesar y liberar emociones que pueden estar contenidas en el cuerpo, especialmente emociones intensas como la ira, el miedo o la tristeza.",
+      steps: [
+        {
+          order: 1,
+          title: "Preparación del espacio",
+          description: "Crea un espacio privado y seguro donde puedas expresarte libremente sin preocuparte por ser visto o escuchado. Asegúrate de tener suficiente espacio para moverte. Ten a mano almohadas, mantas o cojines.",
+          duration: 60
+        },
+        {
+          order: 2,
+          title: "Identificación emocional",
+          description: "Toma unos momentos para identificar qué emoción necesita ser expresada o liberada. Puede ser algo que estés sintiendo actualmente o una emoción que has estado conteniendo. Nombra esta emoción para ti mismo.",
+          duration: 60
+        },
+        {
+          order: 3,
+          title: "Localización corporal",
+          description: "Escanea tu cuerpo y nota dónde sientes esta emoción físicamente. ¿Hay tensión en tu pecho, un nudo en tu garganta, calor en tu abdomen? Lleva tu atención a esta área y respira hacia ella.",
+          duration: 90
+        },
+        {
+          order: 4,
+          title: "Amplificación de la sensación",
+          description: "Comienza a amplificar suavemente la sensación física. Si sientes tensión, permite que se intensifique ligeramente. Si sientes calor, deja que aumente. Observa cómo la sensación puede cambiar o moverse por el cuerpo.",
+          duration: 90
+        },
+        {
+          order: 5,
+          title: "Movimiento intuitivo",
+          description: "Permite que tu cuerpo comience a moverse de la manera que necesite para expresar esta emoción. No planifiques el movimiento; deja que surja naturalmente desde la sensación. Podría ser grande o pequeño, rápido o lento.",
+          duration: 120
+        },
+        {
+          order: 6,
+          title: "Expresión de ira",
+          description: "Si estás trabajando con ira o frustración, puedes golpear suavemente una almohada, hacer movimientos de empujar, apretar y soltar los puños, o pisar fuertemente. Mantén la mandíbula relajada y permite que la respiración fluya.",
+          duration: 120
+        },
+        {
+          order: 7,
+          title: "Expresión de miedo",
+          description: "Si estás trabajando con miedo o ansiedad, puedes temblar o sacudir el cuerpo, correr en el lugar, o adoptar posturas protectoras seguidas de movimientos de apertura. Observa si hay un impulso de huir o congelarte.",
+          duration: 120
+        },
+        {
+          order: 8,
+          title: "Expresión de tristeza",
+          description: "Si estás trabajando con tristeza o dolor, puedes permitir que el pecho se abra, que los hombros se hundan, o que el cuerpo se curve hacia dentro. Puedes mecerte suavemente o dejar que las lágrimas fluyan si surgen.",
+          duration: 120
+        },
+        {
+          order: 9,
+          title: "Incorporación de sonido",
+          description: "Añade sonido a tu expresión física. Puede ser un suspiro, un gruñido, un grito amortiguado, un llanto, o cualquier sonido que surja naturalmente. El sonido amplifica la liberación y ayuda a mover la energía emocional.",
+          duration: 120
+        },
+        {
+          order: 10,
+          title: "Intensificación y liberación",
+          description: "Permite que la expresión alcance su intensidad natural, seguida de una liberación. No fuerces un clímax, pero tampoco contengas la expresión. Confía en que tu cuerpo sabe cómo completar este proceso.",
+          duration: 180
+        },
+        {
+          order: 11,
+          title: "Integración",
+          description: "Después de la liberación, tómate un tiempo para integrar la experiencia. Puedes acostarte, abrazarte a ti mismo, o simplemente respirar tranquilamente. Nota cómo se siente tu cuerpo ahora comparado con antes.",
+          duration: 120
+        },
+        {
+          order: 12,
+          title: "Cierre y autocuidado",
+          description: "Cierra la práctica con un gesto de autocuidado. Puedes colocar las manos sobre tu corazón, darte un auto-abrazo, o simplemente respirar con conciencia. Reconoce tu valentía al permitir esta expresión emocional.",
+          duration: 60
+        }
+      ],
+      benefits: [
+        "Facilita la liberación de emociones contenidas o reprimidas",
+        "Reduce la carga emocional almacenada en el cuerpo",
+        "Completa ciclos emocionales inconclusos",
+        "Promueve mayor fluidez emocional y expresividad",
+        "Puede aliviar síntomas físicos relacionados con emociones contenidas",
+        "Desarrolla mayor capacidad para procesar emociones intensas"
+      ],
+      tips: [
+        "Recuerda que esta práctica es para ti; no hay necesidad de 'actuar' o 'performar' las emociones",
+        "Si te sientes abrumado, reduce la intensidad o toma un descanso",
+        "La expresión emocional puede parecer incómoda al principio si no estás acostumbrado a ella",
+        "Considera tener agua y pañuelos a mano",
+        "Después de una liberación emocional intensa, date tiempo para el autocuidado",
+        "Esta práctica puede complementar, pero no reemplaza, el apoyo profesional para trauma o problemas emocionales severos"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/emotional-release.svg",
+    audio_url: "/assets/audio/tools/somatic/emotional-release-guide.mp3",
+    metadata: {
+      author: "Basado en prácticas de terapia somática y trabajo bioenergético",
+      tags: ["emociones", "liberación", "expresión", "intermedio", "procesamiento"],
+      created_date: "2023-02-15",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Posturas de Poder Somáticas",
+    description: "Una práctica que utiliza posturas corporales específicas para activar sensaciones de confianza, seguridad y poder personal, influyendo positivamente en el estado emocional y la bioquímica del cuerpo.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 8,
+    difficulty: "BEGINNER",
+    target_emotions: ["INSECURITY", "ANXIETY", "FEAR", "POWERLESSNESS", "SHYNESS"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Posturas de Poder Somáticas",
+      instructions: "Esta práctica utiliza posturas corporales específicas para activar sensaciones de confianza, seguridad y poder personal. La investigación muestra que adoptar ciertas posturas puede influir positivamente en tu estado emocional y en la bioquímica de tu cuerpo, incluso en solo dos minutos.",
+      steps: [
+        {
+          order: 1,
+          title: "Preparación",
+          description: "Encuentra un espacio donde puedas moverte libremente. Si es posible, colócate frente a un espejo para observar tu postura. Toma unos momentos para notar cómo te sientes actualmente, tanto física como emocionalmente.",
+          duration: 30
+        },
+        {
+          order: 2,
+          title: "Observación de postura habitual",
+          description: "Observa tu postura natural en este momento. ¿Están tus hombros elevados o redondeados? ¿Está tu pecho hundido o expandido? ¿Cómo sostienes tu cabeza? No juzgues, simplemente observa con curiosidad.",
+          duration: 30
+        },
+        {
+          order: 3,
+          title: "Postura de montaña",
+          description: "Ponte de pie con los pies separados al ancho de las caderas. Distribuye el peso uniformemente en ambos pies. Alarga suavemente la columna, como si un hilo te jalara desde la coronilla. Relaja los hombros alejándolos de las orejas. Respira profundamente en esta postura estable.",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Postura de poder 1: Expansión",
+          description: "Desde la postura de montaña, expande tu postura. Separa los pies un poco más, coloca las manos en las caderas, abre el pecho y levanta ligeramente la barbilla. Imagina que ocupas más espacio. Respira profundamente, sintiendo cómo el aire llena tu pecho expandido.",
+          duration: 120
+        },
+        {
+          order: 5,
+          title: "Atención a sensaciones",
+          description: "Mantén esta postura y observa las sensaciones en tu cuerpo. ¿Notas algún cambio en tu estado emocional? ¿Te sientes más presente, más confiado? Continúa respirando profundamente.",
+          duration: 30
+        },
+        {
+          order: 6,
+          title: "Postura de poder 2: Victoria",
+          description: "Ahora, levanta los brazos en forma de V por encima de la cabeza, como un atleta que ha ganado una carrera. Expande el pecho, mantén la barbilla paralela al suelo y una sonrisa ligera. Siente la expansión y apertura en todo tu cuerpo.",
+          duration: 120
+        },
+        {
+          order: 7,
+          title: "Afirmación de poder",
+          description: "Mientras mantienes esta postura, repite mentalmente o en voz alta una afirmación como: 'Soy fuerte', 'Confío en mí mismo/a', o 'Puedo manejar esto'. Siente cómo estas palabras resuenan en tu cuerpo expandido.",
+          duration: 30
+        },
+        {
+          order: 8,
+          title: "Postura de poder 3: Arraigamiento",
+          description: "Baja los brazos y separa más los pies. Flexiona ligeramente las rodillas, mantén el pecho abierto y siente una conexión fuerte con el suelo. Esta es una postura de estabilidad y arraigamiento. Respira profundamente, sintiendo cómo cada exhalación te ancla más firmemente.",
+          duration: 120
+        },
+        {
+          order: 9,
+          title: "Movimiento de poder",
+          description: "Desde esta postura arraigada, añade un movimiento que exprese fuerza o determinación. Puede ser empujar las manos hacia adelante, dar un paso firme, o cualquier gesto que represente establecer un límite o avanzar con confianza.",
+          duration: 60
+        },
+        {
+          order: 10,
+          title: "Integración",
+          description: "Regresa a una postura neutral, pero mantén la sensación de confianza y poder. Nota si hay diferencias en cómo te sientes ahora comparado con el inicio de la práctica. Observa tu postura: ¿ha cambiado naturalmente?",
+          duration: 60
+        },
+        {
+          order: 11,
+          title: "Aplicación",
+          description: "Piensa en una situación próxima donde te gustaría sentir más confianza o poder personal. Visualízate brevemente adoptando una de estas posturas antes de esa situación, o manteniendo algunos elementos (como el pecho abierto) durante la situación.",
+          duration: 60
+        },
+        {
+          order: 12,
+          title: "Conclusión",
+          description: "Toma unas respiraciones profundas, agradeciendo a tu cuerpo por esta práctica. Recuerda que puedes acceder a estas posturas y las sensaciones que generan en cualquier momento que necesites un impulso de confianza.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Aumenta los niveles de hormonas asociadas con la confianza y reduce las hormonas del estrés",
+        "Crea un cambio inmediato en el estado emocional y la percepción de uno mismo",
+        "Desarrolla mayor presencia y seguridad en situaciones sociales o de presión",
+        "Contrarresta los efectos físicos de la ansiedad y el miedo",
+        "Proporciona una herramienta rápida y discreta para momentos de inseguridad",
+        "Refuerza la conexión mente-cuerpo-emoción"
+      ],
+      tips: [
+        "Practica estas posturas regularmente, no solo cuando las necesites",
+        "Incluso dos minutos en una postura de poder puede crear cambios bioquímicos significativos",
+        "Puedes adaptar las posturas para hacerlas más sutiles en entornos públicos",
+        "Combina con respiración profunda para amplificar los efectos",
+        "Observa qué postura te hace sentir más poderoso/a; las respuestas varían entre personas",
+        "Considera practicar frente a un espejo para reforzar visualmente la experiencia"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/power-poses.svg",
+    audio_url: "/assets/audio/tools/somatic/power-poses-guide.mp3",
+    metadata: {
+      author: "Basado en la investigación de Amy Cuddy y prácticas somáticas",
+      tags: ["poder", "confianza", "postura", "principiante", "presencia"],
+      created_date: "2023-02-20",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Práctica de Límites Somáticos",
+    description: "Un ejercicio que utiliza movimientos corporales y conciencia somática para explorar, establecer y comunicar límites personales, fortaleciendo la capacidad de mantener un espacio seguro y honrar las propias necesidades.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 12,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["OVERWHELM", "ANXIETY", "RESENTMENT", "POWERLESSNESS", "FRUSTRATION"],
+    is_active: true,
+    is_premium: true,
+    content: {
+      title: "Práctica de Límites Somáticos",
+      instructions: "Esta práctica utiliza movimientos corporales y conciencia somática para explorar, establecer y comunicar límites personales. Los límites son esenciales para nuestra seguridad, bienestar y relaciones saludables, y esta práctica te ayuda a sentirlos y expresarlos desde el cuerpo, no solo intelectualmente.",
+      steps: [
+        {
+          order: 1,
+          title: "Preparación",
+          description: "Encuentra un espacio donde puedas moverte libremente. Idealmente, practica descalzo para sentir mejor la conexión con el suelo. Toma unos momentos para centrarte y conectar con tu cuerpo a través de la respiración.",
+          duration: 60
+        },
+        {
+          order: 2,
+          title: "Exploración de espacio personal",
+          description: "Ponte de pie en una postura cómoda. Imagina que hay un círculo invisible alrededor tuyo que representa tu espacio personal. Con tus brazos, traza lentamente este círculo, notando dónde se siente natural que esté el borde de tu espacio.",
+          duration: 90
+        },
+        {
+          order: 3,
+          title: "Sensación de límites",
+          description: "Lleva tu atención a cómo se siente tener este espacio claramente definido. ¿Hay áreas donde el límite se siente más fuerte o más débil? ¿Hay direcciones en las que te gustaría expandir o contraer este espacio?",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Movimiento de 'no'",
+          description: "Explora el gesto de decir 'no' con tu cuerpo. Puedes extender los brazos frente a ti con las palmas hacia afuera, dar un paso atrás, o hacer un movimiento de corte con las manos. Encuentra el gesto que se sienta más auténtico y poderoso para ti.",
+          duration: 90
+        },
+        {
+          order: 5,
+          title: "Voz con movimiento",
+          description: "Añade tu voz al movimiento de 'no'. Comienza con un suave 'no' y gradualmente aumenta la firmeza si se siente bien. Nota cómo la combinación de voz y movimiento amplifica la sensación de establecer un límite claro.",
+          duration: 60
+        },
+        {
+          order: 6,
+          title: "Exploración de 'sí'",
+          description: "Ahora, explora el gesto de decir 'sí' con tu cuerpo. Puede ser abrir los brazos, dar un paso adelante, o un movimiento de acogida. Encuentra el gesto que expresa apertura y receptividad de una manera que se sienta segura para ti.",
+          duration: 90
+        },
+        {
+          order: 7,
+          title: "Alternancia de 'sí' y 'no'",
+          description: "Practica alternando entre tus gestos de 'sí' y 'no'. Nota cómo se siente cambiar entre estos estados. Observa si uno se siente más natural o cómodo que el otro. Ambos son igualmente importantes para límites saludables.",
+          duration: 120
+        },
+        {
+          order: 8,
+          title: "Escenario de límite",
+          description: "Piensa en una situación reciente donde tus límites fueron cruzados o donde te resultó difícil establecerlos. Visualiza brevemente esta situación y luego utiliza tu gesto de 'no' para establecer el límite que necesitabas en ese momento.",
+          duration: 120
+        },
+        {
+          order: 9,
+          title: "Límite con compasión",
+          description: "Explora cómo establecer un límite con compasión, tanto hacia ti como hacia los demás. Encuentra un gesto que combine firmeza y amabilidad. Recuerda que los límites claros son un acto de respeto mutuo, no de rechazo.",
+          duration: 90
+        },
+        {
+          order: 10,
+          title: "Límites flexibles",
+          description: "Explora la cualidad de flexibilidad en tus límites. Muévete entre expandir y contraer tu espacio personal. Algunos límites son firmes y no negociables, mientras que otros pueden ser más adaptables según la situación y la relación.",
+          duration: 90
+        },
+        {
+          order: 11,
+          title: "Integración",
+          description: "Regresa a una postura neutral y siente los efectos de esta práctica en tu cuerpo. Nota cualquier sensación de claridad, fuerza o alivio. Reconoce que tu cuerpo tiene sabiduría sobre tus límites y necesidades.",
+          duration: 60
+        },
+        {
+          order: 12,
+          title: "Aplicación",
+          description: "Reflexiona sobre cómo puedes llevar esta conciencia somática de límites a tu vida diaria. Considera una situación próxima donde podrías necesitar establecer un límite y visualízate haciéndolo con claridad y respeto.",
+          duration: 60
+        },
+        {
+          order: 13,
+          title: "Conclusión",
+          description: "Concluye la práctica con un gesto de autocuidado, como colocar las manos sobre el corazón o darte un abrazo. Agradece a tu cuerpo por su sabiduría y por ayudarte a explorar esta importante dimensión de tu bienestar.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Desarrolla una sensación corporal clara de tus límites personales",
+        "Fortalece la capacidad de comunicar límites de manera efectiva",
+        "Reduce sentimientos de resentimiento y agotamiento por límites poco claros",
+        "Aumenta la confianza en situaciones sociales y relaciones",
+        "Ayuda a reconocer cuando tus límites están siendo respetados o vulnerados",
+        "Promueve relaciones más saludables basadas en el respeto mutuo"
+      ],
+      tips: [
+        "Practica regularmente para fortalecer tu 'músculo' de establecer límites",
+        "Observa qué sensaciones físicas surgen cuando tus límites son respetados vs. cuando son cruzados",
+        "Recuerda que establecer límites es un acto de autocuidado, no de egoísmo",
+        "Los límites pueden variar según la persona y la situación; honra tu experiencia única",
+        "Si establecer límites resulta muy difícil, considera explorar esto con un profesional",
+        "Complementa esta práctica con reflexión escrita sobre tus patrones de límites"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/boundaries.svg",
+    audio_url: "/assets/audio/tools/somatic/boundaries-guide.mp3",
+    metadata: {
+      author: "Basado en prácticas de terapia somática y trabajo de límites personales",
+      tags: ["límites", "espacio personal", "autoprotección", "intermedio", "relaciones"],
+      created_date: "2023-02-25",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Práctica de Autocompasión Somática",
+    description: "Un ejercicio que utiliza el tacto, el movimiento y la postura para cultivar una relación más amable y compasiva con uno mismo, especialmente útil durante momentos de autocrítica, vergüenza o sufrimiento.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 10,
+    difficulty: "BEGINNER",
+    target_emotions: ["SHAME", "SELF_CRITICISM", "SADNESS", "LONELINESS", "ANXIETY"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Práctica de Autocompasión Somática",
+      instructions: "Esta práctica utiliza el tacto, el movimiento y la postura para cultivar una relación más amable y compasiva contigo mismo. A diferencia de enfoques puramente mentales, esta práctica te invita a experimentar la autocompasión a través de sensaciones físicas y gestos de cuidado hacia tu propio cuerpo.",
+      steps: [
+        {
+          order: 1,
+          title: "Posición inicial",
+          description: "Encuentra una posición cómoda, ya sea sentado o acostado. Toma unos momentos para notar cómo te sientes en este momento, tanto física como emocionalmente, sin juzgar tu experiencia.",
+          duration: 30
+        },
+        {
+          order: 2,
+          title: "Reconocimiento del sufrimiento",
+          description: "Reconoce cualquier dificultad, dolor o sufrimiento que estés experimentando actualmente. Podría ser estrés, autocrítica, vergüenza, o simplemente el peso de la vida cotidiana. Nota dónde sientes esto en tu cuerpo.",
+          duration: 60
+        },
+        {
+          order: 3,
+          title: "Gesto de manos al corazón",
+          description: "Coloca suavemente tus manos sobre tu corazón, una encima de la otra. Siente el calor de tus manos, el contacto con tu pecho, y quizás incluso el latido de tu corazón. Este es un gesto universal de autocompasión.",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Respiración compasiva",
+          description: "Mientras mantienes tus manos en el corazón, respira suavemente. Con cada inhalación, imagina que estás respirando hacia tus manos y tu corazón, nutriendo esta área con oxígeno y atención amable.",
+          duration: 90
+        },
+        {
+          order: 5,
+          title: "Frases de autocompasión",
+          description: "Mientras mantienes este contacto físico, repite mentalmente frases como: 'Que sea amable conmigo mismo/a', 'Que me dé la compasión que necesito', 'Esto es difícil, y eso es parte de ser humano'. Siente estas palabras resonando en tu cuerpo.",
+          duration: 90
+        },
+        {
+          order: 6,
+          title: "Exploración de tacto compasivo",
+          description: "Explora otros gestos de autocompasión física. Puedes acariciar suavemente tu brazo, dar palmaditas suaves a tu pierna, colocar una mano en tu mejilla, o darte un abrazo. Encuentra los gestos que te brinden más consuelo.",
+          duration: 120
+        },
+        {
+          order: 7,
+          title: "Atención a áreas de tensión",
+          description: "Lleva tu atención a un área de tu cuerpo que sienta tensión o malestar. Coloca una mano allí con intención compasiva. No intentes cambiar la sensación, simplemente ofrece presencia amable a esta parte de ti.",
+          duration: 90
+        },
+        {
+          order: 8,
+          title: "Movimiento compasivo",
+          description: "Realiza un movimiento suave que exprese compasión hacia ti mismo. Podría ser mecerte suavemente, hacer círculos con el torso, o cualquier movimiento que se sienta nutritivo y reconfortante para ti en este momento.",
+          duration: 90
+        },
+        {
+          order: 9,
+          title: "Postura de autonutrición",
+          description: "Adopta una postura que represente cómo sostendrías o consolarías a un niño pequeño o a un ser querido que sufre. Puede ser acunando tus brazos, inclinándote hacia adelante en una postura protectora, o cualquier posición que evoque cuidado y protección.",
+          duration: 60
+        },
+        {
+          order: 10,
+          title: "Recepción de compasión",
+          description: "Ahora, cambia tu postura para recibir compasión. Abre ligeramente el pecho, relaja los hombros, y permite que tu cuerpo adopte una postura receptiva. Imagina que estás permitiendo que la compasión te llegue y te nutra.",
+          duration: 60
+        },
+        {
+          order: 11,
+          title: "Integración",
+          description: "Regresa a una posición neutral y nota cómo te sientes ahora. Observa cualquier cambio en tu estado emocional o en las sensaciones de tu cuerpo. No busques un resultado específico, simplemente nota lo que está presente.",
+          duration: 60
+        },
+        {
+          order: 12,
+          title: "Compromiso de autocompasión",
+          description: "Concluye la práctica estableciendo una intención de traer más autocompasión a tu vida diaria. Puedes elegir un gesto simple (como manos al corazón) que puedas utilizar durante el día cuando necesites un momento de autocompasión.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Cultiva una relación más amable con uno mismo a nivel corporal",
+        "Activa el sistema de calma y conexión (parasimpático) a través del tacto compasivo",
+        "Reduce la autocrítica y la vergüenza",
+        "Proporciona recursos concretos para momentos de sufrimiento",
+        "Desarrolla la capacidad de ser tu propio apoyo y consuelo",
+        "Contrarresta patrones de autodesprecio o negligencia hacia el cuerpo"
+      ],
+      tips: [
+        "Practica con una actitud de curiosidad y amabilidad, sin expectativas rígidas",
+        "Si sientes resistencia o incomodidad, comienza con gestos pequeños y sutiles",
+        "Adapta los movimientos y posturas según las necesidades y limitaciones de tu cuerpo",
+        "Recuerda que la autocompasión es una habilidad que se desarrolla con la práctica",
+        "Considera establecer recordatorios para momentos breves de autocompasión durante el día",
+        "Esta práctica puede ser especialmente útil durante momentos de autocrítica intensa"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/self-compassion.svg",
+    audio_url: "/assets/audio/tools/somatic/self-compassion-guide.mp3",
+    metadata: {
+      author: "Basado en el trabajo de Kristin Neff y prácticas somáticas",
+      tags: ["autocompasión", "amabilidad", "tacto", "principiante", "autocuidado"],
+      created_date: "2023-03-01",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Práctica de Presencia Somática",
+    description: "Un ejercicio que cultiva la capacidad de estar plenamente presente en el cuerpo y el momento actual, utilizando la respiración, las sensaciones y el movimiento consciente para anclar la atención y desarrollar una presencia encarnada.",
+    category: "SOMATIC",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 10,
+    difficulty: "BEGINNER",
+    target_emotions: ["ANXIETY", "OVERWHELM", "DISCONNECTION", "DISTRACTION", "STRESS"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Práctica de Presencia Somática",
+      instructions: "Esta práctica te guía para cultivar la capacidad de estar plenamente presente en tu cuerpo y en el momento actual. A diferencia de la atención plena puramente mental, esta práctica utiliza la respiración, las sensaciones corporales y el movimiento consciente para anclar tu atención y desarrollar una presencia encarnada.",
+      steps: [
+        {
+          order: 1,
+          title: "Posición inicial",
+          description: "Siéntate en una posición cómoda con la espalda relativamente erguida. Puedes sentarte en una silla con los pies apoyados en el suelo o en el suelo sobre un cojín. Toma unos momentos para acomodarte y sentir los puntos de contacto de tu cuerpo con la superficie que te sostiene.",
+          duration: 60
+        },
+        {
+          order: 2,
+          title: "Escaneo corporal rápido",
+          description: "Realiza un breve escaneo de tu cuerpo de pies a cabeza, notando cualquier área de tensión, comodidad, o sensaciones destacadas. No intentes cambiar nada, simplemente observa lo que está presente en este momento.",
+          duration: 60
+        },
+        {
+          order: 3,
+          title: "Anclaje en la respiración",
+          description: "Lleva tu atención a la respiración, notando las sensaciones físicas del aire entrando y saliendo de tu cuerpo. Siente el movimiento del abdomen, la expansión y contracción del pecho, o el aire pasando por las fosas nasales. Elige el aspecto de la respiración que sea más fácil de notar para ti.",
+          duration: 90
+        },
+        {
+          order: 4,
+          title: "Presencia en las manos",
+          description: "Dirige tu atención a tus manos. Sin mirarlas, nota las sensaciones presentes: calor, hormigueo, peso, ligereza, o quizás un pulso sutil. Mueve ligeramente los dedos para despertar más sensaciones y luego vuelve a la quietud, manteniendo tu atención en esta área.",
+          duration: 60
+        },
+        {
+          order: 5,
+          title: "Presencia en los pies",
+          description: "Ahora, lleva tu atención a tus pies. Siente el contacto con el suelo o el calzado. Nota la temperatura, presión, o cualquier otra sensación. Mueve suavemente los dedos de los pies y luego vuelve a la quietud, manteniendo la conciencia en esta parte de tu cuerpo.",
+          duration: 60
+        },
+        {
+          order: 6,
+          title: "Expansión de la presencia",
+          description: "Expande tu atención para incluir todo tu cuerpo simultáneamente, como un campo unificado de sensación. Siente los límites de tu piel, el espacio interior de tu cuerpo, y la postura general. Mantén esta conciencia amplia durante unos momentos.",
+          duration: 90
+        },
+        {
+          order: 7,
+          title: "Movimiento consciente",
+          description: "Comienza a realizar movimientos muy lentos y pequeños con diferentes partes de tu cuerpo: gira suavemente la muñeca, inclina ligeramente la cabeza, o balancea sutilmente el torso. Mantén tu atención completamente en las sensaciones que surgen con cada movimiento.",
+          duration: 120
+        },
+        {
+          order: 8,
+          title: "Presencia con sonidos",
+          description: "Manteniendo la conciencia en tu cuerpo, expande tu atención para incluir los sonidos a tu alrededor. Nota cómo los sonidos llegan a tus oídos y cómo tu cuerpo puede responder sutilmente a ellos. No sigas la historia de los sonidos, simplemente nótalos como sensaciones.",
+          duration: 60
+        },
+        {
+          order: 9,
+          title: "Presencia con pensamientos",
+          description: "Ahora, nota cómo los pensamientos surgen en tu conciencia. En lugar de seguirlos, observa si puedes sentir los pensamientos como eventos en tu cuerpo: quizás como sensaciones en la cabeza, cambios en la respiración, o tensiones sutiles. Los pensamientos también son experiencias corporales.",
+          duration: 90
+        },
+        {
+          order: 10,
+          title: "Presencia con emociones",
+          description: "Si hay alguna emoción presente, lleva tu atención a cómo se manifiesta en tu cuerpo. ¿Dónde la sientes? ¿Qué cualidades tiene esta sensación? Permite que la emoción esté presente como una experiencia somática, sin necesidad de analizarla o cambiarla.",
+          duration: 90
+        },
+        {
+          order: 11,
+          title: "Integración de la presencia",
+          description: "Integra todos los aspectos de tu experiencia: sensaciones corporales, respiración, sonidos, pensamientos y emociones. Mantén una presencia abierta y receptiva a todo lo que surge en este momento, anclado en la experiencia de tu cuerpo.",
+          duration: 60
+        },
+        {
+          order: 12,
+          title: "Conclusión",
+          description: "Toma unas respiraciones profundas, sintiendo cómo todo tu cuerpo se expande y contrae. Lleva esta cualidad de presencia somática contigo mientras regresas gradualmente a tu actividad diaria, sabiendo que puedes acceder a esta presencia en cualquier momento.",
+          duration: 30
+        }
+      ],
+      benefits: [
+        "Desarrolla la capacidad de estar plenamente presente en el momento actual",
+        "Reduce la rumiación mental y la preocupación excesiva",
+        "Fortalece la conexión mente-cuerpo",
+        "Mejora la capacidad de autorregulación emocional",
+        "Aumenta la sensación de vitalidad y conexión con la experiencia directa",
+        "Proporciona un ancla para momentos de ansiedad o desconexión"
+      ],
+      tips: [
+        "Practica regularmente, incluso con sesiones breves de 3-5 minutos",
+        "No te preocupes si tu mente divaga; simplemente nota cuando sucede y regresa amablemente a las sensaciones corporales",
+        "Explora esta práctica en diferentes posiciones: sentado, de pie, caminando o acostado",
+        "Puedes usar recordatorios durante el día para volver a la presencia somática",
+        "Si te sientes abrumado por emociones intensas, enfócate en sensaciones neutras como los pies o las manos",
+        "Complementa esta práctica con movimiento consciente como yoga, tai chi o caminatas atentas"
+      ]
+    },
+    image_url: "/assets/images/tools/somatic/presence.svg",
+    audio_url: "/assets/audio/tools/somatic/presence-guide.mp3",
+    metadata: {
+      author: "Basado en prácticas de mindfulness somático y presencia encarnada",
+      tags: ["presencia", "atención", "momento presente", "principiante", "mindfulness"],
+      created_date: "2023-03-05",
+      version: "1.0"
+    }
+  }
+];
+
+/**
+ * Get all available somatic exercises
+ * @returns Array of all somatic exercises
+ */
+export function getAllSomaticExercises(): SomaticExercise[] {
+  return somaticExercises;
+}
+
+/**
+ * Get only active somatic exercises
+ * @returns Array of active somatic exercises
+ */
+export function getActiveSomaticExercises(): SomaticExercise[] {
+  return somaticExercises.filter(exercise => exercise.is_active);
+}
+
+/**
+ * Get exercises by difficulty level
+ * @param difficulty The difficulty level to filter by
+ * @returns Array of exercises matching the difficulty level
+ */
+export function getExercisesByDifficulty(difficulty: DifficultyLevel): SomaticExercise[] {
+  return somaticExercises.filter(exercise => 
+    exercise.is_active && exercise.difficulty === difficulty
+  );
+}
+
+/**
+ * Get exercises that target specific emotions
+ * @param emotions Array of emotions to filter by
+ * @returns Array of exercises targeting any of the specified emotions
+ */
+export function getExercisesByTargetEmotions(emotions: EmotionType[]): SomaticExercise[] {
+  return somaticExercises.filter(exercise => 
+    exercise.is_active && 
+    exercise.target_emotions.some(emotion => emotions.includes(emotion))
+  );
+}
+
+/**
+ * Get exercises that are available based on subscription status
+ * @param isPremiumUser Whether the user has a premium subscription
+ * @returns Array of exercises available to the user
+ */
+export function getAvailableExercises(isPremiumUser: boolean): SomaticExercise[] {
+  return somaticExercises.filter(exercise => 
+    exercise.is_active && 
+    (isPremiumUser || !exercise.is_premium)
+  );
+}
+
+/**
+ * Get exercises by duration range
+ * @param minDuration Minimum duration in minutes
+ * @param maxDuration Maximum duration in minutes
+ * @returns Array of exercises within the specified duration range
+ */
+export function getExercisesByDuration(minDuration: number, maxDuration: number): SomaticExercise[] {
+  return somaticExercises.filter(exercise => 
+    exercise.is_active && 
+    exercise.estimated_duration >= minDuration && 
+    exercise.estimated_duration <= maxDuration
+  );
+}
+
+/**
+ * Get exercise by name
+ * @param name The name of the exercise to find
+ * @returns The exercise if found, or undefined if not found
+ */
+export function getExerciseByName(name: string): SomaticExercise | undefined {
+  return somaticExercises.find(exercise => 
+    exercise.is_active && exercise.name === name
+  );
+}
+
+/**
+ * Search exercises by keyword (in name, description, or content)
+ * @param keyword The keyword to search for
+ * @returns Array of exercises matching the keyword
+ */
+export function searchExercises(keyword: string): SomaticExercise[] {
+  const lowercaseKeyword = keyword.toLowerCase();
+  return somaticExercises.filter(exercise => 
+    exercise.is_active && (
+      exercise.name.toLowerCase().includes(lowercaseKeyword) ||
+      exercise.description.toLowerCase().includes(lowercaseKeyword) ||
+      exercise.content.instructions.toLowerCase().includes(lowercaseKeyword) ||
+      exercise.metadata.tags.some(tag => tag.toLowerCase().includes(lowercaseKeyword))
+    )
+  );
+}
