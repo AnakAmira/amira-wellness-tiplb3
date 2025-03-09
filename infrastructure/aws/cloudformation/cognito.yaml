@@ -1,0 +1,464 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Amazon Cognito resources for Amira Wellness application'
+
+Parameters:
+  Environment:
+    Type: String
+    Description: 'Deployment environment (dev, staging, prod)'
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Default: dev
+  
+  DomainName:
+    Type: String
+    Description: 'Domain name for the application'
+    Default: 'amirawellness.com'
+  
+  MfaConfiguration:
+    Type: String
+    Description: 'MFA configuration for the user pool'
+    AllowedValues:
+      - OFF
+      - OPTIONAL
+      - REQUIRED
+    Default: OPTIONAL
+  
+  CreateAuthTriggers:
+    Type: String
+    Description: 'Whether to create Lambda triggers for Cognito'
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+
+Conditions:
+  CreateAuthTriggers: !Equals [!Ref CreateAuthTriggers, 'true']
+
+Resources:
+  # Cognito User Pool
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub 'amira-wellness-users-${Environment}'
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      MfaConfiguration: !Ref MfaConfiguration
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+        InviteMessageTemplate:
+          EmailMessage: 'Bienvenido/a a Amira Wellness. Tu nombre de usuario es {username} y tu contraseña temporal es {####}.'
+          EmailSubject: 'Tu cuenta temporal de Amira Wellness'
+          SMSMessage: 'Bienvenido/a a Amira Wellness. Tu nombre de usuario es {username} y tu contraseña temporal es {####}.'
+      EmailConfiguration:
+        EmailSendingAccount: COGNITO_DEFAULT
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 10
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+          TemporaryPasswordValidityDays: 7
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: true
+          Required: true
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+        - Name: preferred_language
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+      UserPoolAddOns:
+        AdvancedSecurityMode: ENFORCED
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_CODE
+        EmailMessage: 'Tu código de verificación para Amira Wellness es {####}.'
+        EmailSubject: 'Código de verificación para Amira Wellness'
+      LambdaConfig:
+        PreSignUp: !If 
+          - CreateAuthTriggers
+          - !Ref PreSignUpFunction
+          - !Ref AWS::NoValue
+        PostConfirmation: !If 
+          - CreateAuthTriggers
+          - !Ref PostConfirmationFunction
+          - !Ref AWS::NoValue
+        CustomMessage: !If 
+          - CreateAuthTriggers
+          - !Ref CustomMessageFunction
+          - !Ref AWS::NoValue
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Cognito User Pool Client
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId: !Ref UserPool
+      ClientName: !Sub 'amira-wellness-client-${Environment}'
+      GenerateSecret: true
+      RefreshTokenValidity: 30
+      AccessTokenValidity: 1
+      IdTokenValidity: 1
+      TokenValidityUnits:
+        RefreshToken: days
+        AccessToken: hours
+        IdToken: hours
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
+      PreventUserExistenceErrors: ENABLED
+      SupportedIdentityProviders:
+        - COGNITO
+      CallbackURLs:
+        - !Sub 'https://api.${DomainName}/auth/callback'
+        - 'amirawellness://callback'
+      LogoutURLs:
+        - !Sub 'https://api.${DomainName}/auth/logout'
+        - 'amirawellness://logout'
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
+      AllowedOAuthFlowsUserPoolClient: true
+
+  # Cognito User Pool Domain
+  UserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Sub 'auth-amira-wellness-${Environment}'
+      UserPoolId: !Ref UserPool
+
+  # Cognito Identity Pool
+  IdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      IdentityPoolName: !Sub 'amira_wellness_identity_pool_${Environment}'
+      AllowUnauthenticatedIdentities: false
+      CognitoIdentityProviders:
+        - ClientId: !Ref UserPoolClient
+          ProviderName: !GetAtt UserPool.ProviderName
+          ServerSideTokenCheck: true
+
+  # IAM Role for Authenticated Users
+  AuthenticatedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'amira-cognito-authenticated-role-${Environment}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                'cognito-identity.amazonaws.com:aud': !Ref IdentityPool
+              ForAnyValue:StringLike:
+                'cognito-identity.amazonaws.com:amr': authenticated
+      Policies:
+        - PolicyName: authenticated-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'mobileanalytics:PutEvents'
+                  - 'cognito-sync:*'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:PutObject'
+                  - 's3:DeleteObject'
+                Resource:
+                  - !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}/${cognito-identity.amazonaws.com:sub}/*'
+              - Effect: Allow
+                Action:
+                  - 'execute-api:Invoke'
+                Resource:
+                  - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/${Environment}/*'
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # IAM Role for Unauthenticated Users
+  UnauthenticatedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub 'amira-cognito-unauthenticated-role-${Environment}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                'cognito-identity.amazonaws.com:aud': !Ref IdentityPool
+              ForAnyValue:StringLike:
+                'cognito-identity.amazonaws.com:amr': unauthenticated
+      Policies:
+        - PolicyName: unauthenticated-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'mobileanalytics:PutEvents'
+                  - 'cognito-sync:*'
+                Resource: '*'
+              - Effect: Allow
+                Action:
+                  - 'execute-api:Invoke'
+                Resource:
+                  - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/${Environment}/GET/public/*'
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Cognito Identity Pool Role Attachment
+  IdentityPoolRoleAttachment:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref IdentityPool
+      Roles:
+        authenticated: !GetAtt AuthenticatedRole.Arn
+        unauthenticated: !GetAtt UnauthenticatedRole.Arn
+
+  # Lambda Function for Pre-Signup Processing
+  PreSignUpFunction:
+    Type: AWS::Lambda::Function
+    Condition: CreateAuthTriggers
+    Properties:
+      FunctionName: !Sub '${Environment}-amira-pre-signup'
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          exports.handler = async (event, context) => {
+            // Auto-confirm users for development environment
+            if (process.env.ENVIRONMENT === 'dev') {
+              event.response.autoConfirmUser = true;
+              event.response.autoVerifyEmail = true;
+            }
+            return event;
+          };
+      Runtime: nodejs16.x
+      Timeout: 30
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Lambda Function for Post-Confirmation Processing
+  PostConfirmationFunction:
+    Type: AWS::Lambda::Function
+    Condition: CreateAuthTriggers
+    Properties:
+      FunctionName: !Sub '${Environment}-amira-post-confirmation'
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          exports.handler = async (event, context) => {
+            // Initialize user profile or perform other post-confirmation actions
+            console.log('User confirmed:', event.userName);
+            return event;
+          };
+      Runtime: nodejs16.x
+      Timeout: 30
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Lambda Function for Custom Message Processing
+  CustomMessageFunction:
+    Type: AWS::Lambda::Function
+    Condition: CreateAuthTriggers
+    Properties:
+      FunctionName: !Sub '${Environment}-amira-custom-message'
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          exports.handler = async (event, context) => {
+            // Customize messages based on message type
+            if (event.triggerSource === 'CustomMessage_SignUp') {
+              event.response.emailSubject = 'Bienvenido/a a Amira Wellness';
+              event.response.emailMessage = `Hola,<br><br>Gracias por registrarte en Amira Wellness. Tu código de verificación es: ${event.request.codeParameter}.<br><br>Saludos,<br>El equipo de Amira Wellness`;
+            }
+            return event;
+          };
+      Runtime: nodejs16.x
+      Timeout: 30
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # IAM Role for Lambda Execution
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Condition: CreateAuthTriggers
+    Properties:
+      RoleName: !Sub 'amira-cognito-lambda-role-${Environment}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Lambda Permission for Pre-Signup Function
+  PreSignUpPermission:
+    Type: AWS::Lambda::Permission
+    Condition: CreateAuthTriggers
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt PreSignUpFunction.Arn
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !GetAtt UserPool.Arn
+
+  # Lambda Permission for Post-Confirmation Function
+  PostConfirmationPermission:
+    Type: AWS::Lambda::Permission
+    Condition: CreateAuthTriggers
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt PostConfirmationFunction.Arn
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !GetAtt UserPool.Arn
+
+  # Lambda Permission for Custom Message Function
+  CustomMessagePermission:
+    Type: AWS::Lambda::Permission
+    Condition: CreateAuthTriggers
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt CustomMessageFunction.Arn
+      Principal: cognito-idp.amazonaws.com
+      SourceArn: !GetAtt UserPool.Arn
+
+  # Secrets Manager Secret for Cognito Client Secret
+  CognitoClientSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub '${Environment}/amira-wellness/cognito-client-secret'
+      Description: 'Cognito client secret for Amira Wellness application'
+      SecretString: !GetAtt UserPoolClient.ClientSecret
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+  UserPoolId:
+    Description: 'ID of the Cognito user pool'
+    Value: !Ref UserPool
+    Export:
+      Name: !Sub '${AWS::StackName}-UserPoolId'
+  
+  UserPoolArn:
+    Description: 'ARN of the Cognito user pool'
+    Value: !GetAtt UserPool.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-UserPoolArn'
+  
+  UserPoolClientId:
+    Description: 'ID of the Cognito user pool client'
+    Value: !Ref UserPoolClient
+    Export:
+      Name: !Sub '${AWS::StackName}-UserPoolClientId'
+  
+  IdentityPoolId:
+    Description: 'ID of the Cognito identity pool'
+    Value: !Ref IdentityPool
+    Export:
+      Name: !Sub '${AWS::StackName}-IdentityPoolId'
+  
+  UserPoolDomain:
+    Description: 'Domain prefix of the Cognito user pool'
+    Value: !Sub 'auth-amira-wellness-${Environment}'
+    Export:
+      Name: !Sub '${AWS::StackName}-UserPoolDomain'
+  
+  AuthenticatedRoleArn:
+    Description: 'ARN of the authenticated user role'
+    Value: !GetAtt AuthenticatedRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-AuthenticatedRoleArn'
+  
+  UnauthenticatedRoleArn:
+    Description: 'ARN of the unauthenticated user role'
+    Value: !GetAtt UnauthenticatedRole.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-UnauthenticatedRoleArn'
+  
+  CognitoClientSecretArn:
+    Description: 'ARN of the Cognito client secret in Secrets Manager'
+    Value: !Ref CognitoClientSecret
+    Export:
+      Name: !Sub '${AWS::StackName}-CognitoClientSecretArn'
