@@ -1,0 +1,128 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowListBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowBucketAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:GetBucketLocation",
+        "s3:GetBucketVersioning"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${S3_BUCKET_NAME}",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*"
+      ]
+    },
+    {
+      "Sid": "AllowObjectOperations",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject",
+        "s3:GetObjectVersion",
+        "s3:GetObjectTagging",
+        "s3:PutObjectTagging"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${S3_BUCKET_NAME}/*",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*/*"
+      ],
+      "Condition": {
+        "StringEquals": {
+          "s3:x-amz-server-side-encryption": "aws:kms"
+        }
+      }
+    },
+    {
+      "Sid": "AllowKMSKeyUsage",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:DescribeKey"
+      ],
+      "Resource": "${KMS_KEY_ARN}"
+    },
+    {
+      "Sid": "DenyUnencryptedObjectUploads",
+      "Effect": "Deny",
+      "Action": "s3:PutObject",
+      "Resource": [
+        "arn:aws:s3:::${S3_BUCKET_NAME}/*",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*/*"
+      ],
+      "Condition": {
+        "StringNotEquals": {
+          "s3:x-amz-server-side-encryption": "aws:kms"
+        }
+      }
+    },
+    {
+      "Sid": "DenyIncorrectEncryptionHeader",
+      "Effect": "Deny",
+      "Action": "s3:PutObject",
+      "Resource": [
+        "arn:aws:s3:::${S3_BUCKET_NAME}/*",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*/*"
+      ],
+      "Condition": {
+        "StringNotEquals": {
+          "s3:x-amz-server-side-encryption-aws-kms-key-id": "${KMS_KEY_ARN}"
+        }
+      }
+    },
+    {
+      "Sid": "EnforceSSLOnly",
+      "Effect": "Deny",
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::${S3_BUCKET_NAME}",
+        "arn:aws:s3:::${S3_BUCKET_NAME}/*",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*/*"
+      ],
+      "Condition": {
+        "Bool": {
+          "aws:SecureTransport": "false"
+        }
+      }
+    },
+    {
+      "Sid": "AllowUserSpecificAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${S3_BUCKET_NAME}/users/${aws:username}/*",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*/users/${aws:username}/*"
+      ]
+    },
+    {
+      "Sid": "AllowPresignedUrlGeneration",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::${S3_BUCKET_NAME}/*",
+        "arn:aws:s3:::${S3_BUCKET_NAME}-${ENVIRONMENT}-*/*"
+      ]
+    }
+  ]
+}
