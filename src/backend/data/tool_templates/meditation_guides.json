@@ -1,0 +1,851 @@
+[
+  {
+    "name": "Meditación de Atención Plena",
+    "description": "Una práctica fundamental de meditación que cultiva la conciencia del momento presente, ayudando a reducir el estrés y mejorar la claridad mental.",
+    "category": "MEDITATION",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 10,
+    "difficulty": "BEGINNER",
+    "target_emotions": [
+      "ANXIETY",
+      "STRESS",
+      "OVERWHELM",
+      "FRUSTRATION"
+    ],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Meditación de Atención Plena",
+      "instructions": "Esta meditación te guiará a través de una práctica básica de atención plena, enfocándote en la respiración y las sensaciones corporales para anclar tu mente en el momento presente.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate en una posición cómoda con la espalda recta. Puedes sentarte en una silla con los pies apoyados en el suelo, o en el suelo sobre un cojín. Coloca las manos sobre las rodillas o en tu regazo.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Establece la intención",
+          "description": "Toma un momento para establecer tu intención para esta práctica. Quizás sea cultivar calma, estar presente, o simplemente tomar un descanso de la actividad mental constante.",
+          "duration": 20
+        },
+        {
+          "order": 3,
+          "title": "Conciencia de la respiración",
+          "description": "Lleva tu atención a la respiración. Observa las sensaciones de la respiración entrando y saliendo de tu cuerpo. No intentes controlar la respiración, simplemente observa su ritmo natural.",
+          "duration": 120
+        },
+        {
+          "order": 4,
+          "title": "Notar y regresar",
+          "description": "Cuando notes que tu mente ha divagado hacia pensamientos, recuerdos o planes, reconócelo sin juicio y gentilmente regresa tu atención a la respiración.",
+          "duration": 120
+        },
+        {
+          "order": 5,
+          "title": "Expandir la conciencia",
+          "description": "Amplía tu atención para incluir las sensaciones en todo tu cuerpo, manteniendo la respiración como un ancla. Observa cualquier tensión, comodidad o incomodidad sin intentar cambiar nada.",
+          "duration": 120
+        },
+        {
+          "order": 6,
+          "title": "Conclusión",
+          "description": "Gradualmente, vuelve a tomar conciencia del espacio que te rodea. Mueve suavemente los dedos de las manos y los pies, y cuando estés listo, abre los ojos.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Reduce el estrés y la ansiedad",
+        "Mejora la concentración y claridad mental",
+        "Desarrolla la capacidad de responder en lugar de reaccionar",
+        "Aumenta la autoconciencia",
+        "Promueve el bienestar emocional"
+      ],
+      "tips": [
+        "Practica regularmente, incluso si son solo unos minutos al día",
+        "No te preocupes si tu mente divaga; notar esto es parte de la práctica",
+        "Mantén una actitud de curiosidad y amabilidad hacia tu experiencia",
+        "Si te sientes incómodo, ajusta tu postura o cambia tu enfoque",
+        "La meditación es una habilidad que mejora con la práctica"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/mindfulness.svg",
+    "audio_url": "/assets/audio/tools/meditation/mindfulness-guide.mp3",
+    "metadata": {
+      "author": "Práctica tradicional de mindfulness",
+      "tags": [
+        "mindfulness",
+        "atención",
+        "principiante",
+        "respiración"
+      ],
+      "created_date": "2023-01-15",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Meditación de Escaneo Corporal",
+    "description": "Una práctica meditativa que involucra prestar atención sistemáticamente a diferentes partes del cuerpo, promoviendo la relajación profunda y la conexión mente-cuerpo.",
+    "category": "MEDITATION",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 15,
+    "difficulty": "BEGINNER",
+    "target_emotions": [
+      "ANXIETY",
+      "STRESS",
+      "OVERWHELM",
+      "FRUSTRATION"
+    ],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Meditación de Escaneo Corporal",
+      "instructions": "Esta meditación te guiará a través de un proceso de atención sistemática a cada parte de tu cuerpo, ayudándote a liberar tensión y desarrollar una mayor conciencia corporal.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Acuéstate boca arriba en una superficie cómoda, con los brazos a los lados y las palmas hacia arriba. Si prefieres, puedes sentarte en una silla con la espalda apoyada y los pies en el suelo.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Establece la intención",
+          "description": "Toma un momento para establecer tu intención de estar presente con tu cuerpo y liberar tensión. Recuerda que no hay una forma 'correcta' de sentir; simplemente observa las sensaciones tal como son.",
+          "duration": 20
+        },
+        {
+          "order": 3,
+          "title": "Conciencia de la respiración",
+          "description": "Comienza llevando tu atención a la respiración. Observa cómo el abdomen se eleva con cada inhalación y desciende con cada exhalación. Toma unas cuantas respiraciones profundas.",
+          "duration": 60
+        },
+        {
+          "order": 4,
+          "title": "Pies y piernas",
+          "description": "Lleva tu atención a los dedos de los pies, luego a las plantas, los talones, los tobillos, las pantorrillas, las rodillas y los muslos. Observa cualquier sensación presente sin juzgar.",
+          "duration": 120
+        },
+        {
+          "order": 5,
+          "title": "Pelvis y abdomen",
+          "description": "Continúa el escaneo hacia la pelvis, las caderas, la parte baja de la espalda y el abdomen. Nota cómo estas áreas se mueven sutilmente con la respiración.",
+          "duration": 90
+        },
+        {
+          "order": 6,
+          "title": "Pecho y espalda",
+          "description": "Dirige tu atención al pecho, la parte superior de la espalda, los hombros y las clavículas. Observa cualquier tensión y permite que se disuelva con cada exhalación.",
+          "duration": 90
+        },
+        {
+          "order": 7,
+          "title": "Brazos y manos",
+          "description": "Escanea tus brazos, desde los hombros hasta los codos, antebrazos, muñecas, palmas y dedos. Nota cualquier sensación de hormigueo, calor, frío o pesadez.",
+          "duration": 90
+        },
+        {
+          "order": 8,
+          "title": "Cuello y cabeza",
+          "description": "Lleva tu atención al cuello, la garganta, la mandíbula, los labios, las mejillas, la nariz, los ojos, las sienes, la frente y el cuero cabelludo.",
+          "duration": 120
+        },
+        {
+          "order": 9,
+          "title": "Cuerpo completo",
+          "description": "Finalmente, expande tu conciencia para incluir todo el cuerpo como una unidad. Siente la totalidad de tu presencia física en este momento.",
+          "duration": 60
+        },
+        {
+          "order": 10,
+          "title": "Conclusión",
+          "description": "Gradualmente, comienza a mover suavemente los dedos de las manos y los pies. Toma una respiración profunda y, cuando estés listo, abre los ojos y regresa lentamente a una posición sentada.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Promueve la relajación profunda y reduce la tensión física",
+        "Desarrolla una mayor conciencia de las sensaciones corporales",
+        "Ayuda a reconocer y liberar el estrés almacenado en el cuerpo",
+        "Mejora la calidad del sueño",
+        "Fortalece la conexión mente-cuerpo"
+      ],
+      "tips": [
+        "Si te quedas dormido durante la práctica, no te preocupes; es una respuesta común a la relajación profunda",
+        "Puedes practicar el escaneo corporal en posición sentada si prefieres mantenerte alerta",
+        "Observa las sensaciones con curiosidad, sin juzgarlas como 'buenas' o 'malas'",
+        "Si encuentras áreas de incomodidad, envía tu respiración hacia ellas",
+        "Practica regularmente para desarrollar una relación más consciente con tu cuerpo"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/body-scan.svg",
+    "audio_url": "/assets/audio/tools/meditation/body-scan-guide.mp3",
+    "metadata": {
+      "author": "Basado en la práctica MBSR (Reducción de Estrés Basada en Mindfulness)",
+      "tags": [
+        "cuerpo",
+        "relajación",
+        "principiante",
+        "tensión"
+      ],
+      "created_date": "2023-01-20",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Meditación de Compasión",
+    "description": "Una práctica que cultiva sentimientos de bondad y compasión hacia uno mismo y los demás, ayudando a desarrollar resiliencia emocional y conexiones más saludables.",
+    "category": "MEDITATION",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 12,
+    "difficulty": "INTERMEDIATE",
+    "target_emotions": [
+      "SADNESS",
+      "LONELINESS",
+      "FRUSTRATION",
+      "ANGER"
+    ],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Meditación de Compasión",
+      "instructions": "Esta meditación te guiará a través de una práctica para cultivar compasión hacia ti mismo y hacia los demás, desarrollando un corazón más abierto y resiliente.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate en una posición cómoda con la espalda recta pero relajada. Coloca las manos en una posición que te resulte natural, ya sea sobre las rodillas o en tu regazo.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Establece la intención",
+          "description": "Toma un momento para establecer tu intención de cultivar compasión y bondad. Recuerda que esta práctica es un proceso gradual que se desarrolla con el tiempo.",
+          "duration": 20
+        },
+        {
+          "order": 3,
+          "title": "Conciencia de la respiración",
+          "description": "Comienza llevando tu atención a la respiración. Observa el ritmo natural de tu respiración durante unos momentos, sintiendo cómo el cuerpo se expande y contrae.",
+          "duration": 60
+        },
+        {
+          "order": 4,
+          "title": "Compasión hacia ti mismo",
+          "description": "Lleva tu atención al área del corazón. Imagina que con cada inhalación, respiras hacia esta área. Con cada exhalación, siente cómo se expande con calidez y luz.",
+          "duration": 60
+        },
+        {
+          "order": 5,
+          "title": "Frases de autocompasión",
+          "description": "Repite mentalmente las siguientes frases, permitiendo que resuenen en tu corazón: 'Que yo esté seguro. Que yo esté en paz. Que yo sea amable conmigo mismo. Que yo acepte mi vida tal como es.'",
+          "duration": 90
+        },
+        {
+          "order": 6,
+          "title": "Compasión hacia un ser querido",
+          "description": "Ahora, trae a tu mente la imagen de alguien a quien quieres. Dirige las mismas frases hacia esta persona: 'Que estés seguro. Que estés en paz. Que seas amable contigo mismo. Que aceptes tu vida tal como es.'",
+          "duration": 90
+        },
+        {
+          "order": 7,
+          "title": "Compasión hacia una persona neutral",
+          "description": "Visualiza a alguien que conoces pero con quien no tienes una conexión emocional fuerte, como un vecino o compañero de trabajo. Dirige las mismas frases de compasión hacia esta persona.",
+          "duration": 90
+        },
+        {
+          "order": 8,
+          "title": "Compasión hacia una persona difícil",
+          "description": "Si te sientes preparado, trae a tu mente a alguien con quien tengas dificultades. Comienza con alguien que te genere una leve irritación, no una persona que te cause un dolor profundo. Dirige las mismas frases hacia esta persona.",
+          "duration": 90
+        },
+        {
+          "order": 9,
+          "title": "Compasión universal",
+          "description": "Finalmente, expande tu compasión para incluir a todos los seres: 'Que todos los seres estén seguros. Que todos los seres estén en paz. Que todos los seres sean amables consigo mismos. Que todos los seres acepten su vida tal como es.'",
+          "duration": 90
+        },
+        {
+          "order": 10,
+          "title": "Conclusión",
+          "description": "Regresa tu atención a tu respiración y a las sensaciones en tu cuerpo. Nota cómo te sientes después de esta práctica. Cuando estés listo, abre suavemente los ojos.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Desarrolla mayor autocompasión y reduce la autocrítica",
+        "Cultiva empatía y conexión con los demás",
+        "Reduce sentimientos de aislamiento y soledad",
+        "Ayuda a manejar emociones difíciles como la ira y el resentimiento",
+        "Promueve el bienestar psicológico y la resiliencia emocional"
+      ],
+      "tips": [
+        "Si las frases no resuenan contigo, puedes crear tus propias frases de compasión",
+        "Es normal sentir resistencia, especialmente al dirigir compasión hacia personas difíciles; avanza a tu propio ritmo",
+        "Si surgen emociones intensas, regresa a la respiración o a la autocompasión",
+        "La compasión es una habilidad que se desarrolla con la práctica; sé paciente contigo mismo",
+        "Puedes adaptar esta práctica para momentos específicos de dificultad en tu vida diaria"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/compassion.svg",
+    "audio_url": "/assets/audio/tools/meditation/compassion-guide.mp3",
+    "metadata": {
+      "author": "Basado en la práctica de Metta (Amor Bondadoso)",
+      "tags": [
+        "compasión",
+        "bondad",
+        "corazón",
+        "intermedio"
+      ],
+      "created_date": "2023-01-25",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Meditación para Dormir",
+    "description": "Una práctica meditativa diseñada específicamente para calmar la mente y el cuerpo antes de dormir, ayudando a combatir el insomnio y mejorar la calidad del sueño.",
+    "category": "MEDITATION",
+    "content_type": "AUDIO",
+    "estimated_duration": 20,
+    "difficulty": "BEGINNER",
+    "target_emotions": [
+      "ANXIETY",
+      "STRESS",
+      "OVERWHELM"
+    ],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Meditación para Dormir",
+      "instructions": "Esta meditación está diseñada para practicarse en la cama, ayudándote a relajar el cuerpo y la mente para facilitar la transición al sueño. Escúchala cuando estés listo para dormir, en un ambiente oscuro y tranquilo.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Preparación",
+          "description": "Acuéstate cómodamente en tu cama, preferiblemente en la posición en la que sueles dormir. Asegúrate de que la habitación esté oscura y a una temperatura agradable.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Relajación inicial",
+          "description": "Cierra los ojos y toma conciencia de tu cuerpo apoyado en la cama. Siente el peso de tu cuerpo hundiéndose en el colchón, permitiendo que la cama sostenga completamente tu peso.",
+          "duration": 60
+        },
+        {
+          "order": 3,
+          "title": "Respiración profunda",
+          "description": "Lleva tu atención a la respiración. Toma tres respiraciones profundas, inhalando por la nariz y exhalando lentamente por la boca, liberando cualquier tensión residual del día.",
+          "duration": 60
+        },
+        {
+          "order": 4,
+          "title": "Relajación progresiva",
+          "description": "Comienza un proceso de relajación desde los pies hasta la cabeza. Con cada exhalación, siente cómo una ola de relajación recorre tu cuerpo, liberando cualquier tensión que encuentre.",
+          "duration": 180
+        },
+        {
+          "order": 5,
+          "title": "Visualización relajante",
+          "description": "Imagina un lugar tranquilo y seguro, como una playa al atardecer, un prado en primavera o un refugio en la montaña. Visualiza los detalles de este lugar: colores, sonidos, texturas y aromas.",
+          "duration": 240
+        },
+        {
+          "order": 6,
+          "title": "Liberación de pensamientos",
+          "description": "Si surgen pensamientos sobre el día o preocupaciones, imagina que los escribes en hojas que luego colocas en un río, viéndolas flotar lejos. Estos pensamientos pueden esperar hasta mañana.",
+          "duration": 180
+        },
+        {
+          "order": 7,
+          "title": "Respiración para dormir",
+          "description": "Adopta un ritmo de respiración lento y profundo. Cuenta mentalmente: inhala por 4, exhala por 6. Con cada exhalación, siente cómo te hundes más profundamente en la relajación.",
+          "duration": 240
+        },
+        {
+          "order": 8,
+          "title": "Transición al sueño",
+          "description": "Gradualmente, permite que tu atención a la meditación se desvanezca. No te esfuerces por mantenerte despierto o seguir las instrucciones. Permítete derivar naturalmente hacia el sueño.",
+          "duration": 180
+        }
+      ],
+      "benefits": [
+        "Reduce el tiempo necesario para conciliar el sueño",
+        "Mejora la calidad general del sueño",
+        "Disminuye la actividad mental excesiva antes de dormir",
+        "Alivia la ansiedad relacionada con el insomnio",
+        "Promueve un ciclo de sueño más regular"
+      ],
+      "tips": [
+        "Practica esta meditación como parte de una rutina regular antes de dormir",
+        "Evita pantallas al menos 30 minutos antes de esta práctica",
+        "Si tu mente divaga, no te frustres; simplemente regresa suavemente a la meditación",
+        "No te preocupes si no recuerdas el final de la meditación; esto significa que funcionó",
+        "Mantén un ambiente fresco, oscuro y silencioso para optimizar los resultados"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/sleep.svg",
+    "audio_url": "/assets/audio/tools/meditation/sleep-guide.mp3",
+    "metadata": {
+      "author": "Desarrollado por especialistas en medicina del sueño",
+      "tags": [
+        "sueño",
+        "insomnio",
+        "noche",
+        "relajación",
+        "principiante"
+      ],
+      "created_date": "2023-02-01",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Meditación de Gratitud",
+    "description": "Una práctica que cultiva el reconocimiento y aprecio por los aspectos positivos de la vida, ayudando a cambiar el enfoque mental hacia experiencias enriquecedoras y satisfactorias.",
+    "category": "MEDITATION",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 8,
+    "difficulty": "BEGINNER",
+    "target_emotions": [
+      "SADNESS",
+      "FRUSTRATION",
+      "LONELINESS"
+    ],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Meditación de Gratitud",
+      "instructions": "Esta meditación te guiará a través de una práctica para cultivar gratitud, ayudándote a reconocer y apreciar los aspectos positivos de tu vida, desde los más simples hasta los más profundos.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate en una posición cómoda con la espalda recta. Coloca las manos en una posición que te resulte natural, ya sea sobre las rodillas o en tu regazo.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Establece la intención",
+          "description": "Toma un momento para establecer tu intención de cultivar gratitud y aprecio. Recuerda que esta práctica puede cambiar gradualmente tu perspectiva hacia lo positivo.",
+          "duration": 20
+        },
+        {
+          "order": 3,
+          "title": "Conciencia de la respiración",
+          "description": "Comienza llevando tu atención a la respiración. Observa el ritmo natural de tu respiración durante unos momentos, sintiendo la entrada y salida del aire.",
+          "duration": 60
+        },
+        {
+          "order": 4,
+          "title": "Gratitud por el cuerpo",
+          "description": "Dirige tu atención hacia tu cuerpo y todas las formas en que te sirve cada día. Agradece a tu corazón por latir, a tus pulmones por respirar, a tus piernas por sostenerte y moverte.",
+          "duration": 60
+        },
+        {
+          "order": 5,
+          "title": "Gratitud por las necesidades básicas",
+          "description": "Reflexiona sobre las necesidades básicas que tienes cubiertas: comida, agua, refugio, ropa. Muchas personas en el mundo carecen de estas necesidades. Siente gratitud por tener estas necesidades satisfechas.",
+          "duration": 60
+        },
+        {
+          "order": 6,
+          "title": "Gratitud por las personas",
+          "description": "Piensa en las personas que han tenido un impacto positivo en tu vida: familiares, amigos, maestros, incluso extraños que te han mostrado amabilidad. Siente gratitud por su presencia y contribución a tu vida.",
+          "duration": 90
+        },
+        {
+          "order": 7,
+          "title": "Gratitud por las oportunidades",
+          "description": "Reflexiona sobre las oportunidades que has tenido: educación, experiencias, crecimiento personal, momentos de alegría. Reconoce estas oportunidades como regalos que han enriquecido tu vida.",
+          "duration": 60
+        },
+        {
+          "order": 8,
+          "title": "Gratitud por los desafíos",
+          "description": "Considera los desafíos que has enfrentado y cómo te han ayudado a crecer y desarrollarte. Intenta encontrar gratitud incluso en las dificultades, por las lecciones y la fortaleza que te han brindado.",
+          "duration": 60
+        },
+        {
+          "order": 9,
+          "title": "Gratitud por el momento presente",
+          "description": "Finalmente, siente gratitud por este momento presente: por estar vivo, por tener la capacidad de ser consciente, por dedicar tiempo a tu bienestar emocional.",
+          "duration": 60
+        },
+        {
+          "order": 10,
+          "title": "Conclusión",
+          "description": "Lleva las manos al corazón y toma una respiración profunda, absorbiendo los sentimientos de gratitud que has cultivado. Cuando estés listo, abre suavemente los ojos.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Cambia el enfoque mental de lo negativo a lo positivo",
+        "Reduce sentimientos de insatisfacción y comparación social",
+        "Aumenta la sensación de bienestar y felicidad",
+        "Mejora las relaciones al apreciar más a los demás",
+        "Desarrolla resiliencia frente a situaciones difíciles"
+      ],
+      "tips": [
+        "Practica esta meditación regularmente, idealmente al despertar o antes de dormir",
+        "Mantén un diario de gratitud para reforzar esta práctica",
+        "Sé específico en tu gratitud; los detalles concretos tienen más impacto",
+        "No te preocupes si al principio te resulta difícil encontrar cosas por las que sentir gratitud; esta habilidad se desarrolla con la práctica",
+        "Complementa esta meditación expresando gratitud a los demás en tu vida diaria"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/gratitude.svg",
+    "audio_url": "/assets/audio/tools/meditation/gratitude-guide.mp3",
+    "metadata": {
+      "author": "Basado en prácticas de psicología positiva",
+      "tags": [
+        "gratitud",
+        "aprecio",
+        "positivo",
+        "principiante"
+      ],
+      "created_date": "2023-02-05",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Meditación de Montaña",
+    "description": "Una práctica de visualización que cultiva estabilidad, fortaleza y perspectiva, utilizando la imagen de una montaña como metáfora para desarrollar cualidades de firmeza interior frente a los cambios.",
+    "category": "MEDITATION",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 10,
+    "difficulty": "INTERMEDIATE",
+    "target_emotions": [
+      "ANXIETY",
+      "OVERWHELM",
+      "FEAR",
+      "FRUSTRATION"
+    ],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Meditación de Montaña",
+      "instructions": "Esta meditación utiliza la imagen de una montaña como metáfora para cultivar estabilidad interior, fortaleza y perspectiva frente a los cambios y desafíos de la vida.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate en una posición cómoda con la espalda recta, como una montaña elevándose desde la tierra. Coloca las manos sobre las rodillas o en tu regazo.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Establece la intención",
+          "description": "Toma un momento para establecer tu intención de cultivar estabilidad y fortaleza interior, recordando que, como una montaña, puedes permanecer firme a través de los cambios y las tormentas de la vida.",
+          "duration": 20
+        },
+        {
+          "order": 3,
+          "title": "Conciencia de la respiración",
+          "description": "Comienza llevando tu atención a la respiración. Siente cómo el aire entra y sale de tu cuerpo, estableciendo un ritmo constante y estable.",
+          "duration": 60
+        },
+        {
+          "order": 4,
+          "title": "Visualización de la montaña",
+          "description": "Visualiza una montaña majestuosa. Puede ser una montaña que conozcas o una que imagines. Observa su forma, su altura, su base amplia y sólida, su cumbre elevándose hacia el cielo.",
+          "duration": 60
+        },
+        {
+          "order": 5,
+          "title": "Conexión con la montaña",
+          "description": "Imagina que te conviertes en esta montaña. Tu cabeza es la cumbre, tus hombros y brazos son las laderas, y tu parte inferior y piernas son la base sólida arraigada en la tierra.",
+          "duration": 60
+        },
+        {
+          "order": 6,
+          "title": "Estabilidad de la montaña",
+          "description": "Siente las cualidades de la montaña en tu propio cuerpo: solidez, estabilidad, fuerza, dignidad. La montaña está completamente presente, inmóvil, arraigada profundamente en la tierra.",
+          "duration": 60
+        },
+        {
+          "order": 7,
+          "title": "La montaña a través de las estaciones",
+          "description": "Visualiza la montaña a través de las diferentes estaciones. En primavera, cubierta de vegetación y flores. En verano, bañada por el sol cálido. En otoño, con colores cambiantes. En invierno, cubierta de nieve.",
+          "duration": 120
+        },
+        {
+          "order": 8,
+          "title": "La montaña a través del clima",
+          "description": "Imagina la montaña experimentando diferentes condiciones climáticas: días soleados, tormentas con rayos y truenos, niebla que cubre su cumbre, vientos fuertes. A través de todo esto, la montaña permanece inmóvil, imperturbable.",
+          "duration": 120
+        },
+        {
+          "order": 9,
+          "title": "Perspectiva de la montaña",
+          "description": "Desde la altura de la montaña, imagina la vista panorámica que se extiende en todas direcciones. Esta perspectiva te permite ver más allá de lo inmediato, contemplando el paisaje completo de tu vida.",
+          "duration": 60
+        },
+        {
+          "order": 10,
+          "title": "Incorporando las cualidades de la montaña",
+          "description": "Absorbe las cualidades de la montaña en tu ser: estabilidad frente al cambio, fortaleza interior, perspectiva amplia, dignidad natural. Estas cualidades están disponibles para ti en cualquier momento.",
+          "duration": 60
+        },
+        {
+          "order": 11,
+          "title": "Conclusión",
+          "description": "Gradualmente, regresa tu atención a tu respiración y a las sensaciones en tu cuerpo. Lleva contigo las cualidades de la montaña mientras regresas a tu día. Cuando estés listo, abre suavemente los ojos.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Desarrolla estabilidad emocional frente a circunstancias cambiantes",
+        "Cultiva fortaleza interior y resiliencia",
+        "Ayuda a mantener la perspectiva durante tiempos difíciles",
+        "Reduce la reactividad ante situaciones estresantes",
+        "Promueve una sensación de dignidad y presencia"
+      ],
+      "tips": [
+        "Puedes adaptar esta meditación para momentos específicos de inestabilidad en tu vida",
+        "Si te resulta difícil visualizar, enfócate en las sensaciones físicas de estabilidad y fortaleza",
+        "Recuerda la imagen de la montaña durante tu día cuando enfrentes desafíos",
+        "Practica regularmente para fortalecer tu capacidad de mantener la calma en situaciones difíciles",
+        "Complementa esta práctica con una postura física estable y erguida durante el día"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/mountain.svg",
+    "audio_url": "/assets/audio/tools/meditation/mountain-guide.mp3",
+    "metadata": {
+      "author": "Basado en la meditación de montaña de Jon Kabat-Zinn",
+      "tags": [
+        "visualización",
+        "estabilidad",
+        "fortaleza",
+        "intermedio"
+      ],
+      "created_date": "2023-02-10",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Meditación de Observación de Pensamientos",
+    "description": "Una práctica que desarrolla la capacidad de observar los pensamientos sin identificarse con ellos, creando espacio entre el observador y el contenido mental para mayor claridad y libertad emocional.",
+    "category": "MEDITATION",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 15,
+    "difficulty": "INTERMEDIATE",
+    "target_emotions": [
+      "ANXIETY",
+      "OVERWHELM",
+      "FRUSTRATION",
+      "STRESS"
+    ],
+    "is_active": true,
+    "is_premium": true,
+    "content": {
+      "title": "Meditación de Observación de Pensamientos",
+      "instructions": "Esta meditación te guiará a través de una práctica para observar tus pensamientos sin identificarte con ellos, ayudándote a desarrollar una relación más saludable con tu mente.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Siéntate en una posición cómoda con la espalda recta pero relajada. Coloca las manos en una posición que te resulte natural, ya sea sobre las rodillas o en tu regazo.",
+          "duration": 30
+        },
+        {
+          "order": 2,
+          "title": "Establece la intención",
+          "description": "Toma un momento para establecer tu intención de observar tus pensamientos con curiosidad y sin juicio, recordando que no eres tus pensamientos, sino el observador de ellos.",
+          "duration": 20
+        },
+        {
+          "order": 3,
+          "title": "Conciencia de la respiración",
+          "description": "Comienza llevando tu atención a la respiración. Observa las sensaciones de la respiración entrando y saliendo del cuerpo, utilizándola como un ancla para el momento presente.",
+          "duration": 60
+        },
+        {
+          "order": 4,
+          "title": "Expandir la conciencia",
+          "description": "Gradualmente, expande tu conciencia para incluir los sonidos a tu alrededor, las sensaciones en tu cuerpo, y finalmente, la actividad de tu mente.",
+          "duration": 60
+        },
+        {
+          "order": 5,
+          "title": "Observar la mente",
+          "description": "Ahora, dirige tu atención hacia tu mente. Observa cómo los pensamientos surgen, permanecen por un tiempo y luego desaparecen, como nubes pasando por el cielo.",
+          "duration": 90
+        },
+        {
+          "order": 6,
+          "title": "Etiquetar los pensamientos",
+          "description": "Cuando notes un pensamiento, etiquétalo suavemente: 'pensando', 'recordando', 'planeando', 'preocupándose', etc. Luego, déjalo ir y regresa a la observación.",
+          "duration": 120
+        },
+        {
+          "order": 7,
+          "title": "Metáfora del cielo y las nubes",
+          "description": "Imagina que tu conciencia es como el cielo vasto y abierto, y tus pensamientos son como nubes que pasan. El cielo no es afectado por las nubes; simplemente las contiene y las observa pasar.",
+          "duration": 90
+        },
+        {
+          "order": 8,
+          "title": "Notar el apego",
+          "description": "Observa cómo la mente tiende a engancharse con ciertos pensamientos, creando historias y cadenas de pensamiento. Cuando notes esto, gentilmente desengánchate y regresa a la posición de observador.",
+          "duration": 120
+        },
+        {
+          "order": 9,
+          "title": "Experimentar el espacio",
+          "description": "Nota el espacio entre los pensamientos. A medida que practicas, estos espacios pueden volverse más evidentes, revelando la naturaleza espaciosa de la conciencia misma.",
+          "duration": 90
+        },
+        {
+          "order": 10,
+          "title": "Observar sin juzgar",
+          "description": "Si notas que estás juzgando tus pensamientos como 'buenos' o 'malos', simplemente observa este juicio como otro pensamiento. Practica una actitud de curiosidad y aceptación hacia todos los contenidos mentales.",
+          "duration": 120
+        },
+        {
+          "order": 11,
+          "title": "Regresar a la respiración",
+          "description": "Si te sientes abrumado por la actividad mental, regresa suavemente a la respiración como ancla. Descansa en las sensaciones de la respiración antes de volver a la observación de pensamientos.",
+          "duration": 60
+        },
+        {
+          "order": 12,
+          "title": "Conclusión",
+          "description": "Gradualmente, regresa tu atención a tu cuerpo y a tu entorno. Reflexiona sobre lo que has aprendido observando tu mente. Cuando estés listo, abre suavemente los ojos.",
+          "duration": 30
+        }
+      ],
+      "benefits": [
+        "Desarrolla desidentificación de los pensamientos limitantes",
+        "Reduce la rumiación y los patrones de pensamiento negativos",
+        "Aumenta la capacidad de responder en lugar de reaccionar",
+        "Cultiva una relación más saludable con la mente",
+        "Promueve mayor claridad mental y libertad emocional"
+      ],
+      "tips": [
+        "No intentes detener o cambiar tus pensamientos; simplemente obsérvalos",
+        "Si te encuentras atrapado en pensamientos, no te juzgues; es parte del proceso de aprendizaje",
+        "Practica regularmente para desarrollar la habilidad de observación",
+        "Puedes usar esta técnica en momentos de estrés durante el día",
+        "Complementa esta práctica con la escritura reflexiva para explorar patrones de pensamiento"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/thought-observation.svg",
+    "audio_url": "/assets/audio/tools/meditation/thought-observation-guide.mp3",
+    "metadata": {
+      "author": "Basado en prácticas de mindfulness y meditación vipassana",
+      "tags": [
+        "pensamientos",
+        "mente",
+        "observación",
+        "intermedio",
+        "desidentificación"
+      ],
+      "created_date": "2023-02-15",
+      "version": "1.0"
+    }
+  },
+  {
+    "name": "Meditación de Anclaje al Presente",
+    "description": "Una práctica breve y efectiva para regresar rápidamente al momento presente utilizando los sentidos como anclas, ideal para momentos de estrés, ansiedad o cuando la mente está dispersa.",
+    "category": "MEDITATION",
+    "content_type": "GUIDED_EXERCISE",
+    "estimated_duration": 5,
+    "difficulty": "BEGINNER",
+    "target_emotions": [
+      "ANXIETY",
+      "STRESS",
+      "OVERWHELM",
+      "FEAR"
+    ],
+    "is_active": true,
+    "is_premium": false,
+    "content": {
+      "title": "Meditación de Anclaje al Presente",
+      "instructions": "Esta meditación breve utiliza los sentidos como anclas para regresar rápidamente al momento presente. Es ideal para momentos de estrés, ansiedad o cuando sientes que tu mente está dispersa.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Posición inicial",
+          "description": "Puedes realizar esta práctica en cualquier posición: sentado, de pie o incluso caminando. Si es posible, adopta una postura que te permita estar alerta pero cómodo.",
+          "duration": 15
+        },
+        {
+          "order": 2,
+          "title": "Respiración consciente",
+          "description": "Comienza con tres respiraciones profundas y conscientes. Inhala lentamente por la nariz, siente cómo el aire llena tus pulmones, y exhala completamente por la boca.",
+          "duration": 30
+        },
+        {
+          "order": 3,
+          "title": "Cinco cosas que puedes ver",
+          "description": "Dirige tu atención a tu sentido de la vista. Nota cinco cosas que puedes ver en este momento. Observa sus colores, formas, texturas, luz y sombra. Simplemente nombra estos objetos mentalmente.",
+          "duration": 45
+        },
+        {
+          "order": 4,
+          "title": "Cuatro cosas que puedes tocar",
+          "description": "Ahora, lleva tu atención al sentido del tacto. Nota cuatro cosas que puedes sentir en contacto con tu cuerpo: la ropa contra tu piel, la temperatura del aire, la textura de una superficie, el peso de tu cuerpo.",
+          "duration": 45
+        },
+        {
+          "order": 5,
+          "title": "Tres cosas que puedes oír",
+          "description": "Dirige tu atención al sentido del oído. Nota tres sonidos que puedes escuchar en este momento. Pueden ser sonidos cercanos o distantes, fuertes o sutiles. Simplemente escucha sin juzgar.",
+          "duration": 45
+        },
+        {
+          "order": 6,
+          "title": "Dos cosas que puedes oler",
+          "description": "Lleva tu atención al sentido del olfato. Nota dos aromas que puedes percibir en este momento. Si no hay olores evidentes, nota simplemente la cualidad del aire al entrar por tu nariz.",
+          "duration": 30
+        },
+        {
+          "order": 7,
+          "title": "Una cosa que puedes saborear",
+          "description": "Finalmente, dirige tu atención al sentido del gusto. Nota un sabor presente en tu boca en este momento. Puede ser sutil, como el sabor natural de tu boca, o más evidente si has comido recientemente.",
+          "duration": 30
+        },
+        {
+          "order": 8,
+          "title": "Integración sensorial",
+          "description": "Ahora, intenta mantener una conciencia abierta a todos tus sentidos simultáneamente. Siente la riqueza de la experiencia sensorial del momento presente.",
+          "duration": 45
+        },
+        {
+          "order": 9,
+          "title": "Conclusión",
+          "description": "Toma una respiración profunda y nota cómo te sientes ahora en comparación con antes de comenzar la práctica. Lleva esta conciencia sensorial contigo mientras continúas con tu día.",
+          "duration": 15
+        }
+      ],
+      "benefits": [
+        "Interrumpe patrones de preocupación y rumiación",
+        "Reduce rápidamente los síntomas físicos de ansiedad",
+        "Desarrolla la capacidad de regresar al momento presente",
+        "Fortalece la conexión mente-cuerpo",
+        "Proporciona una herramienta accesible para momentos de estrés"
+      ],
+      "tips": [
+        "Puedes adaptar esta práctica según tu situación; no es necesario seguir el orden exacto",
+        "Utiliza esta técnica varias veces al día como mini-meditaciones",
+        "Si estás en un lugar donde no puedes acceder a todos los sentidos, enfócate en los que están disponibles",
+        "Practica regularmente, incluso cuando no estés estresado, para fortalecer la habilidad",
+        "Combina esta técnica con respiración consciente para mayor efectividad"
+      ]
+    },
+    "image_url": "/assets/images/tools/meditation/present-moment-anchor.svg",
+    "audio_url": "/assets/audio/tools/meditation/present-moment-anchor-guide.mp3",
+    "metadata": {
+      "author": "Basado en técnicas de terapia cognitivo-conductual y mindfulness",
+      "tags": [
+        "anclaje",
+        "sentidos",
+        "presente",
+        "rápido",
+        "principiante"
+      ],
+      "created_date": "2023-02-20",
+      "version": "1.0"
+    }
+  }
+]
