@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Exclude sensitive security data -->
+    <exclude
+        android:domain="sharedpref"
+        android:path="encryption_keys.xml" />
+        
+    <!-- Exclude encrypted voice journal recordings -->
+    <exclude
+        android:domain="file"
+        android:path="voice_journals/" />
+        
+    <!-- Exclude user authentication data -->
+    <exclude
+        android:domain="database"
+        android:path="user_credentials.db" />
+        
+    <!-- Exclude biometric settings -->
+    <exclude
+        android:domain="sharedpref"
+        android:path="biometric_settings.xml" />
+        
+    <!-- Include non-sensitive user preferences -->
+    <include
+        android:domain="sharedpref"
+        android:path="user_preferences.xml" />
+        
+    <!-- Include tool favorites for better user experience after restoration -->
+    <include
+        android:domain="database"
+        android:path="tool_favorites.db" />
+</full-backup-content>
