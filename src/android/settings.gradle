@@ -1,0 +1,47 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+    plugins {
+        id 'com.android.application' version '8.1.2'
+        id 'org.jetbrains.kotlin.android' version "${kotlin.version}"
+        id 'org.jetbrains.kotlin.kapt' version "${kotlin.version}"
+        id 'com.google.dagger.hilt.android' version '2.48'
+        id 'androidx.navigation.safeargs.kotlin' version '2.7.4'
+        id 'com.google.gms.google-services' version '4.4.0'
+        id 'com.google.firebase.crashlytics' version '2.9.9'
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// Gradle Enterprise plugin for build performance monitoring - version 3.15.1
+plugins {
+    id 'com.gradle.enterprise' version '3.15.1'
+}
+
+rootProject.name = 'AmiraWellness'
+include ':app'
+enableFeaturePreview('TYPESAFE_PROJECT_ACCESSORS')
+
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+        publishAlways()
+    }
+    
+    buildCache {
+        local {
+            enabled = true
+        }
+    }
+}
