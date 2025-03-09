@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary brand colors -->
+    <color name="primary">#21968D</color>
+    <color name="primary_dark">#1A7A73</color>
+    <color name="primary_light">#A7D8D4</color>
+    <color name="primary_variant">#2EA39A</color>
+    
+    <!-- Secondary brand colors -->
+    <color name="secondary">#F4A15A</color>
+    <color name="secondary_dark">#D88A45</color>
+    <color name="secondary_light">#FADEC2</color>
+    <color name="secondary_variant">#FCAE67</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#222831</color>
+    <color name="text_secondary">#888E97</color>
+    <color name="text_tertiary">#AEB3BC</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <color name="text_on_secondary">#FFFFFF</color>
+    
+    <!-- Background colors -->
+    <color name="background">#F9FAFC</color>
+    <color name="background_dark">#1C1C1E</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_dark">#2C2C2E</color>
+    
+    <!-- Utility colors -->
+    <color name="error">#E53935</color>
+    <color name="success">#43A047</color>
+    <color name="warning">#FFA000</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- Dividers and borders -->
+    <color name="divider">#E0E0E0</color>
+    <color name="divider_dark">#3A3A3C</color>
+    <color name="border">#DDDDDD</color>
+    <color name="border_dark">#444444</color>
+    
+    <!-- Emotion colors -->
+    <color name="emotion_joy">#FFD166</color>
+    <color name="emotion_sadness">#6A8EAE</color>
+    <color name="emotion_anger">#E63946</color>
+    <color name="emotion_fear">#9C89B8</color>
+    <color name="emotion_disgust">#7A9E7E</color>
+    <color name="emotion_surprise">#4CC9F0</color>
+    <color name="emotion_trust">#73D2DE</color>
+    <color name="emotion_anticipation">#F4845F</color>
+    <color name="emotion_calm">#A7C5EB</color>
+    <color name="emotion_anxiety">#B39CD0</color>
+    
+    <!-- Common colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="semi_transparent_black">#80000000</color>
+    <color name="semi_transparent_white">#80FFFFFF</color>
+</resources>
