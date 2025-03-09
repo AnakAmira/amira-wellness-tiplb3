@@ -1,0 +1,1064 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_production_deploy:
+        description: 'Confirm deployment to production environment'
+        required: true
+        type: boolean
+        default: false
+      deployment_reason:
+        description: 'Reason for deployment'
+        required: true
+        type: string
+  schedule:
+    - cron: '0 2 * * 2'  # Every Tuesday at 2 AM UTC (within maintenance window)
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: amira-wellness-backend
+  ECS_CLUSTER: amira-wellness-production
+  ECS_SERVICE: backend-service
+  TERRAFORM_WORKING_DIR: infrastructure/terraform/environments/prod
+  SLACK_CHANNEL: amira-deployments
+
+jobs:
+  verify-deployment-window:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check current time
+        id: time_check
+        run: |
+          # Get current hour in UTC
+          CURRENT_HOUR=$(date -u +%H)
+          CURRENT_DAY=$(date -u +%u)
+          
+          # Tuesday is day 2, and maintenance window is 2AM to 5AM UTC
+          if [[ $CURRENT_DAY -eq 2 && $CURRENT_HOUR -ge 2 && $CURRENT_HOUR -lt 5 ]]; then
+            echo "Inside regular maintenance window"
+            echo "MAINTENANCE_WINDOW=true" >> $GITHUB_ENV
+          else
+            echo "Outside regular maintenance window"
+            echo "MAINTENANCE_WINDOW=false" >> $GITHUB_ENV
+          fi
+      
+      - name: Verify approval for off-hours deployment
+        if: env.MAINTENANCE_WINDOW == 'false' && github.event_name == 'workflow_dispatch'
+        run: |
+          if [[ "${{ github.event.inputs.confirm_production_deploy }}" != "true" ]]; then
+            echo "Error: Deployment outside maintenance window requires explicit confirmation"
+            exit 1
+          fi
+          echo "Off-hours deployment approved by ${{ github.actor }}"
+          
+      - name: Block scheduled deployment outside window
+        if: env.MAINTENANCE_WINDOW == 'false' && github.event_name == 'schedule'
+        run: |
+          echo "Error: Scheduled deployment must run within maintenance window"
+          exit 1
+          
+      - name: Log deployment initiation
+        run: |
+          echo "Deployment initiated at $(date -u)"
+          echo "Initiated by: ${{ github.actor }}"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "Deployment reason: ${{ github.event.inputs.deployment_reason }}"
+          else
+            echo "Deployment reason: Scheduled maintenance"
+          fi
+
+  create-backup:
+    needs: verify-deployment-window
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Create database snapshot
+        id: db_backup
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          SNAPSHOT_ID="amira-prod-backup-${TIMESTAMP}"
+          
+          # Get RDS instance identifier from outputs
+          DB_INSTANCE=$(aws rds describe-db-instances --query "DBInstances[?contains(DBInstanceIdentifier, 'amira-prod')].DBInstanceIdentifier" --output text)
+          
+          # Create snapshot
+          aws rds create-db-snapshot \
+            --db-instance-identifier $DB_INSTANCE \
+            --db-snapshot-identifier $SNAPSHOT_ID
+            
+          echo "DB_SNAPSHOT_ID=$SNAPSHOT_ID" >> $GITHUB_ENV
+          echo "Database snapshot created: $SNAPSHOT_ID"
+      
+      - name: Backup Terraform state
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          BACKUP_FILE="terraform-state-backup-${TIMESTAMP}.zip"
+          
+          # Create backup of terraform state
+          aws s3 cp \
+            s3://amira-wellness-terraform-state/prod/terraform.tfstate \
+            s3://amira-wellness-backups/terraform/$BACKUP_FILE
+            
+          echo "TERRAFORM_BACKUP=$BACKUP_FILE" >> $GITHUB_ENV
+          echo "Terraform state backed up: $BACKUP_FILE"
+      
+      - name: Archive current ECS task definitions
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          TASK_DEF=$(aws ecs describe-task-definition --task-definition ${{ env.ECS_SERVICE }} --query 'taskDefinition' --output json)
+          
+          # Save current task definition to S3
+          echo "$TASK_DEF" > current-task-def.json
+          aws s3 cp \
+            current-task-def.json \
+            s3://amira-wellness-backups/ecs/task-def-backup-${TIMESTAMP}.json
+            
+          echo "ECS_TASK_DEF_BACKUP=task-def-backup-${TIMESTAMP}.json" >> $GITHUB_ENV
+          echo "ECS task definition backed up: task-def-backup-${TIMESTAMP}.json"
+      
+      - name: Store backup references
+        run: |
+          echo "Backup References:" >> backup-info.txt
+          echo "- DB Snapshot: ${{ env.DB_SNAPSHOT_ID }}" >> backup-info.txt
+          echo "- Terraform State: ${{ env.TERRAFORM_BACKUP }}" >> backup-info.txt
+          echo "- ECS Task Definition: ${{ env.ECS_TASK_DEF_BACKUP }}" >> backup-info.txt
+          echo "- Timestamp: $(date -u)" >> backup-info.txt
+          
+          # Upload backup info to S3
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          aws s3 cp \
+            backup-info.txt \
+            s3://amira-wellness-backups/deploy-logs/backup-info-${TIMESTAMP}.txt
+            
+          # Set outputs for later jobs
+          echo "BACKUP_INFO=s3://amira-wellness-backups/deploy-logs/backup-info-${TIMESTAMP}.txt" >> $GITHUB_ENV
+
+  approval-gate:
+    needs: create-backup
+    runs-on: ubuntu-latest
+    environment: production  # This enables required approvals through GitHub environments
+    steps:
+      - name: Notify approvers
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ env.SLACK_CHANNEL }}
+          slack-message: "⚠️ *Production Deployment Pending Approval*\nDeployment to production requires approval.\nInitiated by: ${{ github.actor }}\nWorkflow: ${{ github.workflow }}\nBackups created. Please review and approve in GitHub."
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      
+      - name: Display deployment details
+        run: |
+          echo "Deployment Details:"
+          echo "- Repository: ${{ github.repository }}"
+          echo "- Branch: ${{ github.ref }}"
+          echo "- Commit: ${{ github.sha }}"
+          echo "- Workflow: ${{ github.workflow }}"
+          echo "- Initiated by: ${{ github.actor }}"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "- Reason: ${{ github.event.inputs.deployment_reason }}"
+          else
+            echo "- Reason: Scheduled maintenance"
+          fi
+          echo "- Timestamp: $(date -u)"
+      
+      - name: Approval confirmation
+        run: |
+          echo "✅ Deployment approved through GitHub environment protection rules"
+          echo "Approver: ${{ github.actor }}"
+          echo "Timestamp: $(date -u)"
+      
+      - name: Log approval for audit
+        run: |
+          APPROVAL_LOG="deployment_approval_$(date +%Y%m%d%H%M%S).log"
+          echo "Deployment approved at $(date -u)" > $APPROVAL_LOG
+          echo "Approver: ${{ github.actor }}" >> $APPROVAL_LOG
+          echo "Repository: ${{ github.repository }}" >> $APPROVAL_LOG
+          echo "Workflow: ${{ github.workflow }}" >> $APPROVAL_LOG
+          echo "Commit: ${{ github.sha }}" >> $APPROVAL_LOG
+          
+          # Configure AWS credentials (again for this job)
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ env.AWS_REGION }}
+          
+          # Upload approval log to S3
+          aws s3 cp \
+            $APPROVAL_LOG \
+            s3://amira-wellness-backups/approval-logs/$APPROVAL_LOG
+
+  deploy-infrastructure:
+    needs: approval-gate
+    runs-on: ubuntu-latest
+    outputs:
+      terraform_outputs: ${{ steps.terraform_outputs.outputs.stdout }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Terraform Init
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform init
+      
+      - name: Terraform Validate
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform validate
+      
+      - name: Terraform Plan
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform plan -out=tfplan
+      
+      - name: Terraform Apply
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform apply -auto-approve tfplan
+      
+      - name: Verify infrastructure deployment
+        run: |
+          # Check if any of the critical resources are in a failed state
+          FAILED_RESOURCES=$(aws cloudformation list-stacks --stack-status-filter CREATE_FAILED UPDATE_FAILED DELETE_FAILED --query 'StackSummaries[?contains(StackName, `amira-prod`)].StackName' --output text)
+          
+          if [[ ! -z "$FAILED_RESOURCES" ]]; then
+            echo "Error: Some resources are in a failed state:"
+            echo "$FAILED_RESOURCES"
+            exit 1
+          fi
+          
+          echo "✅ Infrastructure deployment successful"
+      
+      - name: Capture Terraform outputs
+        id: terraform_outputs
+        working-directory: ${{ env.TERRAFORM_WORKING_DIR }}
+        run: terraform output -json
+
+  deploy-backend:
+    needs: deploy-infrastructure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      
+      - name: Generate image tag
+        id: image-tag
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)
+          IMAGE_TAG="${TIMESTAMP}-${SHORT_SHA}"
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "Generated image tag: $IMAGE_TAG"
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.image_tag }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            NODE_ENV=production
+            ENVIRONMENT=production
+      
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ env.ECS_SERVICE }} \
+            --query taskDefinition > task-definition.json
+      
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: amira-backend
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ steps.image-tag.outputs.image_tag }}
+      
+      - name: Deploy Amazon ECS task definition
+        id: deploy
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
+          codedeploy-appspec: appspec.yaml
+          codedeploy-application: amira-backend-deploy
+          codedeploy-deployment-group: amira-backend-prod-deployment
+      
+      - name: Monitor initial deployment health
+        run: |
+          # Wait for service to stabilize
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }}
+          
+          # Check if any tasks are failing health checks
+          UNHEALTHY_TASKS=$(aws ecs list-tasks \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service-name ${{ env.ECS_SERVICE }} \
+            --desired-status RUNNING \
+            --query 'taskArns' --output text | \
+            xargs -I {} aws ecs describe-tasks \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --tasks {} \
+            --query 'tasks[?healthStatus==`UNHEALTHY`].taskArn' --output text)
+          
+          if [[ ! -z "$UNHEALTHY_TASKS" ]]; then
+            echo "Error: Unhealthy tasks detected:"
+            echo "$UNHEALTHY_TASKS"
+            exit 1
+          fi
+          
+          echo "✅ Initial deployment health check passed"
+      
+      - name: Run database migrations
+        run: |
+          # Set up Python for migration script
+          sudo apt-get update
+          sudo apt-get install -y python3 python3-pip
+          
+          # Install dependencies
+          pip3 install -r scripts/requirements.txt
+          
+          # Run migrations with safety checks
+          python3 scripts/run_migrations.py --environment production --safety-checks
+          
+          echo "✅ Database migrations completed successfully"
+      
+      - name: Complete deployment rollout
+        run: |
+          # Continue with CodeDeploy process
+          DEPLOYMENT_ID=$(echo "${{ steps.deploy.outputs.codedeploy-deployment-id }}")
+          
+          # Check if deployment completed successfully
+          STATUS=$(aws deploy get-deployment \
+            --deployment-id $DEPLOYMENT_ID \
+            --query 'deploymentInfo.status' --output text)
+          
+          if [[ "$STATUS" != "Succeeded" ]]; then
+            echo "Error: Deployment failed with status: $STATUS"
+            exit 1
+          fi
+          
+          echo "✅ Deployment rollout completed successfully"
+
+  run-smoke-tests:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r tests/requirements.txt
+      
+      - name: Run API smoke tests
+        run: |
+          # Run smoke tests against production endpoints
+          python -m pytest tests/smoke/ \
+            --environment production \
+            --junitxml=test-results.xml
+      
+      - name: Verify critical user journeys
+        run: |
+          # Run E2E tests that verify critical user journeys
+          python -m pytest tests/e2e/critical/ \
+            --environment production \
+            --junitxml=journey-results.xml
+      
+      - name: Test authentication flows
+        run: |
+          # Verify authentication flows are working
+          python -m pytest tests/auth/ \
+            --environment production \
+            --junitxml=auth-results.xml
+      
+      - name: Validate data encryption
+        run: |
+          # Test encryption functionality
+          python -m pytest tests/security/encryption_tests.py \
+            --environment production \
+            --junitxml=encryption-results.xml
+      
+      - name: Check performance metrics
+        run: |
+          # Run performance baseline checks
+          python -m pytest tests/performance/baseline_check.py \
+            --environment production \
+            --junitxml=performance-results.xml
+      
+      - name: Verify third-party integrations
+        run: |
+          # Test all third-party integrations
+          python -m pytest tests/integrations/ \
+            --environment production \
+            --junitxml=integration-results.xml
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: |
+            test-results.xml
+            journey-results.xml
+            auth-results.xml
+            encryption-results.xml
+            performance-results.xml
+            integration-results.xml
+
+  run-security-verification:
+    needs: deploy-backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install security testing tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r security/requirements.txt
+      
+      - name: Verify SSL/TLS configuration
+        run: |
+          # Check for proper SSL/TLS configuration
+          python security/ssl_check.py \
+            --domain api.amirawellness.com \
+            --min-grade A
+      
+      - name: Check security headers
+        run: |
+          # Verify security headers are properly set
+          python security/headers_check.py \
+            --url https://api.amirawellness.com \
+            --required-headers "Strict-Transport-Security,Content-Security-Policy,X-Content-Type-Options"
+      
+      - name: Validate authentication mechanisms
+        run: |
+          # Test authentication security
+          python security/auth_security_check.py \
+            --endpoint https://api.amirawellness.com/auth
+      
+      - name: Verify encryption of sensitive data
+        run: |
+          # Check that sensitive data is properly encrypted
+          python security/encryption_verification.py \
+            --environment production
+      
+      - name: Confirm WAF and Shield protection
+        run: |
+          # Verify WAF and Shield are active and configured correctly
+          python security/waf_shield_check.py \
+            --region ${{ env.AWS_REGION }}
+      
+      - name: Validate access controls
+        run: |
+          # Test API access controls
+          python security/access_control_check.py \
+            --environment production
+      
+      - name: Check for exposed sensitive information
+        run: |
+          # Check for exposed sensitive information
+          python security/sensitive_info_check.py \
+            --environment production
+
+  finalize-deployment:
+    needs: [run-smoke-tests, run-security-verification]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Update deployment documentation
+        run: |
+          # Get current date
+          DEPLOY_DATE=$(date +"%Y-%m-%d")
+          DEPLOY_TIME=$(date +"%H:%M:%S UTC")
+          
+          # Create deployment record
+          cat << EOF > deployment_record.md
+          # Deployment Record
+          
+          - **Date**: $DEPLOY_DATE
+          - **Time**: $DEPLOY_TIME
+          - **Initiated by**: ${{ github.actor }}
+          - **Repository**: ${{ github.repository }}
+          - **Commit**: ${{ github.sha }}
+          - **Workflow**: ${{ github.workflow }}
+          
+          ## Changes Included
+          
+          $(git log -1 --pretty=format:"%B")
+          
+          ## Notes
+          
+          Deployment completed successfully.
+          EOF
+          
+          # Upload to S3
+          aws s3 cp \
+            deployment_record.md \
+            s3://amira-wellness-docs/deployments/$DEPLOY_DATE-deployment.md
+      
+      - name: Tag release in GitHub
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const tagDate = new Date().toISOString().split('T')[0];
+            const tagName = `production-${tagDate}`;
+            
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `refs/tags/${tagName}`,
+              sha: context.sha
+            });
+            
+            console.log(`Created tag: ${tagName}`);
+      
+      - name: Update changelog
+        run: |
+          # Get current date
+          DEPLOY_DATE=$(date +"%Y-%m-%d")
+          
+          # Update CHANGELOG.md
+          if [ -f CHANGELOG.md ]; then
+            # Create new changelog entry
+            TEMP_CHANGELOG=$(mktemp)
+            
+            # Get commit message
+            COMMIT_MSG=$(git log -1 --pretty=format:"%B")
+            
+            # Create new changelog entry at the top of the file
+            echo "# Changelog" > $TEMP_CHANGELOG
+            echo "" >> $TEMP_CHANGELOG
+            echo "## $DEPLOY_DATE - Production Deployment" >> $TEMP_CHANGELOG
+            echo "" >> $TEMP_CHANGELOG
+            echo "$COMMIT_MSG" >> $TEMP_CHANGELOG
+            echo "" >> $TEMP_CHANGELOG
+            
+            # Append existing changelog (skipping the title)
+            tail -n +2 CHANGELOG.md >> $TEMP_CHANGELOG
+            
+            # Replace the old changelog
+            mv $TEMP_CHANGELOG CHANGELOG.md
+            
+            # Commit the updated changelog
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git add CHANGELOG.md
+            git commit -m "Update CHANGELOG.md for $DEPLOY_DATE deployment"
+            git push
+          else
+            echo "CHANGELOG.md not found. Skipping update."
+          fi
+      
+      - name: Clean up temporary resources
+        run: |
+          # Remove any temporary files or resources
+          echo "Cleaning up temporary resources..."
+      
+      - name: Verify monitoring and alerting
+        run: |
+          # Check that monitoring and alerting are properly configured
+          echo "Verifying monitoring and alerting configuration..."
+          
+          # Check that CloudWatch alarms are in the correct state
+          ALARM_STATUS=$(aws cloudwatch describe-alarms \
+            --alarm-name-prefix "AmiraProduction" \
+            --state-value INSUFFICIENT_DATA \
+            --query 'MetricAlarms[].AlarmName' --output text)
+          
+          if [[ ! -z "$ALARM_STATUS" ]]; then
+            echo "Warning: Some alarms are in INSUFFICIENT_DATA state:"
+            echo "$ALARM_STATUS"
+          else
+            echo "✅ All alarms are properly configured"
+          fi
+      
+      - name: Send deployment completion notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ env.SLACK_CHANNEL }}
+          slack-message: "✅ *Production Deployment Completed Successfully*\nDeployment to production has been completed.\nInitiated by: ${{ github.actor }}\nWorkflow: ${{ github.workflow }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  rollback:
+    if: ${{ failure() }}
+    needs: [deploy-infrastructure, deploy-backend, run-smoke-tests, run-security-verification]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      
+      - name: Determine failure point
+        id: failure_analysis
+        run: |
+          # Get job status from GitHub context
+          if [[ "${{ contains(needs.*.result, 'failure') }}" == "true" ]]; then
+            if [[ "${{ needs.deploy-infrastructure.result }}" == "failure" ]]; then
+              echo "FAILURE_POINT=infrastructure" >> $GITHUB_ENV
+            elif [[ "${{ needs.deploy-backend.result }}" == "failure" ]]; then
+              echo "FAILURE_POINT=backend" >> $GITHUB_ENV
+            elif [[ "${{ needs.run-smoke-tests.result }}" == "failure" ]]; then
+              echo "FAILURE_POINT=smoke-tests" >> $GITHUB_ENV
+            elif [[ "${{ needs.run-security-verification.result }}" == "failure" ]]; then
+              echo "FAILURE_POINT=security-verification" >> $GITHUB_ENV
+            else
+              echo "FAILURE_POINT=unknown" >> $GITHUB_ENV
+            fi
+          else
+            echo "FAILURE_POINT=unknown" >> $GITHUB_ENV
+          fi
+          
+          echo "Detected failure point: ${{ env.FAILURE_POINT }}"
+      
+      - name: Restore from backup if necessary
+        if: env.FAILURE_POINT == 'infrastructure' || env.FAILURE_POINT == 'backend'
+        run: |
+          echo "Starting restoration from backup..."
+          
+          # Find latest backup info file
+          LATEST_BACKUP_INFO=$(aws s3 ls s3://amira-wellness-backups/deploy-logs/ --recursive | sort | tail -n 1 | awk '{print $4}')
+          
+          # Download backup info
+          aws s3 cp s3://amira-wellness-backups/deploy-logs/$LATEST_BACKUP_INFO ./backup-info.txt
+          
+          # Extract backup references
+          DB_SNAPSHOT=$(grep "DB Snapshot" backup-info.txt | cut -d':' -f2 | xargs)
+          TERRAFORM_BACKUP=$(grep "Terraform State" backup-info.txt | cut -d':' -f2 | xargs)
+          ECS_TASK_DEF_BACKUP=$(grep "ECS Task Definition" backup-info.txt | cut -d':' -f2 | xargs)
+          
+          echo "Retrieved backup references:"
+          echo "- DB Snapshot: $DB_SNAPSHOT"
+          echo "- Terraform State: $TERRAFORM_BACKUP"
+          echo "- ECS Task Definition: $ECS_TASK_DEF_BACKUP"
+          
+          # Store for later steps
+          echo "DB_SNAPSHOT=$DB_SNAPSHOT" >> $GITHUB_ENV
+          echo "TERRAFORM_BACKUP=$TERRAFORM_BACKUP" >> $GITHUB_ENV
+          echo "ECS_TASK_DEF_BACKUP=$ECS_TASK_DEF_BACKUP" >> $GITHUB_ENV
+      
+      - name: Revert to previous ECS task definition
+        if: env.FAILURE_POINT == 'backend' || env.FAILURE_POINT == 'smoke-tests' || env.FAILURE_POINT == 'security-verification'
+        run: |
+          echo "Reverting to previous ECS task definition..."
+          
+          # Get the previous task definition ARN
+          PREVIOUS_TASK_DEF=$(aws ecs describe-services \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }} \
+            --query 'services[0].taskDefinition' --output text)
+          
+          # Get the task definition revision before the current one
+          TASK_DEF_FAMILY=$(echo $PREVIOUS_TASK_DEF | cut -d':' -f1)
+          CURRENT_REVISION=$(echo $PREVIOUS_TASK_DEF | cut -d':' -f2)
+          PREVIOUS_REVISION=$((CURRENT_REVISION - 1))
+          
+          if [[ $PREVIOUS_REVISION -lt 1 ]]; then
+            echo "No previous revision available, attempting to use backup"
+            
+            # Restore from backup
+            if [[ ! -z "${{ env.ECS_TASK_DEF_BACKUP }}" ]]; then
+              aws s3 cp \
+                s3://amira-wellness-backups/ecs/${{ env.ECS_TASK_DEF_BACKUP }} \
+                ./previous-task-def.json
+              
+              # Register the backup task definition
+              PREVIOUS_TASK_DEF_ARN=$(aws ecs register-task-definition \
+                --cli-input-json file://previous-task-def.json \
+                --query 'taskDefinition.taskDefinitionArn' --output text)
+            else
+              echo "Error: No backup task definition available"
+              exit 1
+            fi
+          else
+            PREVIOUS_TASK_DEF_ARN="${TASK_DEF_FAMILY}:${PREVIOUS_REVISION}"
+          fi
+          
+          # Update the service to use the previous task definition
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_SERVICE }} \
+            --task-definition $PREVIOUS_TASK_DEF_ARN \
+            --force-new-deployment
+          
+          # Wait for service to stabilize
+          aws ecs wait services-stable \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }}
+          
+          echo "✅ Reverted to previous task definition: $PREVIOUS_TASK_DEF_ARN"
+      
+      - name: Revert Terraform changes if needed
+        if: env.FAILURE_POINT == 'infrastructure'
+        run: |
+          echo "Reverting infrastructure changes..."
+          
+          # Set up Terraform
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          
+          # Install Terraform
+          wget https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip
+          unzip terraform_1.5.0_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+          
+          # Download the backed-up Terraform state
+          if [[ ! -z "${{ env.TERRAFORM_BACKUP }}" ]]; then
+            mkdir -p terraform-restore
+            cd terraform-restore
+            
+            # Download the backup
+            aws s3 cp \
+              s3://amira-wellness-backups/terraform/${{ env.TERRAFORM_BACKUP }} \
+              ./terraform-backup.zip
+            
+            # Extract the backup
+            unzip terraform-backup.zip
+            
+            # Initialize Terraform with the backed-up state
+            terraform init \
+              -backend-config="bucket=amira-wellness-terraform-state" \
+              -backend-config="key=prod/terraform.tfstate" \
+              -backend-config="region=${{ env.AWS_REGION }}"
+            
+            # Apply the previous state
+            terraform apply -auto-approve
+            
+            echo "✅ Reverted infrastructure changes using backup state"
+          else
+            echo "Error: No Terraform state backup available"
+            exit 1
+          fi
+      
+      - name: Verify system stability after rollback
+        run: |
+          echo "Verifying system stability after rollback..."
+          
+          # Check ECS service stability
+          ECS_STATUS=$(aws ecs describe-services \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }} \
+            --query 'services[0].status' --output text)
+          
+          if [[ "$ECS_STATUS" != "ACTIVE" ]]; then
+            echo "Error: ECS service is not active after rollback"
+            echo "Current status: $ECS_STATUS"
+            exit 1
+          fi
+          
+          # Check if service has desired running count
+          DESIRED_COUNT=$(aws ecs describe-services \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }} \
+            --query 'services[0].desiredCount' --output text)
+          
+          RUNNING_COUNT=$(aws ecs describe-services \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --services ${{ env.ECS_SERVICE }} \
+            --query 'services[0].runningCount' --output text)
+          
+          if [[ "$DESIRED_COUNT" != "$RUNNING_COUNT" ]]; then
+            echo "Warning: Not all tasks are running after rollback"
+            echo "Desired count: $DESIRED_COUNT, Running count: $RUNNING_COUNT"
+          else
+            echo "✅ Service has correct number of running tasks"
+          fi
+          
+          echo "✅ System appears stable after rollback"
+      
+      - name: Send rollback notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ env.SLACK_CHANNEL }}
+          slack-message: "⚠️ *Production Deployment Failed - Rollback Completed*\nThe deployment to production failed and has been rolled back.\nFailure point: ${{ env.FAILURE_POINT }}\nInitiated by: ${{ github.actor }}\nWorkflow: ${{ github.workflow }}"
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      
+      - name: Create incident report
+        run: |
+          # Generate incident report
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          INCIDENT_REPORT="incident-report-${TIMESTAMP}.md"
+          
+          cat << EOF > $INCIDENT_REPORT
+          # Deployment Incident Report
+          
+          ## Overview
+          
+          - **Date**: $(date -u +"%Y-%m-%d")
+          - **Time**: $(date -u +"%H:%M:%S UTC")
+          - **Workflow**: ${{ github.workflow }}
+          - **Repository**: ${{ github.repository }}
+          - **Commit**: ${{ github.sha }}
+          - **Initiated by**: ${{ github.actor }}
+          
+          ## Incident Details
+          
+          - **Failure Point**: ${{ env.FAILURE_POINT }}
+          - **Action Taken**: Automated rollback to previous stable state
+          - **Rollback Completed**: $(date -u +"%H:%M:%S UTC")
+          
+          ## Next Steps
+          
+          1. Investigate root cause
+          2. Fix the identified issues
+          3. Retry deployment after verification
+          
+          ## Links
+          
+          - [Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          - [Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})
+          
+          EOF
+          
+          # Upload incident report to S3
+          aws s3 cp \
+            $INCIDENT_REPORT \
+            s3://amira-wellness-backups/incident-reports/$INCIDENT_REPORT
+          
+          echo "✅ Incident report created and uploaded"
+
+  notify-deployment-status:
+    if: always()
+    needs: [deploy-infrastructure, deploy-backend, run-smoke-tests, run-security-verification, finalize-deployment, rollback]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine final deployment status
+        id: deployment_status
+        run: |
+          # Check status of required jobs
+          if [[ "${{ needs.deploy-infrastructure.result }}" == "success" && \
+                "${{ needs.deploy-backend.result }}" == "success" && \
+                "${{ needs.run-smoke-tests.result }}" == "success" && \
+                "${{ needs.run-security-verification.result }}" == "success" && \
+                "${{ needs.finalize-deployment.result }}" == "success" ]]; then
+            echo "STATUS=success" >> $GITHUB_ENV
+            echo "STATUS_EMOJI=✅" >> $GITHUB_ENV
+            echo "STATUS_MESSAGE=Deployment completed successfully" >> $GITHUB_ENV
+          elif [[ "${{ needs.rollback.result }}" == "success" ]]; then
+            echo "STATUS=rollback" >> $GITHUB_ENV
+            echo "STATUS_EMOJI=⚠️" >> $GITHUB_ENV
+            echo "STATUS_MESSAGE=Deployment failed, rollback successful" >> $GITHUB_ENV
+          elif [[ "${{ needs.rollback.result }}" == "failure" ]]; then
+            echo "STATUS=critical" >> $GITHUB_ENV
+            echo "STATUS_EMOJI=🚨" >> $GITHUB_ENV
+            echo "STATUS_MESSAGE=Deployment failed, rollback also failed" >> $GITHUB_ENV
+          else
+            echo "STATUS=failure" >> $GITHUB_ENV
+            echo "STATUS_EMOJI=❌" >> $GITHUB_ENV
+            echo "STATUS_MESSAGE=Deployment failed" >> $GITHUB_ENV
+          fi
+      
+      - name: Prepare status report
+        run: |
+          # Create a detailed status report
+          cat << EOF > status-report.txt
+          ${{ env.STATUS_EMOJI }} *Production Deployment Status: ${{ env.STATUS }}*
+          
+          *Details:*
+          - Repository: ${{ github.repository }}
+          - Branch: ${{ github.ref }}
+          - Commit: ${{ github.sha }}
+          - Workflow: ${{ github.workflow }}
+          - Initiated by: ${{ github.actor }}
+          - Status: ${{ env.STATUS_MESSAGE }}
+          - Completion Time: $(date -u)
+          
+          *Job Results:*
+          - Infrastructure Deployment: ${{ needs.deploy-infrastructure.result }}
+          - Backend Deployment: ${{ needs.deploy-backend.result }}
+          - Smoke Tests: ${{ needs.run-smoke-tests.result }}
+          - Security Verification: ${{ needs.run-security-verification.result }}
+          - Deployment Finalization: ${{ needs.finalize-deployment.result }}
+          - Rollback (if applicable): ${{ needs.rollback.result }}
+          
+          *Next Steps:*
+          ${{ env.STATUS == 'success' && 'Monitor the application for any issues.' || 'Investigate deployment failure and address issues before retrying.' }}
+          EOF
+          
+          cat status-report.txt
+      
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          channel-id: ${{ env.SLACK_CHANNEL }}
+          slack-message: |
+            ${{ env.STATUS_EMOJI }} *Production Deployment Status: ${{ env.STATUS }}*
+            
+            *Details:*
+            - Repository: ${{ github.repository }}
+            - Workflow: ${{ github.workflow }}
+            - Initiated by: ${{ github.actor }}
+            - Status: ${{ env.STATUS_MESSAGE }}
+            
+            *Job Results:*
+            - Infrastructure: ${{ needs.deploy-infrastructure.result }}
+            - Backend: ${{ needs.deploy-backend.result }}
+            - Tests: ${{ needs.run-smoke-tests.result }}
+            - Security: ${{ needs.run-security-verification.result }}
+            
+            <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Details>
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      
+      - name: Update status in monitoring system
+        run: |
+          # This would integrate with your monitoring system
+          # For example, creating a deployment marker in DataDog or New Relic
+          echo "Updating deployment status in monitoring system..."
+          
+          # This is a placeholder - replace with actual monitoring system integration
+          if [[ "${{ env.STATUS }}" == "success" ]]; then
+            curl -X POST \
+              "https://monitoring.amirawellness.com/api/deployments" \
+              -H "Authorization: Bearer ${{ secrets.MONITORING_API_KEY }}" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "environment": "production",
+                "status": "successful",
+                "version": "${{ github.sha }}",
+                "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+              }'
+          else
+            curl -X POST \
+              "https://monitoring.amirawellness.com/api/deployments" \
+              -H "Authorization: Bearer ${{ secrets.MONITORING_API_KEY }}" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "environment": "production",
+                "status": "failed",
+                "version": "${{ github.sha }}",
+                "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+              }'
+          fi
+      
+      - name: Send email notification
+        run: |
+          # This would send an email to stakeholders
+          # For example, using AWS SES or another email service
+          echo "Sending email notification to stakeholders..."
+          
+          # This is a placeholder - replace with actual email sending implementation
+          if [[ "${{ env.STATUS }}" == "success" ]]; then
+            SUBJECT="✅ Production Deployment Successful"
+          elif [[ "${{ env.STATUS }}" == "rollback" ]]; then
+            SUBJECT="⚠️ Production Deployment Failed - Rollback Successful"
+          else
+            SUBJECT="🚨 Production Deployment Failed"
+          fi
+          
+          # Example using AWS SES
+          aws ses send-email \
+            --from "deployments@amirawellness.com" \
+            --to "devops@amirawellness.com" "stakeholders@amirawellness.com" \
+            --subject "$SUBJECT" \
+            --text "$(cat status-report.txt)"
+      
+      - name: Log deployment result for audit
+        run: |
+          # Save deployment result for audit purposes
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          AUDIT_LOG="deployment-audit-${TIMESTAMP}.log"
+          
+          cat << EOF > $AUDIT_LOG
+          Deployment Audit Log
+          ===================
+          
+          Timestamp: $(date -u)
+          Repository: ${{ github.repository }}
+          Workflow: ${{ github.workflow }}
+          Run ID: ${{ github.run_id }}
+          Triggered by: ${{ github.actor }}
+          Commit: ${{ github.sha }}
+          
+          Status: ${{ env.STATUS }}
+          Status Message: ${{ env.STATUS_MESSAGE }}
+          
+          Job Results:
+          - Infrastructure Deployment: ${{ needs.deploy-infrastructure.result }}
+          - Backend Deployment: ${{ needs.deploy-backend.result }}
+          - Smoke Tests: ${{ needs.run-smoke-tests.result }}
+          - Security Verification: ${{ needs.run-security-verification.result }}
+          - Deployment Finalization: ${{ needs.finalize-deployment.result }}
+          - Rollback (if applicable): ${{ needs.rollback.result }}
+          
+          EOF
+          
+          # Configure AWS credentials (again for this job)
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set region ${{ env.AWS_REGION }}
+          
+          # Upload audit log to S3
+          aws s3 cp \
+            $AUDIT_LOG \
+            s3://amira-wellness-backups/audit-logs/$AUDIT_LOG
