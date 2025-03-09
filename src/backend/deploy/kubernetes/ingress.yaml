@@ -1,0 +1,124 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: amira-backend-ingress
+  namespace: amira
+  labels:
+    app: amira-backend
+    component: ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-max-age: "86400"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    nginx.ingress.kubernetes.io/limit-rps: "100"
+    nginx.ingress.kubernetes.io/limit-connections: "50"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "10254"
+spec:
+  tls:
+  - hosts:
+    - api.amirawellness.com
+    secretName: amira-api-tls
+  rules:
+  - host: api.amirawellness.com
+    http:
+      paths:
+      - path: /api/v1/health
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /api/v1/auth
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /api/v1/users
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /api/v1/journals
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /api/v1/emotions
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /api/v1/tools
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /api/v1/progress
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /api/v1/notifications
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /docs
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /redoc
+        pathType: Prefix
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /openapi.json
+        pathType: Exact
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
+      - path: /metrics
+        pathType: Exact
+        backend:
+          service:
+            name: amira-backend
+            port:
+              number: 80
