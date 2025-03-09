@@ -1,0 +1,404 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 buckets for Amira Wellness application, including secure storage for voice journal recordings, content delivery, and application logs.
+
+Parameters:
+  Environment:
+    Type: String
+    Description: Deployment environment (dev, staging, prod)
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Default: dev
+  
+  DomainName:
+    Type: String
+    Description: Domain name for the application
+    Default: amirawellness.com
+  
+  KMSKeyId:
+    Type: String
+    Description: ID of the KMS key for encryption
+    Default: ''
+  
+  EnableReplication:
+    Type: String
+    Description: Whether to enable cross-region replication
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+
+Conditions:
+  EnableReplication: !Equals [!Ref EnableReplication, 'true']
+
+Resources:
+  # Audio bucket for voice journal recordings
+  AudioBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'amira-wellness-audio-${Environment}-${AWS::AccountId}'
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !Ref KMSKeyId
+            BucketKeyEnabled: true
+      VersioningConfiguration:
+        Status: Enabled
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD']
+            AllowedOrigins:
+              - !Sub 'https://api.${DomainName}'
+              - !Sub 'https://${DomainName}'
+              - !Sub 'https://www.${DomainName}'
+            ExposedHeaders: ['ETag']
+            MaxAge: 3000
+      LifecycleConfiguration:
+        Rules:
+          - Id: TransitionToStandardIA
+            Status: Enabled
+            Transitions:
+              - StorageClass: STANDARD_IA
+                TransitionInDays: 30
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 90
+      ReplicationConfiguration:
+        Role: !GetAtt ReplicationRole.Arn
+        Rules:
+          - Id: AudioReplication
+            Status: !If [EnableReplication, 'Enabled', 'Disabled']
+            Destination:
+              Bucket: !Sub 'arn:aws:s3:::${AudioReplicaBucket}'
+              StorageClass: STANDARD
+            SourceSelectionCriteria:
+              SseKmsEncryptedObjects:
+                Status: Enabled
+      MetricsConfigurations:
+        - Id: EntireBucket
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Replica bucket for disaster recovery
+  AudioReplicaBucket:
+    Type: AWS::S3::Bucket
+    Condition: EnableReplication
+    Properties:
+      BucketName: !Sub 'amira-wellness-audio-${Environment}-${AWS::AccountId}-replica'
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Content bucket for tool library content and static assets
+  ContentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'amira-wellness-content-${Environment}-${AWS::AccountId}'
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: ContentLifecycle
+            Status: Enabled
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 30
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Logs bucket for application logs and access logs
+  LogsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'amira-wellness-logs-${Environment}-${AWS::AccountId}'
+      AccessControl: LogDeliveryWrite
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+            BucketKeyEnabled: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: LogsLifecycle
+            Status: Enabled
+            Transitions:
+              - StorageClass: STANDARD_IA
+                TransitionInDays: 30
+              - StorageClass: GLACIER
+                TransitionInDays: 90
+            Expiration:
+              Days: 365
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # IAM role for S3 cross-region replication
+  ReplicationRole:
+    Type: AWS::IAM::Role
+    Condition: EnableReplication
+    Properties:
+      RoleName: !Sub 'amira-s3-replication-role-${Environment}'
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: replication-policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetReplicationConfiguration
+                  - s3:ListBucket
+                Resource:
+                  - !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}'
+              - Effect: Allow
+                Action:
+                  - s3:GetObjectVersionForReplication
+                  - s3:GetObjectVersionAcl
+                  - s3:GetObjectVersionTagging
+                Resource:
+                  - !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}/*'
+              - Effect: Allow
+                Action:
+                  - s3:ReplicateObject
+                  - s3:ReplicateDelete
+                  - s3:ReplicateTags
+                Resource: !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}-replica/*'
+              - Effect: Allow
+                Action:
+                  - kms:Decrypt
+                Resource: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/${KMSKeyId}'
+                Condition:
+                  StringLike:
+                    kms:ViaService: !Sub 's3.${AWS::Region}.amazonaws.com'
+                    'kms:EncryptionContext:aws:s3:arn': !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}/*'
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Bucket policy for audio bucket
+  AudioBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AudioBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: DenyUnencryptedObjectUploads
+            Effect: Deny
+            Principal: '*'
+            Action: s3:PutObject
+            Resource: !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}/*'
+            Condition:
+              StringNotEquals:
+                's3:x-amz-server-side-encryption': 'aws:kms'
+          - Sid: DenyIncorrectEncryptionHeader
+            Effect: Deny
+            Principal: '*'
+            Action: s3:PutObject
+            Resource: !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}/*'
+            Condition:
+              StringNotEquals:
+                's3:x-amz-server-side-encryption-aws-kms-key-id': !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/${KMSKeyId}'
+          - Sid: EnforceTLSRequestsOnly
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}'
+              - !Sub 'arn:aws:s3:::amira-wellness-audio-${Environment}-${AWS::AccountId}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  # Bucket policy for content bucket
+  ContentBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ContentBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceTLSRequestsOnly
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !Sub 'arn:aws:s3:::amira-wellness-content-${Environment}-${AWS::AccountId}'
+              - !Sub 'arn:aws:s3:::amira-wellness-content-${Environment}-${AWS::AccountId}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  # Bucket policy for logs bucket
+  LogsBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref LogsBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceTLSRequestsOnly
+            Effect: Deny
+            Principal: '*'
+            Action: s3:*
+            Resource:
+              - !Sub 'arn:aws:s3:::amira-wellness-logs-${Environment}-${AWS::AccountId}'
+              - !Sub 'arn:aws:s3:::amira-wellness-logs-${Environment}-${AWS::AccountId}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+  # CloudWatch alarm for monitoring audio bucket size
+  AudioBucketSizeAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub 'amira-audio-bucket-size-${Environment}'
+      AlarmDescription: This alarm monitors the size of the audio bucket
+      MetricName: BucketSizeBytes
+      Namespace: AWS/S3
+      Statistic: Maximum
+      Period: 86400  # 1 day in seconds
+      EvaluationPeriods: 1
+      Threshold: 5000000000  # 5 GB in bytes
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: BucketName
+          Value: !Ref AudioBucket
+        - Name: StorageType
+          Value: StandardStorage
+      AlarmActions:
+        - !Ref SNSAlertTopic
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # SNS topic for storage alerts
+  SNSAlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub 'amira-storage-alerts-${Environment}'
+      KmsMasterKeyId: !Ref KMSKeyId
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+  AudioBucketName:
+    Description: Name of the S3 bucket for audio storage
+    Value: !Ref AudioBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-AudioBucketName'
+  
+  AudioBucketArn:
+    Description: ARN of the S3 bucket for audio storage
+    Value: !GetAtt AudioBucket.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-AudioBucketArn'
+  
+  AudioBucketDomainName:
+    Description: Domain name of the S3 bucket for audio storage
+    Value: !GetAtt AudioBucket.RegionalDomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-AudioBucketDomainName'
+  
+  ContentBucketName:
+    Description: Name of the S3 bucket for content storage
+    Value: !Ref ContentBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ContentBucketName'
+  
+  ContentBucketArn:
+    Description: ARN of the S3 bucket for content storage
+    Value: !GetAtt ContentBucket.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-ContentBucketArn'
+  
+  LogsBucketName:
+    Description: Name of the S3 bucket for logs storage
+    Value: !Ref LogsBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-LogsBucketName'
+  
+  LogsBucketArn:
+    Description: ARN of the S3 bucket for logs storage
+    Value: !GetAtt LogsBucket.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-LogsBucketArn'
+  
+  SNSAlertTopicArn:
+    Description: ARN of the SNS topic for storage alerts
+    Value: !Ref SNSAlertTopic
+    Export:
+      Name: !Sub '${AWS::StackName}-SNSAlertTopicArn'
