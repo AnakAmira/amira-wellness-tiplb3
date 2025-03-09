@@ -1,0 +1,451 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      scrape_timeout: 10s
+
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+
+    rule_files:
+      - /etc/prometheus/rules/*.yml
+
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+        - targets: ['localhost:9090']
+
+      - job_name: 'kubernetes-apiservers'
+        kubernetes_sd_configs:
+        - role: endpoints
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+          action: keep
+          regex: default;kubernetes;https
+
+      - job_name: 'kubernetes-nodes'
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+        - role: node
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - target_label: __address__
+          replacement: kubernetes.default.svc:443
+        - source_labels: [__meta_kubernetes_node_name]
+          regex: (.+)
+          target_label: __metrics_path__
+          replacement: /api/v1/nodes/${1}/proxy/metrics
+
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+        - role: pod
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_pod_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_pod_name]
+          action: replace
+          target_label: kubernetes_pod_name
+
+      - job_name: 'amira-backend-metrics'
+        kubernetes_sd_configs:
+        - role: service
+        relabel_configs:
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+          action: replace
+          target_label: __metrics_path__
+          regex: (.+)
+        - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+          action: replace
+          regex: ([^:]+)(?::\d+)?;(\d+)
+          replacement: $1:$2
+          target_label: __address__
+        - action: labelmap
+          regex: __meta_kubernetes_service_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          action: replace
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_service_name]
+          action: replace
+          target_label: kubernetes_service_name
+
+      - job_name: 'kubernetes-cadvisor'
+        scheme: https
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        kubernetes_sd_configs:
+        - role: node
+        relabel_configs:
+        - action: labelmap
+          regex: __meta_kubernetes_node_label_(.+)
+        - target_label: __address__
+          replacement: kubernetes.default.svc:443
+        - source_labels: [__meta_kubernetes_node_name]
+          regex: (.+)
+          target_label: __metrics_path__
+          replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+
+      - job_name: 'kube-state-metrics'
+        static_configs:
+        - targets: ['kube-state-metrics.kube-system.svc.cluster.local:8080']
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-rules
+  namespace: monitoring
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+data:
+  alert-rules.yml: |
+    groups:
+    - name: amira-backend-alerts
+      rules:
+      - alert: HighRequestLatency
+        expr: job:request_latency_seconds:mean5m{job="amira-backend-metrics"} > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High request latency on {{ $labels.instance }}
+          description: API request latency is above 500ms for 5 minutes.
+
+      - alert: HighErrorRate
+        expr: job:request_error_rate:5m{job="amira-backend-metrics"} > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High error rate on {{ $labels.instance }}
+          description: Error rate is above 5% for 5 minutes.
+
+      - alert: HighDatabaseQueryTime
+        expr: job:database_query_duration_seconds:mean5m{job="amira-backend-metrics"} > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High database query time on {{ $labels.instance }}
+          description: Database query time is above 100ms for 5 minutes.
+
+      - alert: HighAudioProcessingTime
+        expr: job:audio_processing_duration_seconds:mean5m{job="amira-backend-metrics"} > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High audio processing time on {{ $labels.instance }}
+          description: Audio processing time is above 5 seconds for 5 minutes.
+
+      - alert: HighAuthenticationFailures
+        expr: sum(rate(http_request_errors_total{job="amira-backend-metrics", status="401"}[5m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High authentication failures
+          description: More than 10 authentication failures per second for 5 minutes.
+
+      - alert: HighAuthorizationFailures
+        expr: sum(rate(http_request_errors_total{job="amira-backend-metrics", status="403"}[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High authorization failures
+          description: More than 5 authorization failures per second for 5 minutes.
+
+      - alert: HighRateLimitingEvents
+        expr: sum(rate(http_request_errors_total{job="amira-backend-metrics", status="429"}[5m])) > 20
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: High rate limiting events
+          description: More than 20 rate limiting events per second for 5 minutes.
+
+    - name: kubernetes-alerts
+      rules:
+      - alert: KubePodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total{namespace="amira-wellness"}[5m]) > 0.2
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Pod {{ $labels.pod }} is crash looping
+          description: Pod {{ $labels.pod }} is restarting more than 0.2 times per minute for 15 minutes.
+
+      - alert: KubePodNotReady
+        expr: sum by (pod) (kube_pod_status_phase{phase=~"Pending|Unknown", namespace="amira-wellness"}) > 0
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Pod {{ $labels.pod }} not ready
+          description: Pod {{ $labels.pod }} has been in a non-ready state for more than 15 minutes.
+
+      - alert: KubeDeploymentReplicasMismatch
+        expr: kube_deployment_spec_replicas{namespace="amira-wellness"} != kube_deployment_status_replicas_available{namespace="amira-wellness"}
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Deployment {{ $labels.deployment }} replicas mismatch
+          description: Deployment {{ $labels.deployment }} has not matched the expected number of replicas for 15 minutes.
+
+      - alert: KubeNodeNotReady
+        expr: kube_node_status_condition{condition="Ready", status="true"} == 0
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: Node {{ $labels.node }} not ready
+          description: Node {{ $labels.node }} has been in a non-ready state for more than 15 minutes.
+
+      - alert: KubeCPUOvercommit
+        expr: sum(kube_pod_container_resource_requests_cpu_cores) / sum(kube_node_status_allocatable_cpu_cores) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Kubernetes CPU overcommit
+          description: Cluster has overcommitted CPU resources (> 80% allocated).
+
+      - alert: KubeMemoryOvercommit
+        expr: sum(kube_pod_container_resource_requests_memory_bytes) / sum(kube_node_status_allocatable_memory_bytes) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Kubernetes memory overcommit
+          description: Cluster has overcommitted memory resources (> 80% allocated).
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      securityContext:
+        fsGroup: 65534
+        runAsUser: 65534
+        runAsNonRoot: true
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.45.0
+        imagePullPolicy: IfNotPresent
+        args:
+        - --config.file=/etc/prometheus/prometheus.yml
+        - --storage.tsdb.path=/prometheus
+        - --storage.tsdb.retention.time=15d
+        - --web.console.libraries=/usr/share/prometheus/console_libraries
+        - --web.console.templates=/usr/share/prometheus/consoles
+        - --web.enable-lifecycle
+        ports:
+        - name: http
+          containerPort: 9090
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /-/ready
+            port: http
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: http
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          failureThreshold: 3
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        volumeMounts:
+        - name: prometheus-config
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+        - name: prometheus-rules
+          mountPath: /etc/prometheus/rules
+        - name: prometheus-storage
+          mountPath: /prometheus
+      volumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-config
+      - name: prometheus-rules
+        configMap:
+          name: prometheus-rules
+      - name: prometheus-storage
+        persistentVolumeClaim:
+          claimName: prometheus-storage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+spec:
+  selector:
+    app: prometheus
+  ports:
+  - name: http
+    port: 9090
+    targetPort: http
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-storage
+  namespace: monitoring
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: standard
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+rules:
+- apiGroups: [""]
+  resources:
+  - nodes
+  - nodes/proxy
+  - services
+  - endpoints
+  - pods
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions"]
+  resources:
+  - ingresses
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: prometheus
+  namespace: monitoring
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prometheus-ingress
+  namespace: monitoring
+  labels:
+    app: prometheus
+    part-of: amira-wellness
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
+spec:
+  rules:
+  - host: ${MONITORING_DOMAIN}
+    http:
+      paths:
+      - path: /prometheus(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: prometheus
+            port:
+              name: http
+  tls:
+  - hosts:
+    - ${MONITORING_DOMAIN}
+    secretName: monitoring-tls-secret
