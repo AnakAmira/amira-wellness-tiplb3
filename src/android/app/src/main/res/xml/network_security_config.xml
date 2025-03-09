@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Default configuration for all connections -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- System certificates are trusted by default -->
+            <certificates src="system" />
+            <!-- User-added certificates are trusted only in debug builds -->
+            <certificates src="user" overridePins="true" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Configuration for specific domains -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">api.amirawellness.com</domain>
+        <pin-set expiration="2024-12-31">
+            <!-- SHA-256 hash of the API server's certificate public key -->
+            <pin digest="sha256">base64EncodedSha256HashOfPublicKey1</pin>
+            <!-- Backup certificate pin for key rotation -->
+            <pin digest="sha256">base64EncodedSha256HashOfPublicKey2</pin>
+        </pin-set>
+    </domain-config>
+
+    <!-- Configuration for content delivery network -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">cdn.amirawellness.com</domain>
+        <trust-anchors>
+            <!-- Trust anchors for CDN -->
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Security configuration overrides for debug builds -->
+    <debug-overrides>
+        <trust-anchors>
+            <!-- Debug certificates -->
+            <certificates src="user" />
+            <!-- System certificates -->
+            <certificates src="system" />
+        </trust-anchors>
+    </debug-overrides>
+</network-security-config>
