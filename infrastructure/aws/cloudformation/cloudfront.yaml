@@ -1,0 +1,430 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: |
+  CloudFront distributions for Amira Wellness application, providing secure content delivery
+  for static assets, tool library content, and encrypted audio files.
+
+Parameters:
+  Environment:
+    Type: String
+    Description: Deployment environment (dev, staging, prod)
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Default: dev
+  
+  DomainName:
+    Type: String
+    Description: Domain name for the application
+    Default: amirawellness.com
+  
+  CertificateArn:
+    Type: String
+    Description: ARN of the ACM certificate for CloudFront distributions
+    Default: ''
+  
+  PriceClass:
+    Type: String
+    Description: CloudFront price class
+    AllowedValues:
+      - PriceClass_100
+      - PriceClass_200
+      - PriceClass_All
+    Default: PriceClass_100
+  
+  HostedZoneId:
+    Type: String
+    Description: Route53 hosted zone ID for DNS records
+    Default: ''
+  
+  WebACLId:
+    Type: String
+    Description: WAF Web ACL ID for CloudFront protection
+    Default: ''
+  
+  EnableWAF:
+    Type: String
+    Description: Whether to enable WAF for CloudFront
+    AllowedValues:
+      - 'true'
+      - 'false'
+    Default: 'true'
+  
+  PublicKeyPEM:
+    Type: String
+    Description: PEM-encoded public key for signed URLs
+    Default: ''
+    NoEcho: true
+  
+  SNSAlertTopic:
+    Type: String
+    Description: SNS topic ARN for CloudFront alerts
+    Default: ''
+  
+  CachingOptimizedPolicy:
+    Type: String
+    Description: ID of the CloudFront caching optimized policy
+    Default: '658327ea-f89d-4fab-a63d-7e88639e58f6'  # AWS managed policy ID
+  
+  CORS-S3Origin:
+    Type: String
+    Description: ID of the CloudFront CORS-S3Origin policy
+    Default: '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf'  # AWS managed policy ID
+
+Conditions:
+  CreateDNSRecords: !Not [!Equals [!Ref HostedZoneId, '']]
+  EnableWAF: !Equals [!Ref EnableWAF, 'true']
+
+Resources:
+  # CloudFront distribution for content (tool library, static assets)
+  ContentDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: Content distribution for Amira Wellness tool library
+        DefaultRootObject: index.html
+        PriceClass: !Ref PriceClass
+        HttpVersion: http2
+        IPV6Enabled: true
+        Aliases:
+          - !Sub 'cdn.${DomainName}'
+        Origins:
+          - Id: ContentBucketOrigin
+            DomainName: !GetAtt ContentBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${ContentOriginAccessIdentity}'
+        DefaultCacheBehavior:
+          TargetOriginId: ContentBucketOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: ['GET', 'HEAD', 'OPTIONS']
+          CachedMethods: ['GET', 'HEAD', 'OPTIONS']
+          Compress: true
+          DefaultTTL: 86400  # 1 day
+          MinTTL: 0
+          MaxTTL: 31536000  # 1 year
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+            Headers:
+              - Origin
+              - Access-Control-Request-Method
+              - Access-Control-Request-Headers
+          CachePolicyId: !Ref CachingOptimizedPolicy
+          OriginRequestPolicyId: !Ref CORS-S3Origin
+          ResponseHeadersPolicyId: !Ref SecurityHeadersPolicy
+        CacheBehaviors:
+          - PathPattern: '/tools/*'
+            TargetOriginId: ContentBucketOrigin
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: ['GET', 'HEAD', 'OPTIONS']
+            CachedMethods: ['GET', 'HEAD', 'OPTIONS']
+            Compress: true
+            DefaultTTL: 86400  # 1 day
+            MinTTL: 0
+            MaxTTL: 31536000  # 1 year
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+              Headers:
+                - Origin
+                - Access-Control-Request-Method
+                - Access-Control-Request-Headers
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 300
+          - ErrorCode: 404
+            ResponseCode: 404
+            ResponsePagePath: /404.html
+            ErrorCachingMinTTL: 300
+        WebACLId: !If [EnableWAF, !Ref WebACLId, !Ref 'AWS::NoValue']
+        Logging:
+          Bucket: !GetAtt LogsBucket.DomainName
+          Prefix: 'cloudfront/content/'
+          IncludeCookies: false
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        Restrictions:
+          GeoRestriction:
+            RestrictionType: none
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # CloudFront distribution for audio (voice journals)
+  AudioDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: Secure distribution for Amira Wellness audio recordings
+        PriceClass: !Ref PriceClass
+        HttpVersion: http2
+        IPV6Enabled: true
+        Aliases:
+          - !Sub 'audio.${DomainName}'
+        Origins:
+          - Id: AudioBucketOrigin
+            DomainName: !GetAtt AudioBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${AudioOriginAccessIdentity}'
+        DefaultCacheBehavior:
+          TargetOriginId: AudioBucketOrigin
+          ViewerProtocolPolicy: https-only
+          AllowedMethods: ['GET', 'HEAD', 'OPTIONS']
+          CachedMethods: ['GET', 'HEAD', 'OPTIONS']
+          Compress: true
+          DefaultTTL: 0  # No caching by default for private content
+          MinTTL: 0
+          MaxTTL: 86400  # 1 day max if caching allowed
+          ForwardedValues:
+            QueryString: true  # Forward query strings for signed URLs
+            Cookies:
+              Forward: none
+            Headers:
+              - Origin
+              - Access-Control-Request-Method
+              - Access-Control-Request-Headers
+              - Authorization
+          TrustedSigners: ['self']  # Allow CloudFront to sign URLs
+          TrustedKeyGroups: [!Ref AudioKeyGroup]
+        WebACLId: !If [EnableWAF, !Ref WebACLId, !Ref 'AWS::NoValue']
+        Logging:
+          Bucket: !GetAtt LogsBucket.DomainName
+          Prefix: 'cloudfront/audio/'
+          IncludeCookies: false
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        Restrictions:
+          GeoRestriction:
+            RestrictionType: none
+      Tags:
+        - Key: Project
+          Value: AmiraWellness
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # CloudFront Origin Access Identity for content bucket
+  ContentOriginAccessIdentity:
+    Type: AWS::CloudFront::OriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'OAI for Amira Wellness content - ${Environment}'
+
+  # CloudFront Origin Access Identity for audio bucket
+  AudioOriginAccessIdentity:
+    Type: AWS::CloudFront::OriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'OAI for Amira Wellness audio - ${Environment}'
+
+  # Public key for signed URLs
+  AudioPublicKey:
+    Type: AWS::CloudFront::PublicKey
+    Properties:
+      PublicKeyConfig:
+        CallerReference: !Sub '${Environment}-${AWS::AccountId}-audio-key'
+        Name: !Sub '${Environment}-amira-audio-public-key'
+        EncodedKey: !Ref PublicKeyPEM
+        Comment: Public key for signed URLs for Amira Wellness audio recordings
+
+  # Key group for signed URLs
+  AudioKeyGroup:
+    Type: AWS::CloudFront::KeyGroup
+    Properties:
+      KeyGroupConfig:
+        Items:
+          - !Ref AudioPublicKey
+        Name: !Sub '${Environment}-amira-audio-key-group'
+        Comment: Key group for Amira Wellness audio recordings
+
+  # Security headers policy for CloudFront
+  SecurityHeadersPolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub '${Environment}-amira-security-headers'
+        Comment: Security headers for Amira Wellness CloudFront distributions
+        SecurityHeadersConfig:
+          ContentSecurityPolicy:
+            ContentSecurityPolicy: "default-src 'self'; img-src 'self' data:; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self' https://api.amirawellness.com;"
+            Override: true
+          ContentTypeOptions:
+            Override: true
+          FrameOptions:
+            FrameOption: DENY
+            Override: true
+          ReferrerPolicy:
+            ReferrerPolicy: strict-origin-when-cross-origin
+            Override: true
+          StrictTransportSecurity:
+            AccessControlMaxAgeSec: 63072000  # 2 years
+            IncludeSubdomains: true
+            Preload: true
+            Override: true
+          XSSProtection:
+            ModeBlock: true
+            Protection: true
+            Override: true
+        CorsConfig:
+          AccessControlAllowCredentials: false
+          AccessControlAllowHeaders:
+            Items:
+              - Authorization
+              - Content-Type
+              - Origin
+              - Accept
+          AccessControlAllowMethods:
+            Items:
+              - GET
+              - HEAD
+              - OPTIONS
+          AccessControlAllowOrigins:
+            Items:
+              - !Sub 'https://${DomainName}'
+              - !Sub 'https://www.${DomainName}'
+              - !Sub 'https://api.${DomainName}'
+          AccessControlMaxAgeSec: 600
+          OriginOverride: true
+
+  # DNS record for content CDN
+  ContentCDNRecord:
+    Type: AWS::Route53::RecordSet
+    Condition: CreateDNSRecords
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub 'cdn.${DomainName}.'
+      Type: A
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2  # CloudFront hosted zone ID
+        DNSName: !GetAtt ContentDistribution.DomainName
+        EvaluateTargetHealth: false
+
+  # DNS record for audio CDN
+  AudioCDNRecord:
+    Type: AWS::Route53::RecordSet
+    Condition: CreateDNSRecords
+    Properties:
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub 'audio.${DomainName}.'
+      Type: A
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2  # CloudFront hosted zone ID
+        DNSName: !GetAtt AudioDistribution.DomainName
+        EvaluateTargetHealth: false
+
+  # S3 bucket policy for content bucket to allow CloudFront access
+  ContentBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ContentBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontServicePrincipal
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${ContentOriginAccessIdentity}'
+            Action: 's3:GetObject'
+            Resource: !Sub 'arn:aws:s3:::${ContentBucket}/*'
+
+  # S3 bucket policy for audio bucket to allow CloudFront access
+  AudioBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AudioBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontServicePrincipal
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${AudioOriginAccessIdentity}'
+            Action: 's3:GetObject'
+            Resource: !Sub 'arn:aws:s3:::${AudioBucket}/*'
+
+  # CloudWatch alarm for monitoring CloudFront error rate
+  CloudFrontErrorRateAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub '${Environment}-amira-cloudfront-error-rate'
+      AlarmDescription: Alarm if CloudFront error rate exceeds threshold
+      MetricName: 5xxErrorRate
+      Namespace: AWS/CloudFront
+      Statistic: Average
+      Period: 300  # 5 minutes
+      EvaluationPeriods: 3
+      Threshold: 5  # 5% error rate
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+        - Name: DistributionId
+          Value: !Ref ContentDistribution
+        - Name: Region
+          Value: Global
+      AlarmActions:
+        - !Ref SNSAlertTopic
+      OKActions:
+        - !Ref SNSAlertTopic
+
+Outputs:
+  ContentDistributionId:
+    Description: ID of the CloudFront content distribution
+    Value: !Ref ContentDistribution
+    Export:
+      Name: !Sub '${AWS::StackName}-ContentDistributionId'
+  
+  ContentDistributionDomainName:
+    Description: Domain name of the CloudFront content distribution
+    Value: !GetAtt ContentDistribution.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-ContentDistributionDomainName'
+  
+  AudioDistributionId:
+    Description: ID of the CloudFront audio distribution
+    Value: !Ref AudioDistribution
+    Export:
+      Name: !Sub '${AWS::StackName}-AudioDistributionId'
+  
+  AudioDistributionDomainName:
+    Description: Domain name of the CloudFront audio distribution
+    Value: !GetAtt AudioDistribution.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-AudioDistributionDomainName'
+  
+  ContentOriginAccessIdentity:
+    Description: CloudFront origin access identity for content bucket
+    Value: !Ref ContentOriginAccessIdentity
+    Export:
+      Name: !Sub '${AWS::StackName}-ContentOriginAccessIdentity'
+  
+  AudioOriginAccessIdentity:
+    Description: CloudFront origin access identity for audio bucket
+    Value: !Ref AudioOriginAccessIdentity
+    Export:
+      Name: !Sub '${AWS::StackName}-AudioOriginAccessIdentity'
+  
+  AudioKeyGroupId:
+    Description: ID of the CloudFront key group for signed URLs
+    Value: !Ref AudioKeyGroup
+    Export:
+      Name: !Sub '${AWS::StackName}-AudioKeyGroupId'
+  
+  SecurityHeadersPolicyId:
+    Description: ID of the CloudFront security headers policy
+    Value: !Ref SecurityHeadersPolicy
+    Export:
+      Name: !Sub '${AWS::StackName}-SecurityHeadersPolicyId'
