@@ -1,0 +1,298 @@
+name: iOS CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - src/ios/**
+      - .github/workflows/ios-ci.yml
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - src/ios/**
+      - .github/workflows/ios-ci.yml
+
+env:
+  WORKING_DIRECTORY: src/ios/AmiraWellness
+  RUBY_VERSION: 3.2
+  XCODE_VERSION: 15.0
+  DEVELOPER_DIR: /Applications/Xcode_15.0.app/Contents/Developer
+  LC_ALL: en_US.UTF-8
+  LANG: en_US.UTF-8
+
+jobs:
+  lint:
+    # Run SwiftLint to ensure code quality
+    runs-on: macos-13
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+      
+      - name: Install SwiftLint
+        run: brew install swiftlint
+      
+      - name: Run SwiftLint
+        run: swiftlint --strict --reporter json > swiftlint-report.json || true
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Upload SwiftLint report
+        uses: actions/upload-artifact@v3
+        with:
+          name: swiftlint-report
+          path: ${{ env.WORKING_DIRECTORY }}/swiftlint-report.json
+        if: always()
+
+  dependency-check:
+    # Check for vulnerable dependencies
+    runs-on: macos-13
+    needs: [lint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+      
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/Pods
+          key: pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: pods-
+      
+      - name: Install CocoaPods
+        run: pod install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Install dependency-check
+        run: brew install dependency-check
+      
+      - name: Run dependency check
+        run: dependency-check --scan Podfile.lock --format JSON --out dependency-check-report.json
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Upload dependency check report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: ${{ env.WORKING_DIRECTORY }}/dependency-check-report.json
+
+  unit-test:
+    # Run unit tests
+    runs-on: macos-13
+    needs: [lint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+      
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/Pods
+          key: pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: pods-
+      
+      - name: Install CocoaPods
+        run: pod install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Install Fastlane
+        run: bundle install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Run unit tests
+        uses: maierj/fastlane-action@v2.3.0
+        with:
+          lane: test
+          subdirectory: ${{ env.WORKING_DIRECTORY }}
+          bundle-install-path: vendor/bundle
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: ${{ env.WORKING_DIRECTORY }}/fastlane/test_output
+        if: always()
+      
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ${{ env.WORKING_DIRECTORY }}/fastlane/test_output/xcov
+        if: success()
+
+  ui-test:
+    # Run UI tests
+    runs-on: macos-13
+    needs: [unit-test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+      
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/Pods
+          key: pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: pods-
+      
+      - name: Install CocoaPods
+        run: pod install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Install Fastlane
+        run: bundle install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Run UI tests
+        run: bundle exec fastlane scan --scheme "AmiraWellness" --device "iPhone 14" --only_testing "AmiraWellnessUITests" --output_directory "fastlane/ui_test_output" --output_types "html,junit" --code_coverage true
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      
+      - name: Upload UI test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: ui-test-results
+          path: ${{ env.WORKING_DIRECTORY }}/fastlane/ui_test_output
+        if: always()
+
+  build:
+    # Build the iOS application
+    runs-on: macos-13
+    needs: [unit-test, dependency-check]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+      
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/Pods
+          key: pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: pods-
+      
+      - name: Install CocoaPods
+        run: pod install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Install Fastlane
+        run: bundle install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Extract branch name
+        shell: bash
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+      
+      - name: Setup code signing
+        uses: maierj/fastlane-action@v2.3.0
+        with:
+          lane: refresh_certificates
+          subdirectory: ${{ env.WORKING_DIRECTORY }}
+          bundle-install-path: vendor/bundle
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      
+      - name: Build for testing
+        uses: maierj/fastlane-action@v2.3.0
+        with:
+          lane: build_for_testing
+          subdirectory: ${{ env.WORKING_DIRECTORY }}
+          bundle-install-path: vendor/bundle
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+      
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts-${{ env.BRANCH_NAME }}
+          path: ${{ env.WORKING_DIRECTORY }}/build
+
+  beta-deploy:
+    # Deploy to TestFlight
+    runs-on: macos-13
+    needs: [ui-test, build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+          bundler-cache: true
+      
+      - name: Cache CocoaPods
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/Pods
+          key: pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: pods-
+      
+      - name: Install CocoaPods
+        run: pod install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Install Fastlane
+        run: bundle install
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+      
+      - name: Deploy to TestFlight
+        uses: maierj/fastlane-action@v2.3.0
+        with:
+          lane: beta
+          subdirectory: ${{ env.WORKING_DIRECTORY }}
+          bundle-install-path: vendor/bundle
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
