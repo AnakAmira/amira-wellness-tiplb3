@@ -1,0 +1,855 @@
+/**
+ * Journaling Tools Data
+ * 
+ * This file contains the collection of journaling tools available in the Amira Wellness
+ * application. Each tool is designed to support emotional well-being through structured
+ * reflection exercises.
+ * 
+ * @version 1.0.0
+ */
+
+// Type definitions for journaling tools
+export type ToolCategory = 'JOURNALING' | 'BREATHING' | 'MEDITATION' | 'SOMATIC' | 'GRATITUDE';
+export type ContentType = 'TEXT' | 'GUIDED_EXERCISE' | 'AUDIO' | 'VIDEO' | 'INTERACTIVE';
+export type DifficultyLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+export type EmotionType = 
+  'ANXIETY' | 'STRESS' | 'OVERWHELM' | 'FRUSTRATION' | 'ANGER' | 'FEAR' | 
+  'SADNESS' | 'SHAME' | 'LONELINESS' | 'CONFUSION' | 'CURIOSITY' | 'WONDER' | 
+  'GRIEF' | 'RESENTMENT' | 'DISCONNECTION' | 'DISCOMFORT';
+
+export interface ToolMetadata {
+  author: string;
+  tags: string[];
+  created_date: string;
+  version: string;
+}
+
+export interface Step {
+  order: number;
+  title: string;
+  description: string;
+  duration: number; // seconds
+}
+
+export interface TextContent {
+  title: string;
+  instructions: string;
+  prompts: string[];
+  benefits: string[];
+  tips: string[];
+}
+
+export interface GuidedExerciseContent {
+  title: string;
+  instructions: string;
+  steps: Step[];
+  benefits: string[];
+  tips: string[];
+}
+
+export type ToolContent = TextContent | GuidedExerciseContent;
+
+export interface JournalingTool {
+  name: string;
+  description: string;
+  category: ToolCategory;
+  content_type: ContentType;
+  estimated_duration: number; // minutes
+  difficulty: DifficultyLevel;
+  target_emotions: EmotionType[];
+  is_active: boolean;
+  is_premium: boolean;
+  content: ToolContent;
+  image_url: string;
+  metadata: ToolMetadata;
+}
+
+// Export the collection of journaling tools
+export const journalingTools: JournalingTool[] = [
+  {
+    name: "Reflexión Diaria",
+    description: "Un ejercicio de journaling simple para reflexionar sobre tu día, tus emociones y tus experiencias, ayudándote a procesar tus sentimientos y obtener claridad mental.",
+    category: "JOURNALING",
+    content_type: "TEXT",
+    estimated_duration: 10,
+    difficulty: "BEGINNER",
+    target_emotions: ["ANXIETY", "STRESS", "OVERWHELM", "FRUSTRATION"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Reflexión Diaria",
+      instructions: "Tómate unos minutos al final del día para reflexionar sobre tus experiencias, emociones y pensamientos. Esta práctica regular te ayudará a procesar tus sentimientos, identificar patrones y obtener mayor claridad mental.",
+      prompts: [
+        "¿Cómo me siento en este momento? ¿Qué emociones he experimentado hoy?",
+        "¿Cuál fue el momento más significativo de mi día y por qué?",
+        "¿Qué me ha preocupado o estresado hoy? ¿Cómo he manejado estas situaciones?",
+        "¿Qué he aprendido hoy sobre mí mismo o sobre los demás?",
+        "¿Qué me gustaría llevar conmigo al día de mañana? ¿Qué me gustaría dejar atrás?"
+      ],
+      benefits: [
+        "Aumenta la autoconciencia emocional",
+        "Reduce el estrés y la ansiedad",
+        "Ayuda a identificar patrones de pensamiento y comportamiento",
+        "Proporciona un espacio para procesar emociones difíciles",
+        "Mejora la claridad mental y la toma de decisiones"
+      ],
+      tips: [
+        "Intenta escribir sin filtrar o juzgar tus pensamientos",
+        "No te preocupes por la gramática o la estructura; lo importante es la expresión",
+        "Establece un horario regular para tu práctica de journaling",
+        "Si te quedas bloqueado, comienza simplemente describiendo tu día",
+        "Revisa tus entradas anteriores periódicamente para identificar patrones"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/daily-reflection.svg",
+    metadata: {
+      author: "Equipo de Amira Wellness",
+      tags: ["reflexión", "diario", "principiante", "autoconciencia"],
+      created_date: "2023-01-15",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Descarga Emocional",
+    description: "Una práctica de escritura libre diseñada para liberar emociones intensas o abrumadoras, proporcionando un espacio seguro para expresar y procesar sentimientos difíciles.",
+    category: "JOURNALING",
+    content_type: "TEXT",
+    estimated_duration: 15,
+    difficulty: "BEGINNER",
+    target_emotions: ["ANGER", "FRUSTRATION", "ANXIETY", "OVERWHELM", "SADNESS"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Descarga Emocional",
+      instructions: "Esta práctica te invita a escribir de forma libre y sin filtros sobre las emociones intensas que estás experimentando. Es un espacio seguro para expresar todo lo que sientes, especialmente aquellas emociones que pueden ser difíciles de compartir con otros.",
+      prompts: [
+        "Escribe sobre lo que estás sintiendo ahora mismo, sin filtrar ni juzgar tus emociones.",
+        "¿Qué situación está provocando estas emociones intensas? Describe los detalles.",
+        "Si tu emoción pudiera hablar, ¿qué diría? ¿Qué necesita?",
+        "¿Dónde sientes esta emoción en tu cuerpo? Describe las sensaciones físicas.",
+        "¿Qué te gustaría hacer con esta emoción? ¿Cómo podrías liberarla de forma constructiva?"
+      ],
+      benefits: [
+        "Proporciona alivio emocional inmediato",
+        "Reduce la intensidad de emociones abrumadoras",
+        "Previene la supresión emocional y sus efectos negativos",
+        "Ayuda a identificar las causas subyacentes de tus emociones",
+        "Desarrolla mayor capacidad para procesar emociones difíciles"
+      ],
+      tips: [
+        "Escribe rápido y continuamente, sin preocuparte por la ortografía o gramática",
+        "Si te sientes cómodo, puedes romper o quemar el papel después como acto simbólico de liberación",
+        "Considera establecer un límite de tiempo (15-20 minutos) para evitar rumiar demasiado",
+        "Después de la descarga, tómate un momento para respirar y centrarte",
+        "Complementa esta práctica con actividades de autocuidado después"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/emotional-release.svg",
+    metadata: {
+      author: "Basado en técnicas de terapia expresiva",
+      tags: ["liberación", "emociones", "expresión", "principiante", "intensidad"],
+      created_date: "2023-01-20",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Diálogo con la Emoción",
+    description: "Una técnica de journaling que te permite establecer un diálogo escrito con tus emociones, ayudándote a comprenderlas mejor y a descubrir su mensaje subyacente.",
+    category: "JOURNALING",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 20,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["ANXIETY", "FEAR", "ANGER", "SADNESS", "FRUSTRATION"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Diálogo con la Emoción",
+      instructions: "Esta práctica te invita a establecer un diálogo escrito con una emoción específica, personificándola y conversando con ella para comprender mejor su propósito y mensaje.",
+      steps: [
+        {
+          order: 1,
+          title: "Identificación",
+          description: "Identifica una emoción que has estado experimentando con frecuencia o intensidad. Nómbrala específicamente (por ejemplo: miedo, tristeza, enojo).",
+          duration: 60
+        },
+        {
+          order: 2,
+          title: "Personificación",
+          description: "Imagina esta emoción como un personaje o entidad con su propia voz y personalidad. ¿Cómo se ve? ¿Cómo habla? ¿Qué características tiene?",
+          duration: 120
+        },
+        {
+          order: 3,
+          title: "Inicio del diálogo",
+          description: "Comienza el diálogo escribiendo una pregunta o declaración dirigida a la emoción. Por ejemplo: 'Hola Miedo, has estado muy presente últimamente. ¿Qué estás tratando de decirme?'",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Respuesta de la emoción",
+          description: "Cambia de perspectiva y responde como si fueras la emoción. Deja que las palabras fluyan intuitivamente, sin censurar o juzgar lo que surge.",
+          duration: 180
+        },
+        {
+          order: 5,
+          title: "Continuar el diálogo",
+          description: "Continúa la conversación, alternando entre tu voz y la voz de la emoción. Haz preguntas como: '¿Qué necesitas de mí?' '¿Qué estás tratando de proteger?' '¿Cómo podemos trabajar juntos?'",
+          duration: 300
+        },
+        {
+          order: 6,
+          title: "Cierre",
+          description: "Concluye el diálogo de manera respetuosa, agradeciendo a la emoción por compartir su mensaje y estableciendo cómo te gustaría relacionarte con ella en el futuro.",
+          duration: 120
+        },
+        {
+          order: 7,
+          title: "Reflexión",
+          description: "Reflexiona sobre lo que has aprendido de este diálogo. ¿Qué te ha sorprendido? ¿Qué nuevas perspectivas has ganado? ¿Qué acciones podrías tomar basándote en esta conversación?",
+          duration: 180
+        }
+      ],
+      benefits: [
+        "Desarrolla una relación más consciente con tus emociones",
+        "Descubre el propósito y la sabiduría detrás de emociones difíciles",
+        "Reduce la identificación excesiva con las emociones",
+        "Transforma la relación antagonista con las emociones en una relación de colaboración",
+        "Proporciona nuevas perspectivas sobre situaciones desafiantes"
+      ],
+      tips: [
+        "Permite que la voz de la emoción surja naturalmente, sin forzarla",
+        "Mantén una actitud de curiosidad genuina durante el diálogo",
+        "Si te bloqueas, prueba cambiando de mano para escribir la respuesta de la emoción",
+        "Recuerda que no hay respuestas 'correctas' o 'incorrectas' en este ejercicio",
+        "Practica regularmente con diferentes emociones para desarrollar mayor fluidez"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/emotion-dialogue.svg",
+    metadata: {
+      author: "Basado en técnicas de la terapia de los estados del yo y la psicología junguiana",
+      tags: ["diálogo", "emociones", "personificación", "intermedio", "autoconocimiento"],
+      created_date: "2023-01-25",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Journaling de Autocompasión",
+    description: "Una práctica de escritura diseñada para cultivar autocompasión y amabilidad hacia uno mismo, especialmente útil durante momentos de autocrítica, vergüenza o sufrimiento.",
+    category: "JOURNALING",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 15,
+    difficulty: "BEGINNER",
+    target_emotions: ["SADNESS", "FRUSTRATION", "SHAME", "ANXIETY", "LONELINESS"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Journaling de Autocompasión",
+      instructions: "Esta práctica te guía a través de un proceso de escritura para cultivar autocompasión, especialmente útil cuando estás experimentando autocrítica, vergüenza o sufrimiento. La autocompasión implica tratarte a ti mismo con la misma amabilidad y comprensión que ofrecerías a un buen amigo.",
+      steps: [
+        {
+          order: 1,
+          title: "Reconocimiento",
+          description: "Identifica una situación o aspecto de ti mismo que te está causando dolor, autocrítica o vergüenza. Escribe sobre ello brevemente, reconociendo tu sufrimiento sin minimizarlo ni exagerarlo.",
+          duration: 120
+        },
+        {
+          order: 2,
+          title: "Humanidad compartida",
+          description: "Reflexiona y escribe sobre cómo tu experiencia te conecta con otros. Recuerda que el sufrimiento, los errores y las imperfecciones son parte de la experiencia humana compartida. No estás solo en tu lucha.",
+          duration: 180
+        },
+        {
+          order: 3,
+          title: "Carta de un amigo compasivo",
+          description: "Imagina qué le escribiría un amigo profundamente compasivo y sabio sobre esta situación. ¿Qué palabras de comprensión, consuelo y aliento te ofrecería? Escribe esta carta dirigida a ti.",
+          duration: 240
+        },
+        {
+          order: 4,
+          title: "Palabras de autocompasión",
+          description: "Ahora, escribe directamente a ti mismo con la misma compasión. Usa frases como: 'Esto es realmente difícil ahora mismo', 'Es natural sentirse así', 'Mereces amabilidad y comprensión'.",
+          duration: 180
+        },
+        {
+          order: 5,
+          title: "Acciones compasivas",
+          description: "Reflexiona y escribe sobre acciones concretas que podrías tomar para cuidarte en este momento difícil. ¿Qué necesitas? ¿Cómo puedes atender a tu sufrimiento con amabilidad?",
+          duration: 120
+        },
+        {
+          order: 6,
+          title: "Reflexión",
+          description: "Concluye reflexionando sobre cómo te sientes después de este ejercicio. Observa cualquier cambio en tu relación con la situación o contigo mismo.",
+          duration: 60
+        }
+      ],
+      benefits: [
+        "Reduce la autocrítica y la vergüenza",
+        "Desarrolla una voz interna más amable y comprensiva",
+        "Aumenta la resiliencia emocional",
+        "Mejora la capacidad de afrontar situaciones difíciles",
+        "Promueve el bienestar psicológico general"
+      ],
+      tips: [
+        "Practica este ejercicio regularmente, no solo en momentos de crisis",
+        "Si te resulta difícil ser compasivo contigo mismo, comienza imaginando qué le dirías a un amigo",
+        "Observa la resistencia a la autocompasión si surge, sin juzgarla",
+        "Recuerda que la autocompasión no es autoindulgencia; es una forma saludable de relacionarte contigo mismo",
+        "Complementa esta práctica con gestos físicos de autocompasión, como colocar una mano sobre tu corazón"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/self-compassion.svg",
+    metadata: {
+      author: "Basado en el trabajo de Kristin Neff sobre autocompasión",
+      tags: ["autocompasión", "amabilidad", "autocuidado", "principiante", "aceptación"],
+      created_date: "2023-02-01",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Reescritura de Narrativas Limitantes",
+    description: "Una técnica de journaling para identificar y transformar narrativas o creencias limitantes, reemplazándolas con perspectivas más equilibradas y empoderadoras.",
+    category: "JOURNALING",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 25,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["ANXIETY", "FEAR", "FRUSTRATION", "SADNESS", "OVERWHELM"],
+    is_active: true,
+    is_premium: true,
+    content: {
+      title: "Reescritura de Narrativas Limitantes",
+      instructions: "Esta práctica te guía para identificar y transformar narrativas o creencias limitantes que influyen en tus emociones y comportamientos. A través de la escritura reflexiva, examinarás estas narrativas y crearás alternativas más equilibradas y empoderadoras.",
+      steps: [
+        {
+          order: 1,
+          title: "Identificación de la narrativa",
+          description: "Identifica una creencia o historia que te cuentas sobre ti mismo, los demás o el mundo que te limita o causa sufrimiento. Escríbela en detalle, notando las palabras específicas que usas.",
+          duration: 180
+        },
+        {
+          order: 2,
+          title: "Exploración de orígenes",
+          description: "Reflexiona sobre cuándo y cómo surgió esta narrativa. ¿Qué experiencias contribuyeron a su formación? ¿Quién más influyó en esta creencia? Escribe sobre sus orígenes.",
+          duration: 240
+        },
+        {
+          order: 3,
+          title: "Impacto en tu vida",
+          description: "Examina cómo esta narrativa ha influido en tus emociones, decisiones y comportamientos. ¿Qué te ha impedido hacer? ¿Cómo ha afectado tus relaciones y oportunidades?",
+          duration: 180
+        },
+        {
+          order: 4,
+          title: "Cuestionamiento",
+          description: "Cuestiona la validez de esta narrativa. ¿Es completamente cierta? ¿Qué evidencia contradice esta creencia? ¿Cómo cambiaría tu perspectiva si no creyeras esto?",
+          duration: 240
+        },
+        {
+          order: 5,
+          title: "Creación de una nueva narrativa",
+          description: "Escribe una nueva versión de esta historia que sea más equilibrada, compasiva y empoderadora. No tiene que ser opuesta a la original, sino más matizada y flexible.",
+          duration: 300
+        },
+        {
+          order: 6,
+          title: "Encarnando la nueva narrativa",
+          description: "Imagina cómo sería vivir desde esta nueva perspectiva. ¿Cómo te sentirías? ¿Qué acciones diferentes tomarías? ¿Cómo cambiarían tus relaciones?",
+          duration: 180
+        },
+        {
+          order: 7,
+          title: "Plan de acción",
+          description: "Identifica pasos concretos que puedes tomar para integrar esta nueva narrativa en tu vida diaria. ¿Qué recordatorios puedes establecer? ¿Qué acciones pueden reforzar esta nueva creencia?",
+          duration: 180
+        }
+      ],
+      benefits: [
+        "Desarrolla mayor flexibilidad cognitiva",
+        "Reduce patrones de pensamiento negativo automático",
+        "Aumenta la sensación de agencia y empoderamiento",
+        "Mejora la autoestima y confianza",
+        "Promueve respuestas más adaptativas ante los desafíos"
+      ],
+      tips: [
+        "Trabaja con una narrativa a la vez para mayor profundidad",
+        "Sé paciente; cambiar creencias arraigadas lleva tiempo y práctica",
+        "Busca el equilibrio, no el positivismo tóxico; las nuevas narrativas deben ser creíbles",
+        "Considera revisar y refinar tu nueva narrativa periódicamente",
+        "Comparte tu proceso con alguien de confianza para obtener perspectiva adicional"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/narrative-rewriting.svg",
+    metadata: {
+      author: "Basado en técnicas de terapia cognitivo-conductual y terapia narrativa",
+      tags: ["narrativas", "creencias", "transformación", "intermedio", "cognición"],
+      created_date: "2023-02-05",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Journaling de Valores",
+    description: "Una práctica de escritura reflexiva para identificar, clarificar y conectar con tus valores personales más importantes, ayudándote a tomar decisiones más alineadas y significativas.",
+    category: "JOURNALING",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 30,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["CONFUSION", "FRUSTRATION", "ANXIETY", "OVERWHELM"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Journaling de Valores",
+      instructions: "Esta práctica te guía a través de un proceso de escritura reflexiva para identificar, clarificar y conectar con tus valores personales más importantes. Los valores son cualidades de acción que deseas manifestar en tu vida, independientemente de las circunstancias externas.",
+      steps: [
+        {
+          order: 1,
+          title: "Exploración inicial",
+          description: "Reflexiona sobre momentos significativos en tu vida en los que te sentiste más vivo, satisfecho o en paz. Describe estos momentos y lo que los hizo importantes para ti.",
+          duration: 240
+        },
+        {
+          order: 2,
+          title: "Identificación de valores",
+          description: "A partir de estas experiencias, identifica los valores que estaban presentes. Algunos ejemplos de valores son: autenticidad, conexión, creatividad, crecimiento, contribución, libertad, etc. Haz una lista de los que resuenen contigo.",
+          duration: 180
+        },
+        {
+          order: 3,
+          title: "Priorización",
+          description: "Revisa tu lista y selecciona los 3-5 valores que sientes que son más fundamentales para ti en este momento de tu vida. Escribe sobre por qué cada uno es importante para ti.",
+          duration: 240
+        },
+        {
+          order: 4,
+          title: "Definición personal",
+          description: "Para cada valor prioritario, escribe tu definición personal. ¿Qué significa este valor específicamente para ti? ¿Cómo se manifiesta en tu vida cuando lo estás honrando?",
+          duration: 300
+        },
+        {
+          order: 5,
+          title: "Evaluación de alineación",
+          description: "Reflexiona sobre áreas de tu vida (relaciones, trabajo, salud, tiempo libre) y evalúa en qué medida estás viviendo de acuerdo con estos valores actualmente. ¿Dónde hay alineación? ¿Dónde hay desconexión?",
+          duration: 240
+        },
+        {
+          order: 6,
+          title: "Obstáculos y desafíos",
+          description: "Identifica los obstáculos que te dificultan vivir de acuerdo con tus valores. Estos pueden ser externos (circunstancias, personas) o internos (miedos, creencias limitantes).",
+          duration: 180
+        },
+        {
+          order: 7,
+          title: "Acciones alineadas",
+          description: "Para cada valor prioritario, identifica 2-3 acciones concretas que puedes tomar en las próximas semanas para vivir más alineado con este valor, incluso frente a los obstáculos identificados.",
+          duration: 240
+        },
+        {
+          order: 8,
+          title: "Integración",
+          description: "Escribe una declaración de compromiso sobre cómo quieres que estos valores guíen tus decisiones y acciones en el futuro. ¿Cómo te recordarás lo que es verdaderamente importante para ti?",
+          duration: 180
+        }
+      ],
+      benefits: [
+        "Proporciona claridad en la toma de decisiones",
+        "Aumenta la sensación de propósito y significado",
+        "Reduce la influencia de presiones externas en tus elecciones",
+        "Mejora la coherencia entre tus acciones y lo que es importante para ti",
+        "Desarrolla mayor resiliencia frente a los desafíos"
+      ],
+      tips: [
+        "No hay valores 'correctos' o 'incorrectos'; lo importante es que resuenen auténticamente contigo",
+        "Los valores son direcciones, no destinos; siempre puedes actuar en línea con ellos, independientemente de las circunstancias",
+        "Revisa y actualiza tus valores periódicamente, ya que pueden evolucionar con el tiempo",
+        "Considera crear recordatorios visuales de tus valores para mantenerlos presentes en tu día a día",
+        "Usa tus valores como brújula cuando te sientas perdido o confundido sobre qué camino tomar"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/values-journaling.svg",
+    metadata: {
+      author: "Basado en principios de la Terapia de Aceptación y Compromiso (ACT)",
+      tags: ["valores", "propósito", "significado", "intermedio", "decisiones"],
+      created_date: "2023-02-10",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Cartas No Enviadas",
+    description: "Una técnica de escritura terapéutica que permite expresar pensamientos y sentimientos no dichos a través de cartas que no necesariamente se envían, facilitando el procesamiento emocional y la resolución.",
+    category: "JOURNALING",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 20,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["ANGER", "SADNESS", "GRIEF", "RESENTMENT", "LONELINESS"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Cartas No Enviadas",
+      instructions: "Esta práctica te invita a escribir cartas que expresan pensamientos y sentimientos no dichos, pero que no necesariamente se envían al destinatario. Es un espacio seguro para procesar emociones complejas relacionadas con otras personas, situaciones del pasado, o incluso aspectos de ti mismo.",
+      steps: [
+        {
+          order: 1,
+          title: "Selección del destinatario",
+          description: "Identifica a quién o a qué quieres dirigir tu carta. Puede ser una persona (viva o fallecida), una versión pasada o futura de ti mismo, una parte de tu cuerpo, una emoción, una situación, etc.",
+          duration: 60
+        },
+        {
+          order: 2,
+          title: "Intención",
+          description: "Clarifica tu intención para escribir esta carta. ¿Qué esperas procesar o liberar a través de esta escritura? No se trata de culpar o atacar, sino de expresar honestamente para tu propio proceso.",
+          duration: 120
+        },
+        {
+          order: 3,
+          title: "Escritura sin filtros",
+          description: "Comienza a escribir dirigiéndote directamente al destinatario. Expresa todo lo que has querido decir pero no has podido o no has sabido cómo. Escribe sin censura, sabiendo que esta carta es para tu proceso personal.",
+          duration: 300
+        },
+        {
+          order: 4,
+          title: "Expresión de emociones",
+          description: "Asegúrate de nombrar y expresar las emociones que sientes. Usa frases como 'Me sentí...' o 'Siento...' para conectar con la dimensión emocional de tu experiencia.",
+          duration: 180
+        },
+        {
+          order: 5,
+          title: "Necesidades y deseos",
+          description: "Expresa lo que necesitabas o necesitas, y lo que deseabas o deseas. ¿Qué te hubiera gustado que fuera diferente? ¿Qué necesitas para sanar o seguir adelante?",
+          duration: 180
+        },
+        {
+          order: 6,
+          title: "Cierre",
+          description: "Concluye la carta de una manera que te dé sensación de cierre, incluso si es temporal. Puedes incluir palabras de despedida, un resumen de lo que has aprendido, o una declaración de tus intenciones para el futuro.",
+          duration: 120
+        },
+        {
+          order: 7,
+          title: "Reflexión",
+          description: "Después de terminar la carta, tómate un momento para reflexionar sobre la experiencia. ¿Cómo te sientes ahora? ¿Qué has descubierto? ¿Qué quieres hacer con esta carta?",
+          duration: 120
+        }
+      ],
+      benefits: [
+        "Facilita la expresión de emociones difíciles en un espacio seguro",
+        "Proporciona claridad sobre situaciones o relaciones complejas",
+        "Ayuda a procesar duelos, conflictos o transiciones",
+        "Reduce la carga emocional de asuntos no resueltos",
+        "Desarrolla mayor autocomprensión y empatía"
+      ],
+      tips: [
+        "Recuerda que el propósito principal es tu propio proceso, no la comunicación con el destinatario",
+        "Escribe a mano si es posible, ya que puede facilitar una conexión más profunda con tus emociones",
+        "Si decides enviar la carta eventualmente, considera reescribirla con un enfoque más constructivo",
+        "Algunas personas encuentran útil realizar un ritual con la carta (guardarla en un lugar especial, quemarla, etc.)",
+        "Puedes volver a esta práctica múltiples veces con el mismo destinatario a medida que tu proceso evoluciona"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/unsent-letters.svg",
+    metadata: {
+      author: "Basado en técnicas de terapia narrativa y escritura expresiva",
+      tags: ["cartas", "expresión", "relaciones", "intermedio", "procesamiento"],
+      created_date: "2023-02-15",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Journaling de Sueños",
+    description: "Una práctica para registrar y explorar tus sueños, ayudándote a acceder a la sabiduría del inconsciente, identificar patrones emocionales y desarrollar mayor autoconocimiento.",
+    category: "JOURNALING",
+    content_type: "TEXT",
+    estimated_duration: 15,
+    difficulty: "BEGINNER",
+    target_emotions: ["CONFUSION", "ANXIETY", "CURIOSITY", "WONDER"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Journaling de Sueños",
+      instructions: "Esta práctica te invita a registrar y explorar tus sueños como una ventana a tu mundo interior. Los sueños pueden ofrecer perspectivas valiosas sobre tus emociones, preocupaciones, deseos y patrones inconscientes.",
+      prompts: [
+        "Describe tu sueño con el mayor detalle posible. ¿Qué ocurrió? ¿Quién estaba presente? ¿Dónde sucedió?",
+        "¿Qué emociones experimentaste durante el sueño? ¿Cómo te sientes ahora al recordarlo?",
+        "¿Qué elementos del sueño te parecen más significativos o llamativos? ¿Por qué?",
+        "¿Ves alguna conexión entre este sueño y tu vida actual? ¿Refleja alguna situación, preocupación o deseo?",
+        "Si este sueño tuviera un mensaje para ti, ¿cuál crees que sería?",
+        "¿Notas algún patrón o tema recurrente en tus sueños? ¿Qué podría estar tratando de comunicarte tu inconsciente?",
+        "Si pudieras cambiar o continuar este sueño, ¿cómo lo harías? ¿Qué te gustaría explorar más?"
+      ],
+      benefits: [
+        "Desarrolla mayor autoconocimiento y comprensión de tu mundo interior",
+        "Accede a perspectivas y soluciones creativas para desafíos en tu vida",
+        "Identifica patrones emocionales y psicológicos subconscientes",
+        "Mejora tu memoria de sueños y potencialmente facilita el sueño lúcido",
+        "Cultiva una relación más consciente con tu mente inconsciente"
+      ],
+      tips: [
+        "Mantén tu diario de sueños y un bolígrafo junto a tu cama para registrarlos inmediatamente al despertar",
+        "Si no recuerdas un sueño completo, anota fragmentos, imágenes o sensaciones; incluso estos pueden ser significativos",
+        "Evita interpretar tus sueños con diccionarios de símbolos genéricos; tus símbolos personales son únicos",
+        "Observa tus sueños con curiosidad, no con juicio; incluso los sueños perturbadores pueden contener información valiosa",
+        "Considera revisar periódicamente tu diario de sueños para identificar patrones o temas recurrentes"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/dream-journaling.svg",
+    metadata: {
+      author: "Basado en técnicas de psicología junguiana y trabajo con sueños",
+      tags: ["sueños", "inconsciente", "símbolos", "principiante", "autoconocimiento"],
+      created_date: "2023-02-20",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Journaling de Gratitud",
+    description: "Una práctica de escritura centrada en identificar y apreciar aspectos positivos de la vida, cultivando una mentalidad de abundancia y aprecio que contribuye al bienestar emocional.",
+    category: "JOURNALING",
+    content_type: "TEXT",
+    estimated_duration: 10,
+    difficulty: "BEGINNER",
+    target_emotions: ["SADNESS", "FRUSTRATION", "ANXIETY", "LONELINESS"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Journaling de Gratitud",
+      instructions: "Esta práctica te invita a enfocar tu atención en los aspectos de tu vida por los que sientes gratitud, desde las bendiciones más evidentes hasta los pequeños placeres cotidianos que a menudo pasamos por alto.",
+      prompts: [
+        "¿Qué tres cosas específicas agradeces hoy y por qué son significativas para ti?",
+        "¿Qué persona ha tenido un impacto positivo en tu vida recientemente? ¿Cómo te ha ayudado o apoyado?",
+        "¿Qué aspecto de tu salud o de tu cuerpo aprecias hoy?",
+        "¿Qué experiencia reciente, por pequeña que sea, te ha traído alegría o satisfacción?",
+        "¿Qué desafío o dificultad has enfrentado que ahora puedes ver como una oportunidad de crecimiento?",
+        "¿Qué comodidad o privilegio en tu vida a menudo das por sentado?",
+        "¿Qué belleza has notado hoy en tu entorno?",
+        "¿Qué habilidad o cualidad personal aprecias en ti mismo?"
+      ],
+      benefits: [
+        "Cambia el enfoque mental de lo negativo a lo positivo",
+        "Reduce síntomas de ansiedad y depresión",
+        "Mejora la calidad del sueño",
+        "Aumenta la satisfacción con la vida",
+        "Desarrolla mayor resiliencia frente a situaciones difíciles"
+      ],
+      tips: [
+        "Establece un horario regular para tu práctica de gratitud (por ejemplo, antes de dormir o al despertar)",
+        "Busca ser específico en lugar de general; los detalles aumentan el impacto de la práctica",
+        "Intenta encontrar cosas nuevas cada día, no solo repetir las mismas",
+        "Incluye tanto aspectos externos (personas, experiencias) como internos (cualidades, logros)",
+        "Si te sientes resistente o escéptico, comienza con cosas pequeñas y concretas"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/gratitude-journaling.svg",
+    metadata: {
+      author: "Basado en investigaciones de psicología positiva",
+      tags: ["gratitud", "apreciación", "positivo", "principiante", "bienestar"],
+      created_date: "2023-02-25",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Diálogo con el Cuerpo",
+    description: "Una práctica de escritura que facilita la comunicación con tu cuerpo, ayudándote a escuchar sus mensajes, comprender sus necesidades y desarrollar una relación más consciente y compasiva con tu dimensión física.",
+    category: "JOURNALING",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 20,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["ANXIETY", "FRUSTRATION", "DISCONNECTION", "DISCOMFORT"],
+    is_active: true,
+    is_premium: true,
+    content: {
+      title: "Diálogo con el Cuerpo",
+      instructions: "Esta práctica te guía para establecer un diálogo escrito con tu cuerpo o con partes específicas de él, ayudándote a escuchar sus mensajes, comprender sus necesidades y desarrollar una relación más consciente y compasiva con tu dimensión física.",
+      steps: [
+        {
+          order: 1,
+          title: "Preparación",
+          description: "Encuentra un lugar tranquilo y cómodo. Toma unos momentos para respirar profundamente y conectar con las sensaciones de tu cuerpo. Observa sin juicio dónde sientes tensión, incomodidad, ligereza o cualquier otra sensación.",
+          duration: 120
+        },
+        {
+          order: 2,
+          title: "Selección",
+          description: "Decide si quieres dialogar con tu cuerpo como un todo o con una parte específica que esté llamando tu atención (puede ser un área de tensión, dolor, o simplemente una parte con la que sientas curiosidad por comunicarte).",
+          duration: 60
+        },
+        {
+          order: 3,
+          title: "Inicio del diálogo",
+          description: "Comienza el diálogo escribiendo un saludo y una pregunta inicial a tu cuerpo o a la parte elegida. Por ejemplo: 'Hola, cuerpo. Noto que has estado enviándome señales últimamente. ¿Qué estás tratando de comunicarme?'",
+          duration: 60
+        },
+        {
+          order: 4,
+          title: "Respuesta del cuerpo",
+          description: "Cambia de perspectiva y responde como si fueras tu cuerpo o la parte específica. Deja que las palabras fluyan intuitivamente, sin censurar o analizar lo que surge. Confía en lo que emerja.",
+          duration: 180
+        },
+        {
+          order: 5,
+          title: "Profundización",
+          description: "Continúa el diálogo, alternando entre tu voz y la voz de tu cuerpo. Explora preguntas como: '¿Qué necesitas de mí?', '¿Cómo puedo apoyarte mejor?', '¿Hay algo que estés tratando de protegerme?', '¿Qué te gustaría que supiera?'",
+          duration: 300
+        },
+        {
+          order: 6,
+          title: "Acuerdos",
+          description: "A medida que el diálogo avanza, busca llegar a acuerdos o compromisos con tu cuerpo. ¿Qué cambios podrías implementar para honrar sus necesidades? ¿Cómo podrías establecer una relación más colaborativa?",
+          duration: 180
+        },
+        {
+          order: 7,
+          title: "Cierre",
+          description: "Concluye el diálogo de manera respetuosa, agradeciendo a tu cuerpo por su sabiduría y comunicación. Puedes expresar tu compromiso de escuchar más atentamente en el futuro.",
+          duration: 60
+        },
+        {
+          order: 8,
+          title: "Reflexión",
+          description: "Tómate unos momentos para reflexionar sobre la experiencia. ¿Qué descubriste? ¿Qué te sorprendió? ¿Qué acciones concretas podrías tomar basándote en este diálogo?",
+          duration: 120
+        }
+      ],
+      benefits: [
+        "Desarrolla mayor conciencia corporal y conexión mente-cuerpo",
+        "Facilita la comprensión de síntomas físicos y su posible significado emocional",
+        "Promueve una relación más compasiva con tu cuerpo",
+        "Ayuda a identificar necesidades físicas desatendidas",
+        "Fomenta hábitos de autocuidado más alineados con tus necesidades reales"
+      ],
+      tips: [
+        "Aborda este ejercicio con curiosidad genuina, sin expectativas rígidas sobre lo que 'deberías' descubrir",
+        "Si te resulta difícil 'escuchar' a tu cuerpo, comienza prestando atención a sensaciones físicas concretas",
+        "Recuerda que no hay respuestas 'correctas' o 'incorrectas'; confía en tu intuición",
+        "Considera complementar esta práctica con movimiento consciente o meditación corporal",
+        "Regresa a este diálogo periódicamente, especialmente cuando experimentes síntomas físicos persistentes"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/body-dialogue.svg",
+    metadata: {
+      author: "Basado en técnicas de Focusing y terapia somática",
+      tags: ["cuerpo", "somático", "diálogo", "intermedio", "conexión"],
+      created_date: "2023-03-01",
+      version: "1.0"
+    }
+  },
+  {
+    name: "Journaling para Claridad de Decisiones",
+    description: "Una práctica estructurada de escritura para explorar opciones, clarificar valores y obtener mayor claridad en procesos de toma de decisiones importantes o difíciles.",
+    category: "JOURNALING",
+    content_type: "GUIDED_EXERCISE",
+    estimated_duration: 25,
+    difficulty: "INTERMEDIATE",
+    target_emotions: ["CONFUSION", "ANXIETY", "OVERWHELM", "FEAR", "FRUSTRATION"],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: "Journaling para Claridad de Decisiones",
+      instructions: "Esta práctica te guía a través de un proceso estructurado de escritura para explorar una decisión importante o difícil que estés enfrentando. Te ayudará a clarificar tus opciones, conectar con tus valores y obtener mayor claridad sobre el camino a seguir.",
+      steps: [
+        {
+          order: 1,
+          title: "Definición de la decisión",
+          description: "Describe claramente la decisión que necesitas tomar. ¿Cuáles son las opciones específicas entre las que estás eligiendo? ¿Cuál es el plazo para tomar esta decisión?",
+          duration: 120
+        },
+        {
+          order: 2,
+          title: "Exploración emocional",
+          description: "Explora tus emociones en relación con esta decisión. ¿Qué sientes cuando piensas en cada opción? ¿Hay alguna emoción particularmente fuerte o persistente? ¿De dónde podrían venir estas emociones?",
+          duration: 180
+        },
+        {
+          order: 3,
+          title: "Análisis de pros y contras",
+          description: "Para cada opción, enumera los posibles beneficios y desventajas. Considera impactos a corto y largo plazo. Incluye factores prácticos, emocionales, relacionales y cualquier otro aspecto relevante para ti.",
+          duration: 240
+        },
+        {
+          order: 4,
+          title: "Conexión con valores",
+          description: "Reflexiona sobre tus valores más importantes. ¿Qué opción está más alineada con estos valores? ¿Hay algún valor que esté en conflicto en esta situación? ¿Cómo podrías honrar tus valores más importantes a través de esta decisión?",
+          duration: 180
+        },
+        {
+          order: 5,
+          title: "Perspectivas alternativas",
+          description: "Imagina cómo verías esta decisión desde diferentes perspectivas: tu yo futuro (5 años después), alguien a quien admiras, o alguien que te conoce bien y te quiere. ¿Qué nuevas perspectivas emergen?",
+          duration: 180
+        },
+        {
+          order: 6,
+          title: "Exploración de miedos",
+          description: "Identifica los miedos que podrían estar influyendo en tu proceso de decisión. ¿Qué es lo peor que podría pasar con cada opción? ¿Qué tan probable es realmente? ¿Cómo podrías manejar esa situación si ocurriera?",
+          duration: 180
+        },
+        {
+          order: 7,
+          title: "Sabiduría intuitiva",
+          description: "Más allá del análisis racional, conecta con tu intuición o sabiduría interna. Si ya supieras la respuesta, ¿cuál sería? ¿Hay alguna opción que te genere una sensación de expansión o alivio?",
+          duration: 120
+        },
+        {
+          order: 8,
+          title: "Plan de acción",
+          description: "Basándote en todo lo explorado, esboza un plan de acción. Si aún no estás listo para decidir, ¿qué información adicional necesitas? Si ya tienes claridad, ¿cuáles son los próximos pasos concretos?",
+          duration: 180
+        },
+        {
+          order: 9,
+          title: "Reflexión final",
+          description: "Reflexiona sobre cómo te sientes ahora en relación con esta decisión. ¿Tienes mayor claridad? ¿Qué has aprendido sobre ti mismo a través de este proceso?",
+          duration: 120
+        }
+      ],
+      benefits: [
+        "Reduce la confusión y la parálisis ante decisiones importantes",
+        "Ayuda a identificar factores que podrían estar nublando tu juicio",
+        "Facilita decisiones más alineadas con tus valores auténticos",
+        "Disminuye la probabilidad de arrepentimiento posterior",
+        "Desarrolla tu capacidad general para tomar decisiones conscientes"
+      ],
+      tips: [
+        "Dedica tiempo suficiente a este proceso; las decisiones importantes merecen reflexión",
+        "Si te sientes abrumado, divide el ejercicio en varias sesiones",
+        "Intenta distinguir entre el miedo basado en precaución saludable y el miedo basado en limitaciones autoimpuestas",
+        "Recuerda que pocas decisiones son completamente irreversibles; la mayoría pueden ajustarse con el tiempo",
+        "Considera compartir tus reflexiones con alguien de confianza que pueda ofrecerte perspectiva adicional"
+      ]
+    },
+    image_url: "/assets/images/tools/journaling/decision-clarity.svg",
+    metadata: {
+      author: "Basado en técnicas de toma de decisiones conscientes y psicología cognitiva",
+      tags: ["decisiones", "claridad", "opciones", "intermedio", "valores"],
+      created_date: "2023-03-05",
+      version: "1.0"
+    }
+  }
+];
+
+// Helper functions for working with journaling tools
+export const getJournalingToolsByEmotion = (emotion: EmotionType): JournalingTool[] => {
+  return journalingTools.filter(tool => 
+    tool.is_active && tool.target_emotions.includes(emotion)
+  );
+};
+
+export const getJournalingToolsByDifficulty = (difficulty: DifficultyLevel): JournalingTool[] => {
+  return journalingTools.filter(tool => 
+    tool.is_active && tool.difficulty === difficulty
+  );
+};
+
+export const getFreeJournalingTools = (): JournalingTool[] => {
+  return journalingTools.filter(tool => 
+    tool.is_active && !tool.is_premium
+  );
+};
+
+export const getPremiumJournalingTools = (): JournalingTool[] => {
+  return journalingTools.filter(tool => 
+    tool.is_active && tool.is_premium
+  );
+};
+
+export const getJournalingToolById = (name: string): JournalingTool | undefined => {
+  return journalingTools.find(tool => tool.name === name);
+};
+
+export default journalingTools;
