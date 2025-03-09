@@ -1,0 +1,1047 @@
+/**
+ * Gratitude Tools Data Module
+ * 
+ * This module provides a collection of gratitude-focused tools and exercises
+ * for the Amira Wellness application's Tool Library. These tools help users
+ * cultivate gratitude through various practices including journaling, meditation,
+ * letter writing, and other mindfulness exercises.
+ * 
+ * @version 1.0.0
+ */
+
+// Type definitions for the tool structure
+export enum ToolCategory {
+  GRATITUDE = 'GRATITUDE',
+  BREATHING = 'BREATHING',
+  MEDITATION = 'MEDITATION',
+  JOURNALING = 'JOURNALING',
+  SOMATIC = 'SOMATIC'
+}
+
+export enum ContentType {
+  GUIDED_EXERCISE = 'GUIDED_EXERCISE',
+  AUDIO = 'AUDIO',
+  VIDEO = 'VIDEO',
+  TEXT = 'TEXT',
+  INTERACTIVE = 'INTERACTIVE'
+}
+
+export enum DifficultyLevel {
+  BEGINNER = 'BEGINNER',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED'
+}
+
+export enum Emotion {
+  ANXIETY = 'ANXIETY',
+  SADNESS = 'SADNESS',
+  ANGER = 'ANGER',
+  FEAR = 'FEAR',
+  FRUSTRATION = 'FRUSTRATION',
+  OVERWHELM = 'OVERWHELM',
+  INSECURITY = 'INSECURITY',
+  SHAME = 'SHAME',
+  DISSATISFACTION = 'DISSATISFACTION',
+  BOREDOM = 'BOREDOM',
+  RESTLESSNESS = 'RESTLESSNESS',
+  LONELINESS = 'LONELINESS',
+  DISCONNECTION = 'DISCONNECTION',
+  RESENTMENT = 'RESENTMENT',
+  GRIEF = 'GRIEF',
+  DESPAIR = 'DESPAIR',
+  STRESS = 'STRESS',
+  INSOMNIA = 'INSOMNIA',
+  SCARCITY = 'SCARCITY'
+}
+
+export interface ExerciseStep {
+  order: number;
+  title: string;
+  description: string;
+  duration: number; // in seconds
+}
+
+export interface GuidedExerciseContent {
+  title: string;
+  instructions: string;
+  steps: ExerciseStep[];
+  benefits: string[];
+  tips: string[];
+}
+
+export interface AudioContent {
+  title: string;
+  instructions: string;
+  transcript: string;
+  benefits: string[];
+  tips: string[];
+}
+
+export type ToolContent = GuidedExerciseContent | AudioContent;
+
+export interface ToolMetadata {
+  author: string;
+  tags: string[];
+  created_date: string;
+  version: string;
+}
+
+export interface Tool {
+  name: string;
+  description: string;
+  category: ToolCategory;
+  content_type: ContentType;
+  estimated_duration: number;
+  difficulty: DifficultyLevel;
+  target_emotions: Emotion[];
+  is_active: boolean;
+  is_premium: boolean;
+  content: ToolContent;
+  image_url: string;
+  audio_url: string;
+  metadata: ToolMetadata;
+}
+
+/**
+ * Collection of gratitude tools and exercises
+ */
+export const gratitudeTools: Tool[] = [
+  {
+    name: 'Diario de Gratitud',
+    description: 'Una práctica diaria para cultivar la gratitud mediante la identificación y el registro de cosas por las que estás agradecido, ayudando a cambiar el enfoque hacia los aspectos positivos de la vida.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 5,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.SADNESS, Emotion.ANXIETY, Emotion.FRUSTRATION, Emotion.OVERWHELM],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Diario de Gratitud',
+      instructions: 'Esta práctica te invita a reflexionar y registrar regularmente las cosas por las que te sientes agradecido. Al dirigir tu atención hacia lo positivo, puedes cultivar una mentalidad de abundancia y aprecio que contribuye significativamente a tu bienestar emocional.',
+      steps: [
+        {
+          order: 1,
+          title: 'Preparación',
+          description: 'Encuentra un momento tranquilo en tu día, preferiblemente por la mañana o antes de dormir. Toma algunas respiraciones profundas para centrarte en el momento presente.',
+          duration: 30
+        },
+        {
+          order: 2,
+          title: 'Reflexión',
+          description: 'Piensa en tres cosas específicas por las que te sientes agradecido hoy. Pueden ser grandes o pequeñas, desde relaciones significativas hasta pequeños placeres como una taza de café o un momento de tranquilidad.',
+          duration: 60
+        },
+        {
+          order: 3,
+          title: 'Registro',
+          description: "Escribe cada una de estas tres cosas, siendo lo más específico posible. En lugar de 'Estoy agradecido por mi familia', intenta algo como 'Estoy agradecido por la llamada reconfortante que tuve con mi hermana ayer'.",
+          duration: 90
+        },
+        {
+          order: 4,
+          title: 'Profundización',
+          description: 'Para cada elemento, reflexiona y escribe por qué te sientes agradecido por ello y cómo enriquece tu vida. ¿Qué emociones te genera? ¿Qué valor añade a tu experiencia?',
+          duration: 90
+        },
+        {
+          order: 5,
+          title: 'Conexión',
+          description: 'Tómate un momento para realmente sentir la gratitud en tu cuerpo. ¿Dónde la sientes? ¿Cómo es esa sensación? Permítete sumergirte completamente en ese sentimiento de aprecio.',
+          duration: 30
+        }
+      ],
+      benefits: [
+        'Cambia el enfoque mental de lo que falta a lo que ya tienes',
+        'Reduce síntomas de ansiedad y depresión',
+        'Mejora la calidad del sueño cuando se practica antes de dormir',
+        'Aumenta la sensación general de bienestar y satisfacción',
+        'Desarrolla mayor resiliencia frente a situaciones difíciles'
+      ],
+      tips: [
+        'Establece un horario regular para tu práctica de gratitud para convertirla en un hábito',
+        'Busca ser específico en lugar de general; los detalles aumentan el impacto de la práctica',
+        'Intenta encontrar cosas nuevas cada día, no solo repetir las mismas',
+        'Si te sientes resistente o escéptico, comienza con cosas pequeñas y concretas',
+        'Complementa esta práctica con un momento de aprecio consciente durante el día'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/gratitude-journal.svg',
+    audio_url: '/assets/audio/tools/gratitude/gratitude-journal-guide.mp3',
+    metadata: {
+      author: 'Basado en investigaciones de psicología positiva',
+      tags: ['gratitud', 'diario', 'principiante', 'bienestar', 'positivo'],
+      created_date: '2023-01-15',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Carta de Gratitud',
+    description: 'Una práctica profunda para expresar gratitud hacia alguien que ha tenido un impacto positivo en tu vida, mediante la escritura de una carta detallada de agradecimiento.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 20,
+    difficulty: DifficultyLevel.INTERMEDIATE,
+    target_emotions: [Emotion.SADNESS, Emotion.LONELINESS, Emotion.FRUSTRATION],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Carta de Gratitud',
+      instructions: 'Esta práctica te invita a expresar tu gratitud hacia alguien que ha tenido un impacto positivo en tu vida, pero a quien quizás nunca has agradecido adecuadamente. Escribir una carta de gratitud, incluso si nunca la entregas, puede tener profundos efectos positivos en tu bienestar emocional.',
+      steps: [
+        {
+          order: 1,
+          title: 'Selección del destinatario',
+          description: 'Piensa en alguien que haya tenido un impacto positivo significativo en tu vida. Puede ser alguien con quien aún mantengas contacto o no, alguien vivo o fallecido, alguien que conoces personalmente o alguien que te ha inspirado a distancia.',
+          duration: 120
+        },
+        {
+          order: 2,
+          title: 'Reflexión',
+          description: 'Reflexiona sobre las formas específicas en que esta persona ha influido positivamente en tu vida. ¿Qué hizo por ti? ¿Qué te enseñó? ¿Cómo sería diferente tu vida sin su influencia?',
+          duration: 180
+        },
+        {
+          order: 3,
+          title: 'Escritura de la carta',
+          description: 'Escribe una carta dirigida a esta persona, expresando tu gratitud de manera específica y sincera. Comienza con un saludo directo, luego explica por qué estás escribiendo esta carta. Detalla las acciones específicas que aprecias y el impacto que han tenido en tu vida.',
+          duration: 600
+        },
+        {
+          order: 4,
+          title: 'Expresión de sentimientos',
+          description: 'Incluye cómo te sentiste en el momento y cómo te sientes ahora al recordar lo que esta persona hizo por ti. Sé honesto y vulnerable sobre el significado que ha tenido para ti.',
+          duration: 180
+        },
+        {
+          order: 5,
+          title: 'Cierre',
+          description: 'Concluye la carta con un cierre significativo que resuma tu gratitud. Puedes incluir tus esperanzas para el futuro o un reconocimiento final del valor de esta persona en tu vida.',
+          duration: 120
+        },
+        {
+          order: 6,
+          title: 'Reflexión final',
+          description: 'Después de completar la carta, tómate un momento para reflexionar sobre cómo te sientes. ¿Qué emociones surgieron durante el proceso? ¿Hubo alguna comprensión o perspectiva nueva?',
+          duration: 120
+        },
+        {
+          order: 7,
+          title: 'Consideración de entrega',
+          description: 'Decide si quieres entregar la carta a su destinatario. Esto es completamente opcional; el beneficio principal viene del proceso de reflexión y escritura. Si decides entregarla, piensa en cómo te gustaría hacerlo (en persona, por correo, etc.).',
+          duration: 60
+        }
+      ],
+      benefits: [
+        'Fortalece las conexiones sociales y el sentido de pertenencia',
+        'Reduce los sentimientos de soledad y aislamiento',
+        'Aumenta los sentimientos de felicidad y satisfacción',
+        'Mejora la autoestima y la confianza',
+        'Proporciona perspectiva sobre las relaciones significativas en tu vida'
+      ],
+      tips: [
+        'Sé específico sobre lo que aprecias; los detalles hacen que la gratitud sea más poderosa',
+        'Escribe desde el corazón, sin preocuparte demasiado por la gramática o la estructura',
+        'Si decides entregar la carta, considera leerla en voz alta a la persona',
+        'Esta práctica puede ser especialmente poderosa para sanar relaciones del pasado',
+        'Puedes adaptar esta práctica escribiendo a grupos de personas, organizaciones o incluso a ti mismo'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/gratitude-letter.svg',
+    audio_url: '/assets/audio/tools/gratitude/gratitude-letter-guide.mp3',
+    metadata: {
+      author: 'Basado en el trabajo de Martin Seligman sobre psicología positiva',
+      tags: ['gratitud', 'carta', 'relaciones', 'intermedio', 'expresión'],
+      created_date: '2023-01-20',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Meditación de Gratitud',
+    description: 'Una práctica de meditación guiada centrada en cultivar y experimentar la gratitud, conectando con la sensación de aprecio en el cuerpo y la mente.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.AUDIO,
+    estimated_duration: 10,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.ANXIETY, Emotion.SADNESS, Emotion.FRUSTRATION, Emotion.OVERWHELM],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Meditación de Gratitud',
+      instructions: 'Esta meditación guiada te ayudará a cultivar un estado de gratitud mediante la atención plena y la visualización. A través de esta práctica, aprenderás a conectar con la sensación de aprecio en tu cuerpo y mente, creando un espacio para que la gratitud florezca naturalmente.',
+      transcript: 'Encuentra una posición cómoda, ya sea sentado o acostado. Cierra suavemente los ojos y comienza a notar tu respiración, sin tratar de cambiarla, simplemente observándola... [continúa con el guion completo de la meditación, incluyendo pausas, instrucciones para la atención a la respiración, visualizaciones de gratitud, y un cierre gradual]',
+      benefits: [
+        'Induce un estado de calma y relajación',
+        'Cultiva una perspectiva más positiva y apreciativa',
+        'Reduce la activación del sistema nervioso simpático',
+        'Mejora la capacidad de notar aspectos positivos en la vida cotidiana',
+        'Fortalece la práctica de la atención plena'
+      ],
+      tips: [
+        'Practica esta meditación en un lugar tranquilo donde no serás interrumpido',
+        'Si tu mente divaga, gentilmente redirige tu atención a la sensación de gratitud',
+        'Experimenta con diferentes momentos del día para encontrar cuándo es más efectiva para ti',
+        'Complementa esta práctica con un diario de gratitud para reforzar los beneficios',
+        'Recuerda que cultivar gratitud es una práctica; se vuelve más natural con el tiempo'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/gratitude-meditation.svg',
+    audio_url: '/assets/audio/tools/gratitude/gratitude-meditation-guide.mp3',
+    metadata: {
+      author: 'Equipo de Amira Wellness',
+      tags: ['gratitud', 'meditación', 'atención plena', 'principiante', 'audio'],
+      created_date: '2023-01-25',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Paseo de Gratitud',
+    description: 'Una práctica de atención plena que combina el movimiento con la gratitud, invitándote a notar y apreciar conscientemente tu entorno durante un paseo contemplativo.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 15,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.ANXIETY, Emotion.STRESS, Emotion.OVERWHELM, Emotion.SADNESS],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Paseo de Gratitud',
+      instructions: 'Esta práctica combina el movimiento con la atención plena y la gratitud, invitándote a realizar un paseo contemplativo donde notarás y apreciarás conscientemente tu entorno. Es una forma maravillosa de incorporar la gratitud en tu rutina diaria mientras disfrutas de los beneficios del movimiento suave.',
+      steps: [
+        {
+          order: 1,
+          title: 'Preparación',
+          description: 'Elige un entorno para tu paseo. Puede ser un parque, un sendero natural, tu vecindario o incluso un espacio interior como un museo. Lo importante es que sea un lugar donde puedas caminar cómodamente y con relativa tranquilidad.',
+          duration: 60
+        },
+        {
+          order: 2,
+          title: 'Intención',
+          description: 'Antes de comenzar, establece la intención de este paseo: cultivar gratitud a través de la observación atenta. Recuerda que no se trata de llegar a un destino, sino de experimentar plenamente el camino.',
+          duration: 30
+        },
+        {
+          order: 3,
+          title: 'Atención a los sentidos',
+          description: 'Comienza a caminar a un ritmo tranquilo y cómodo. Mientras lo haces, dirige tu atención conscientemente a tus sentidos. ¿Qué puedes ver, oír, oler, sentir y quizás incluso saborear en este momento?',
+          duration: 180
+        },
+        {
+          order: 4,
+          title: 'Notar lo agradable',
+          description: 'A medida que caminas, busca conscientemente cosas que encuentres agradables o hermosas: la luz filtrándose entre las hojas, el sonido de los pájaros, la sensación del aire en tu piel, la arquitectura de un edificio, una sonrisa de un extraño.',
+          duration: 240
+        },
+        {
+          order: 5,
+          title: 'Cultivar aprecio',
+          description: 'Cuando notes algo agradable, detente un momento (física o mentalmente) para realmente apreciarlo. Reconoce internamente tu gratitud por poder experimentar este momento, esta sensación, esta vista.',
+          duration: 180
+        },
+        {
+          order: 6,
+          title: 'Reflexión sobre interconexión',
+          description: 'Mientras continúas, reflexiona sobre todas las condiciones y personas que han hecho posible lo que estás experimentando. Por ejemplo, si aprecias un jardín, piensa en quienes lo plantaron y mantienen, en la naturaleza que lo sustenta, en tu propia capacidad de verlo y apreciarlo.',
+          duration: 180
+        },
+        {
+          order: 7,
+          title: 'Conclusión',
+          description: 'Al finalizar tu paseo, tómate un momento para reflexionar sobre la experiencia. ¿Qué notaste? ¿Cómo te sientes ahora comparado con antes del paseo? ¿Qué te inspiró más gratitud?',
+          duration: 60
+        }
+      ],
+      benefits: [
+        'Combina los beneficios del ejercicio físico con la práctica de la gratitud',
+        'Entrena la mente para notar y apreciar lo positivo en el entorno',
+        'Reduce el estrés y la rumiación mental',
+        'Aumenta la conexión con el entorno y el momento presente',
+        'Puede incorporarse fácilmente en la rutina diaria'
+      ],
+      tips: [
+        'Intenta realizar este paseo sin distracciones tecnológicas; deja tu teléfono en modo avión o en casa',
+        'Si te resulta difícil mantener la atención, puedes contar las cosas por las que sientes gratitud mientras caminas',
+        'Esta práctica puede adaptarse a cualquier entorno, incluso a espacios muy familiares',
+        'Considera llevar un pequeño cuaderno para anotar descubrimientos o reflexiones',
+        'Puedes combinar esta práctica con fotografía consciente, capturando imágenes de lo que te inspira gratitud'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/gratitude-walk.svg',
+    audio_url: '/assets/audio/tools/gratitude/gratitude-walk-guide.mp3',
+    metadata: {
+      author: 'Basado en prácticas de atención plena y psicología positiva',
+      tags: ['gratitud', 'movimiento', 'atención plena', 'naturaleza', 'principiante'],
+      created_date: '2023-01-30',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Ritual de Gratitud Nocturna',
+    description: 'Una práctica para cerrar el día con gratitud, revisando los momentos positivos y expresando aprecio por las experiencias vividas, preparando la mente para un descanso reparador.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 7,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.ANXIETY, Emotion.STRESS, Emotion.OVERWHELM, Emotion.INSOMNIA],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Ritual de Gratitud Nocturna',
+      instructions: 'Esta práctica está diseñada para cerrar tu día con una nota de gratitud, ayudándote a transitar hacia el descanso con una mentalidad positiva. Al revisar y apreciar los momentos positivos del día, preparas tu mente para un sueño más reparador y cultivas una perspectiva más optimista.',
+      steps: [
+        {
+          order: 1,
+          title: 'Preparación',
+          description: 'Prepárate para dormir completando tus rutinas habituales. Cuando estés cómodamente en la cama, pero antes de quedarte dormido, toma algunas respiraciones profundas para relajarte y centrar tu atención.',
+          duration: 60
+        },
+        {
+          order: 2,
+          title: 'Revisión del día',
+          description: 'Mentalmente, recorre tu día desde la mañana hasta este momento. No te detengas en cada detalle, sino deja que tu mente navegue naturalmente por los eventos del día, como viendo una película a velocidad aumentada.',
+          duration: 60
+        },
+        {
+          order: 3,
+          title: 'Identificación de momentos positivos',
+          description: 'A medida que revisas tu día, identifica tres momentos o experiencias positivas, sin importar cuán pequeñas hayan sido. Podría ser una comida deliciosa, una conversación agradable, un momento de tranquilidad, o simplemente haber completado una tarea.',
+          duration: 90
+        },
+        {
+          order: 4,
+          title: 'Apreciación consciente',
+          description: 'Para cada uno de estos tres momentos positivos, detente y revívelo mentalmente con mayor detalle. ¿Qué ocurrió exactamente? ¿Quién estaba involucrado? ¿Qué sensaciones experimentaste? Permítete sentir nuevamente la emoción positiva asociada.',
+          duration: 120
+        },
+        {
+          order: 5,
+          title: 'Expresión de gratitud',
+          description: "Para cada momento, expresa mentalmente tu gratitud. Puedes usar frases como 'Estoy agradecido/a por...' o simplemente sentir la gratitud en tu corazón. Reconoce que estos momentos positivos son regalos en tu vida.",
+          duration: 60
+        },
+        {
+          order: 6,
+          title: 'Transición al descanso',
+          description: 'Con esta sensación de gratitud y aprecio, permite que tu cuerpo se relaje completamente. Imagina que la gratitud te envuelve como una manta cálida y reconfortante mientras te preparas para un sueño reparador.',
+          duration: 30
+        }
+      ],
+      benefits: [
+        'Mejora la calidad del sueño al reducir pensamientos negativos antes de dormir',
+        'Entrena al cerebro para identificar y recordar experiencias positivas',
+        'Reduce la ansiedad y el estrés acumulados durante el día',
+        'Crea un cierre positivo para el día, independientemente de los desafíos enfrentados',
+        'Desarrolla el hábito de la gratitud de manera consistente'
+      ],
+      tips: [
+        'Practica este ritual de forma consistente para convertirlo en un hábito nocturno',
+        "Si te cuesta identificar momentos positivos, comienza con cosas muy simples como 'tuve agua limpia para beber' o 'mi cama es cómoda'",
+        'Si tiendes a quedarte dormido rápidamente, realiza esta práctica sentado en la cama antes de acostarte',
+        'Puedes combinar esta práctica con respiración profunda para mayor relajación',
+        'Si prefieres, puedes escribir tus tres momentos de gratitud en un diario junto a tu cama'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/evening-gratitude.svg',
+    audio_url: '/assets/audio/tools/gratitude/evening-gratitude-guide.mp3',
+    metadata: {
+      author: 'Basado en prácticas de psicología positiva para mejorar el sueño',
+      tags: ['gratitud', 'noche', 'sueño', 'principiante', 'ritual'],
+      created_date: '2023-02-05',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Gratitud en Momentos Difíciles',
+    description: 'Una práctica para encontrar motivos de gratitud incluso en circunstancias desafiantes, cultivando resiliencia y una perspectiva más equilibrada durante periodos de dificultad.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 15,
+    difficulty: DifficultyLevel.INTERMEDIATE,
+    target_emotions: [Emotion.SADNESS, Emotion.ANGER, Emotion.FRUSTRATION, Emotion.DESPAIR, Emotion.GRIEF],
+    is_active: true,
+    is_premium: true,
+    content: {
+      title: 'Gratitud en Momentos Difíciles',
+      instructions: 'Esta práctica está diseñada para ayudarte a encontrar motivos de gratitud incluso en circunstancias desafiantes. No se trata de negar o minimizar las dificultades, sino de ampliar tu perspectiva para incluir también lo que sigue funcionando, lo que te sostiene, y las oportunidades de crecimiento presentes en la adversidad.',
+      steps: [
+        {
+          order: 1,
+          title: 'Reconocimiento',
+          description: 'Comienza reconociendo honestamente la situación difícil que estás atravesando. Nombra el desafío y valida tus emociones al respecto. Es importante no saltarse este paso; la gratitud auténtica no niega la realidad de las dificultades.',
+          duration: 120
+        },
+        {
+          order: 2,
+          title: 'Respiración consciente',
+          description: 'Toma algunas respiraciones profundas para centrarte y crear un espacio interno desde el cual puedas observar tu situación con mayor perspectiva. Inhala por la nariz contando hasta 4, mantén por 2, y exhala por la boca contando hasta 6.',
+          duration: 60
+        },
+        {
+          order: 3,
+          title: 'Lo que sigue funcionando',
+          description: 'Reflexiona sobre lo que sigue funcionando en tu vida a pesar de este desafío. ¿Qué aspectos de tu vida permanecen intactos? ¿Qué recursos (internos y externos) sigues teniendo disponibles? Identifica al menos tres cosas por las que puedes sentir gratitud en este sentido.',
+          duration: 180
+        },
+        {
+          order: 4,
+          title: 'Apoyo y recursos',
+          description: 'Considera las personas, sistemas o recursos que te están apoyando durante este momento difícil. Puede ser desde amigos y familiares hasta servicios públicos, habilidades personales o incluso desconocidos que han mostrado amabilidad. Reconoce conscientemente tu gratitud hacia estos apoyos.',
+          duration: 180
+        },
+        {
+          order: 5,
+          title: 'Aprendizajes y crecimiento',
+          description: 'Reflexiona sobre lo que esta situación difícil te está enseñando o cómo podría estar contribuyendo a tu crecimiento. ¿Qué fortalezas estás desarrollando? ¿Qué estás aprendiendo sobre ti mismo o sobre la vida? ¿Qué perspectivas nuevas estás ganando?',
+          duration: 180
+        },
+        {
+          order: 6,
+          title: 'Pequeños momentos de alivio',
+          description: 'Identifica pequeños momentos de alivio, belleza o conexión que hayas experimentado recientemente, incluso en medio de la dificultad. Un amanecer hermoso, el sabor de una taza de té, una sonrisa amable, un momento de calma. Permítete sentir gratitud por estos pequeños regalos.',
+          duration: 120
+        },
+        {
+          order: 7,
+          title: 'Expresión de gratitud',
+          description: "Escribe o expresa verbalmente tu gratitud por los aspectos identificados en los pasos anteriores. Sé específico y sincero. Puedes comenzar con frases como 'En medio de esta dificultad, agradezco...' o 'A pesar de este desafío, siento gratitud por...'",
+          duration: 180
+        },
+        {
+          order: 8,
+          title: 'Integración',
+          description: 'Reflexiona sobre cómo esta perspectiva más amplia, que incluye tanto la dificultad como los motivos de gratitud, te hace sentir. ¿Notas algún cambio en tu estado emocional o en tu forma de ver la situación?',
+          duration: 60
+        }
+      ],
+      benefits: [
+        'Desarrolla resiliencia emocional frente a la adversidad',
+        'Reduce la tendencia a la rumiación y el pensamiento catastrófico',
+        'Amplía la perspectiva para incluir aspectos positivos junto con los desafíos',
+        'Activa el sistema nervioso parasimpático, reduciendo la respuesta de estrés',
+        'Fortalece la capacidad de encontrar significado en las experiencias difíciles'
+      ],
+      tips: [
+        'Esta práctica no busca invalidar o minimizar el sufrimiento; honra tus emociones difíciles',
+        "Si te resulta muy desafiante, comienza con aspectos muy básicos como 'puedo respirar' o 'tengo un lugar para descansar'",
+        'La gratitud en momentos difíciles es una habilidad que se desarrolla con práctica; sé paciente contigo mismo',
+        'Considera llevar un diario específico para esta práctica durante periodos prolongados de dificultad',
+        'Recuerda que es posible sentir gratitud y dolor simultáneamente; no son mutuamente excluyentes'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/difficult-times-gratitude.svg',
+    audio_url: '/assets/audio/tools/gratitude/difficult-times-gratitude-guide.mp3',
+    metadata: {
+      author: 'Basado en prácticas de resiliencia y psicología positiva',
+      tags: ['gratitud', 'resiliencia', 'adversidad', 'intermedio', 'perspectiva'],
+      created_date: '2023-02-10',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Gratitud Corporal',
+    description: 'Una práctica para cultivar aprecio y gratitud hacia tu cuerpo, reconociendo todo lo que hace por ti y desarrollando una relación más positiva con tu dimensión física.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 10,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.INSECURITY, Emotion.FRUSTRATION, Emotion.SHAME, Emotion.ANXIETY],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Gratitud Corporal',
+      instructions: 'Esta práctica te invita a cultivar aprecio y gratitud hacia tu cuerpo, reconociendo todo lo que hace por ti cada día. En una cultura que a menudo nos enseña a criticar nuestros cuerpos, esta práctica ayuda a desarrollar una relación más positiva y compasiva con tu dimensión física.',
+      steps: [
+        {
+          order: 1,
+          title: 'Posición cómoda',
+          description: 'Encuentra una posición cómoda, ya sea sentado o acostado. Cierra los ojos si te resulta cómodo, o mantén la mirada suave hacia un punto fijo. Toma algunas respiraciones profundas para centrarte en el momento presente.',
+          duration: 60
+        },
+        {
+          order: 2,
+          title: 'Atención a la respiración',
+          description: 'Lleva tu atención a tu respiración. Observa cómo tu cuerpo respira automáticamente, sin que tengas que pensar en ello. Siente gratitud por este proceso vital que tu cuerpo realiza constantemente, incluso mientras duermes.',
+          duration: 60
+        },
+        {
+          order: 3,
+          title: 'Escaneo corporal de gratitud',
+          description: 'Comienza un escaneo corporal desde la parte superior de tu cabeza hasta los dedos de tus pies. A medida que diriges tu atención a cada parte, reconoce lo que hace por ti y siente gratitud por ello.',
+          duration: 300
+        },
+        {
+          order: 4,
+          title: 'Gratitud por funciones corporales',
+          description: 'Ahora, considera las funciones y sistemas de tu cuerpo que trabajan constantemente sin que lo notes: tu sistema digestivo procesando nutrientes, tu corazón bombeando sangre, tu sistema inmunológico protegiéndote de enfermedades. Tómate un momento para apreciar estas maravillas internas.',
+          duration: 90
+        },
+        {
+          order: 5,
+          title: 'Reconocimiento de capacidades',
+          description: 'Piensa en las capacidades que tu cuerpo te brinda: la habilidad de moverte, de sentir placer, de abrazar a seres queridos, de crear, de experimentar el mundo a través de tus sentidos. Siente gratitud por estas posibilidades que tu cuerpo te ofrece.',
+          duration: 90
+        },
+        {
+          order: 6,
+          title: 'Apreciación de la resiliencia',
+          description: 'Reconoce la increíble resiliencia de tu cuerpo: su capacidad para sanar heridas, adaptarse a diferentes condiciones, recuperarse de enfermedades, y aprender nuevas habilidades. Agradece esta resiliencia innata.',
+          duration: 60
+        },
+        {
+          order: 7,
+          title: 'Compromiso de cuidado',
+          description: 'Desde este lugar de gratitud, considera cómo podrías honrar a tu cuerpo a través del cuidado consciente. ¿Qué necesita tu cuerpo de ti? ¿Cómo podrías tratarlo con mayor amabilidad y respeto?',
+          duration: 60
+        },
+        {
+          order: 8,
+          title: 'Cierre',
+          description: 'Para concluir, coloca una mano sobre tu corazón y otra sobre tu abdomen. Respira profundamente y agradece a tu cuerpo por todo lo que hace por ti, comprometiéndote a cultivar una relación más compasiva con él.',
+          duration: 30
+        }
+      ],
+      benefits: [
+        'Contrarresta la tendencia cultural a la crítica corporal',
+        'Mejora la imagen corporal y la autoestima',
+        'Promueve hábitos más saludables basados en el respeto al cuerpo',
+        'Reduce la ansiedad relacionada con la apariencia física',
+        'Desarrolla una relación más compasiva con tu dimensión física'
+      ],
+      tips: [
+        'Practica esta meditación regularmente, especialmente en momentos en que sientas crítica hacia tu cuerpo',
+        'Si surgen pensamientos críticos durante la práctica, obsérvalos con amabilidad y regresa al enfoque de gratitud',
+        'Considera complementar esta práctica con afirmaciones positivas sobre tu cuerpo',
+        'Adapta el escaneo corporal según tus necesidades, dedicando más tiempo a partes con las que tienes una relación difícil',
+        "Recuerda que la gratitud corporal no depende de la apariencia o el funcionamiento 'perfecto'"
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/body-gratitude.svg',
+    audio_url: '/assets/audio/tools/gratitude/body-gratitude-guide.mp3',
+    metadata: {
+      author: 'Basado en prácticas de imagen corporal positiva y atención plena',
+      tags: ['gratitud', 'cuerpo', 'imagen corporal', 'autoestima', 'principiante'],
+      created_date: '2023-02-15',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Frasco de Gratitud',
+    description: 'Una práctica creativa para recolectar momentos de gratitud en un frasco físico, creando un recurso tangible de momentos positivos al que puedes recurrir en tiempos difíciles.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 10,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.SADNESS, Emotion.ANXIETY, Emotion.LONELINESS, Emotion.FRUSTRATION],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Frasco de Gratitud',
+      instructions: "Esta práctica te invita a crear un 'frasco de gratitud' físico donde recolectarás notas sobre momentos, personas y cosas por las que sientes gratitud. Con el tiempo, este frasco se convertirá en un poderoso recurso de momentos positivos al que puedes recurrir cuando necesites un impulso emocional.",
+      steps: [
+        {
+          order: 1,
+          title: 'Preparación de materiales',
+          description: "Reúne los materiales necesarios: un frasco o recipiente transparente con tapa, pequeños trozos de papel (pueden ser de colores), y un bolígrafo o lápiz. Puedes decorar el frasco si lo deseas, etiquetándolo como tu 'Frasco de Gratitud' o 'Momentos de Alegría'.",
+          duration: 120
+        },
+        {
+          order: 2,
+          title: 'Establecimiento de la práctica',
+          description: 'Decide con qué frecuencia añadirás notas a tu frasco. Puede ser diariamente, varias veces por semana, o cuando sientas un momento especial de gratitud. Coloca el frasco en un lugar visible que te recuerde usarlo regularmente.',
+          duration: 60
+        },
+        {
+          order: 3,
+          title: 'Reflexión inicial',
+          description: 'Para comenzar tu frasco, reflexiona sobre 3-5 cosas por las que sientes gratitud en este momento. Pueden ser grandes o pequeñas, desde relaciones significativas hasta pequeños placeres como tu bebida favorita o un momento de tranquilidad.',
+          duration: 120
+        },
+        {
+          order: 4,
+          title: 'Escritura de notas',
+          description: "En cada trozo de papel, escribe una cosa por la que sientes gratitud. Sé específico y, si es posible, incluye cómo te hace sentir. Por ejemplo, en lugar de 'Mi amiga Sara', podrías escribir 'La llamada reconfortante con Sara hoy que me hizo sentir comprendida'.",
+          duration: 180
+        },
+        {
+          order: 5,
+          title: 'Adición al frasco',
+          description: 'Dobla cada nota y colócala en el frasco. Mientras lo haces, tómate un momento para realmente sentir la gratitud por lo que has escrito. Observa cómo se siente en tu cuerpo esta apreciación consciente.',
+          duration: 60
+        },
+        {
+          order: 6,
+          title: 'Práctica continua',
+          description: 'Continúa añadiendo notas a tu frasco según la frecuencia que hayas establecido. Puedes hacerlo como parte de una rutina (por ejemplo, antes de dormir) o espontáneamente cuando notes algo por lo que te sientes agradecido.',
+          duration: 30
+        },
+        {
+          order: 7,
+          title: 'Uso del recurso',
+          description: 'Cuando te sientas triste, ansioso o simplemente necesites un impulso emocional, toma algunas notas de tu frasco y léelas. Permítete reconectar con esos momentos de gratitud y las emociones positivas asociadas.',
+          duration: 60
+        }
+      ],
+      benefits: [
+        'Crea un recurso tangible de momentos positivos para tiempos difíciles',
+        'Entrena la mente para notar y recordar experiencias positivas',
+        'Proporciona evidencia concreta contra pensamientos negativos generalizados',
+        'Ofrece una actividad creativa y significativa que puede involucrar a toda la familia',
+        'Desarrolla el hábito de la gratitud de manera consistente y visible'
+      ],
+      tips: [
+        'Personaliza tu frasco para hacerlo más significativo y atractivo visualmente',
+        'Considera añadir la fecha a cada nota para crear un registro cronológico',
+        'Puedes incluir pequeños objetos significativos junto con las notas (un ticket, una foto, etc.)',
+        'Establece recordatorios si te cuesta mantener la práctica regularmente',
+        'En ocasiones especiales (cumpleaños, fin de año), dedica tiempo a leer todas las notas y reflexionar sobre la abundancia en tu vida'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/gratitude-jar.svg',
+    audio_url: '/assets/audio/tools/gratitude/gratitude-jar-guide.mp3',
+    metadata: {
+      author: 'Basado en prácticas creativas de gratitud',
+      tags: ['gratitud', 'creatividad', 'tangible', 'recurso', 'principiante'],
+      created_date: '2023-02-20',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Gratitud por las Pequeñas Cosas',
+    description: 'Una práctica para desarrollar la capacidad de notar y apreciar las pequeñas alegrías y comodidades cotidianas que a menudo pasamos por alto, cultivando una mayor satisfacción con la vida tal como es.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 8,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.DISSATISFACTION, Emotion.FRUSTRATION, Emotion.BOREDOM, Emotion.RESTLESSNESS],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Gratitud por las Pequeñas Cosas',
+      instructions: "Esta práctica te invita a desarrollar la capacidad de notar y apreciar las pequeñas alegrías, comodidades y privilegios cotidianos que a menudo damos por sentado. Al dirigir tu atención hacia estas 'pequeñas grandes cosas', cultivarás una mayor satisfacción con la vida tal como es, en lugar de estar siempre anhelando algo más.",
+      steps: [
+        {
+          order: 1,
+          title: 'Pausa consciente',
+          description: 'Toma un momento para hacer una pausa en tu día. Respira profundamente varias veces, permitiendo que tu cuerpo se relaje y que tu mente se aquiete. Establece la intención de notar las pequeñas cosas que enriquecen tu vida cotidiana.',
+          duration: 60
+        },
+        {
+          order: 2,
+          title: 'Comodidades básicas',
+          description: 'Comienza reflexionando sobre las comodidades básicas que tienes: agua limpia que sale del grifo, electricidad que ilumina tu hogar, un techo que te protege de los elementos. Estas comodidades, que muchas personas en el mundo no tienen, son pequeños milagros cotidianos.',
+          duration: 60
+        },
+        {
+          order: 3,
+          title: 'Placeres sensoriales',
+          description: 'Dirige tu atención a los pequeños placeres sensoriales que experimentas regularmente: el aroma del café por la mañana, la sensación del agua caliente en la ducha, la comodidad de tu cama, la luz del sol entrando por la ventana, el sabor de tu comida favorita.',
+          duration: 90
+        },
+        {
+          order: 4,
+          title: 'Tecnología y conveniencias',
+          description: 'Considera las tecnologías y conveniencias que facilitan tu vida: poder comunicarte instantáneamente con seres queridos, tener acceso a información ilimitada, la facilidad para viajar o transportarte, electrodomésticos que ahorran tiempo y esfuerzo.',
+          duration: 60
+        },
+        {
+          order: 5,
+          title: 'Momentos de belleza',
+          description: 'Reflexiona sobre los pequeños momentos de belleza que encuentras en tu día: una flor en el camino, un cielo particularmente hermoso, una melodía agradable, la risa de un niño, un gesto de amabilidad presenciado o recibido.',
+          duration: 90
+        },
+        {
+          order: 6,
+          title: 'Capacidades corporales',
+          description: 'Aprecia las capacidades de tu cuerpo que te permiten experimentar la vida: poder ver colores, escuchar música, saborear alimentos, moverte por el mundo, sentir texturas, respirar sin esfuerzo consciente.',
+          duration: 60
+        },
+        {
+          order: 7,
+          title: 'Registro de gratitud',
+          description: "Escribe o expresa verbalmente al menos cinco 'pequeñas cosas' por las que sientes gratitud hoy. Intenta ser específico y presente, enfocándote en cosas que hayas notado o experimentado recientemente.",
+          duration: 120
+        }
+      ],
+      benefits: [
+        'Contrarresta la adaptación hedónica (la tendencia a acostumbrarnos a lo bueno)',
+        'Desarrolla mayor satisfacción con la vida tal como es',
+        "Reduce la comparación social y el anhelo constante de 'más'",
+        'Aumenta la capacidad de disfrutar el momento presente',
+        'Cultiva una perspectiva de abundancia en lugar de escasez'
+      ],
+      tips: [
+        'Intenta notar cosas nuevas cada día, no solo repetir las mismas',
+        "Considera establecer 'disparadores' para la gratitud (como cada vez que abres el grifo o enciendes la luz)",
+        "Comparte tus 'pequeñas cosas' con otros para inspirar una perspectiva similar",
+        'Cuando te sientas frustrado o impaciente, usa esta práctica como un reset mental',
+        'Complementa esta práctica con fotografías de pequeñas cosas que te traen alegría'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/small-things.svg',
+    audio_url: '/assets/audio/tools/gratitude/small-things-guide.mp3',
+    metadata: {
+      author: 'Basado en prácticas de atención plena y psicología positiva',
+      tags: ['gratitud', 'pequeñas cosas', 'cotidiano', 'apreciación', 'principiante'],
+      created_date: '2023-02-25',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Gratitud Interpersonal',
+    description: 'Una práctica para expresar gratitud directamente a las personas en tu vida, fortaleciendo conexiones sociales y cultivando un ciclo positivo de aprecio y reconocimiento mutuo.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.GUIDED_EXERCISE,
+    estimated_duration: 15,
+    difficulty: DifficultyLevel.INTERMEDIATE,
+    target_emotions: [Emotion.LONELINESS, Emotion.DISCONNECTION, Emotion.SADNESS, Emotion.RESENTMENT],
+    is_active: true,
+    is_premium: true,
+    content: {
+      title: 'Gratitud Interpersonal',
+      instructions: 'Esta práctica te invita a expresar gratitud directamente a las personas en tu vida, desde familiares y amigos cercanos hasta colegas y conocidos. Al comunicar tu aprecio de manera específica y auténtica, fortaleces conexiones sociales y cultivas un ciclo positivo de reconocimiento mutuo.',
+      steps: [
+        {
+          order: 1,
+          title: 'Reflexión sobre relaciones',
+          description: 'Tómate un momento para reflexionar sobre las diferentes personas en tu vida: familia, amigos, colegas, mentores, e incluso personas que te brindan servicios regularmente. Considera cómo cada uno contribuye positivamente a tu vida de diferentes maneras.',
+          duration: 120
+        },
+        {
+          order: 2,
+          title: 'Selección de destinatarios',
+          description: 'Identifica 3-5 personas a quienes te gustaría expresar gratitud en los próximos días. Puedes comenzar con personas cercanas con quienes te sientes cómodo, y gradualmente expandir a relaciones más periféricas a medida que la práctica se vuelve más natural.',
+          duration: 60
+        },
+        {
+          order: 3,
+          title: 'Identificación de contribuciones',
+          description: 'Para cada persona seleccionada, identifica específicamente cómo ha contribuido positivamente a tu vida. ¿Qué acciones, cualidades o formas de ser aprecias de esta persona? Sé lo más concreto posible.',
+          duration: 180
+        },
+        {
+          order: 4,
+          title: 'Impacto personal',
+          description: 'Reflexiona sobre el impacto que estas contribuciones han tenido en ti. ¿Cómo te han beneficiado? ¿Qué emociones positivas has experimentado gracias a esta persona? ¿Qué diferencia han hecho en tu vida?',
+          duration: 120
+        },
+        {
+          order: 5,
+          title: 'Preparación de la expresión',
+          description: 'Para cada persona, prepara una expresión de gratitud que incluya: 1) La acción o cualidad específica que aprecias, 2) El impacto positivo que ha tenido en ti, y 3) Un reconocimiento de la persona detrás de la acción.',
+          duration: 180
+        },
+        {
+          order: 6,
+          title: 'Elección del medio',
+          description: 'Decide cómo expresarás tu gratitud a cada persona. Podría ser en persona, por teléfono, a través de una carta escrita a mano, un mensaje de texto, un correo electrónico, o incluso un pequeño regalo acompañado de una nota. Elige el medio que sea más significativo para cada relación.',
+          duration: 60
+        },
+        {
+          order: 7,
+          title: 'Expresión de gratitud',
+          description: 'Expresa tu gratitud a cada persona de la manera que hayas elegido. Intenta ser presente y auténtico en tu comunicación. No es necesario que sea elaborado; la sinceridad es lo más importante.',
+          duration: 180
+        },
+        {
+          order: 8,
+          title: 'Reflexión sobre la experiencia',
+          description: 'Después de expresar gratitud a cada persona, tómate un momento para reflexionar sobre la experiencia. ¿Cómo te sentiste al expresar tu aprecio? ¿Cómo respondió la otra persona? ¿Qué aprendiste de esta interacción?',
+          duration: 60
+        }
+      ],
+      benefits: [
+        'Fortalece conexiones sociales y profundiza relaciones',
+        'Reduce sentimientos de soledad y aislamiento',
+        'Cultiva un ciclo positivo de aprecio y reconocimiento mutuo',
+        'Mejora el bienestar tanto del que expresa como del que recibe la gratitud',
+        'Desarrolla mayor conciencia de las contribuciones positivas de otros en tu vida'
+      ],
+      tips: [
+        'Sé específico en tu expresión de gratitud; los detalles concretos tienen mayor impacto',
+        'Expresa gratitud por quién es la persona, no solo por lo que hace por ti',
+        'Practica regularmente, no solo en ocasiones especiales',
+        'Comienza con expresiones pequeñas y auténticas; no necesitas grandes gestos',
+        'Recuerda que la incomodidad inicial es normal; la práctica se vuelve más natural con el tiempo'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/interpersonal-gratitude.svg',
+    audio_url: '/assets/audio/tools/gratitude/interpersonal-gratitude-guide.mp3',
+    metadata: {
+      author: 'Basado en investigaciones sobre gratitud y conexión social',
+      tags: ['gratitud', 'relaciones', 'conexión', 'expresión', 'intermedio'],
+      created_date: '2023-03-01',
+      version: '1.0'
+    }
+  },
+  {
+    name: 'Visualización de Gratitud',
+    description: 'Una práctica de visualización guiada que utiliza imágenes mentales para profundizar la experiencia de gratitud, conectando con la sensación de abundancia y aprecio a nivel sensorial y emocional.',
+    category: ToolCategory.GRATITUDE,
+    content_type: ContentType.AUDIO,
+    estimated_duration: 12,
+    difficulty: DifficultyLevel.BEGINNER,
+    target_emotions: [Emotion.ANXIETY, Emotion.SCARCITY, Emotion.DISSATISFACTION, Emotion.RESTLESSNESS],
+    is_active: true,
+    is_premium: false,
+    content: {
+      title: 'Visualización de Gratitud',
+      instructions: 'Esta práctica utiliza la visualización guiada para profundizar tu experiencia de gratitud. A través de imágenes mentales y conexión sensorial, cultivarás un estado de aprecio y abundancia que puede transformar tu perspectiva y estado emocional.',
+      transcript: 'Encuentra una posición cómoda y cierra suavemente los ojos. Comienza a respirar profundamente, permitiendo que cada inhalación traiga calma y cada exhalación libere tensión... [continúa con el guion completo de la visualización, incluyendo instrucciones para imaginar un lugar especial, recordar momentos de gratitud, visualizar la gratitud como luz o color, y un cierre gradual]',
+      benefits: [
+        'Activa regiones cerebrales asociadas tanto con la gratitud como con la visualización',
+        'Profundiza la experiencia de gratitud a nivel sensorial y emocional',
+        'Crea un recurso mental al que puedes volver en momentos de estrés',
+        'Desarrolla la capacidad de generar estados emocionales positivos intencionalmente',
+        'Complementa otras prácticas de gratitud con un enfoque más experiencial'
+      ],
+      tips: [
+        'Si te cuesta visualizar, enfócate en las sensaciones corporales y emocionales',
+        'Personaliza las imágenes para que resuenen más profundamente contigo',
+        'Practica en un lugar tranquilo donde no serás interrumpido',
+        'Considera grabar la visualización con tu propia voz para una experiencia más personal',
+        'Complementa esta práctica con un diario de gratitud para reforzar los beneficios'
+      ]
+    },
+    image_url: '/assets/images/tools/gratitude/gratitude-visualization.svg',
+    audio_url: '/assets/audio/tools/gratitude/gratitude-visualization-guide.mp3',
+    metadata: {
+      author: 'Equipo de Amira Wellness',
+      tags: ['gratitud', 'visualización', 'imaginación', 'abundancia', 'principiante'],
+      created_date: '2023-03-05',
+      version: '1.0'
+    }
+  }
+];
+
+/**
+ * Type guard to check if content is GuidedExerciseContent
+ */
+export function isGuidedExercise(content: ToolContent): content is GuidedExerciseContent {
+  return 'steps' in content;
+}
+
+/**
+ * Type guard to check if content is AudioContent
+ */
+export function isAudioContent(content: ToolContent): content is AudioContent {
+  return 'transcript' in content;
+}
+
+/**
+ * Get all active gratitude tools
+ */
+export function getActiveGratitudeTools(): Tool[] {
+  return gratitudeTools.filter(tool => tool.is_active);
+}
+
+/**
+ * Get gratitude tools by difficulty level
+ */
+export function getToolsByDifficulty(difficulty: DifficultyLevel): Tool[] {
+  return gratitudeTools.filter(tool => tool.difficulty === difficulty && tool.is_active);
+}
+
+/**
+ * Get gratitude tools that target a specific emotion
+ */
+export function getToolsByEmotion(emotion: Emotion): Tool[] {
+  return gratitudeTools.filter(tool => 
+    tool.target_emotions.includes(emotion) && tool.is_active
+  );
+}
+
+/**
+ * Get gratitude tools with duration less than or equal to specified minutes
+ */
+export function getToolsByMaxDuration(maxMinutes: number): Tool[] {
+  return gratitudeTools.filter(tool => 
+    tool.estimated_duration <= maxMinutes && tool.is_active
+  );
+}
+
+/**
+ * Get free (non-premium) gratitude tools
+ */
+export function getFreeGratitudeTools(): Tool[] {
+  return gratitudeTools.filter(tool => !tool.is_premium && tool.is_active);
+}
+
+/**
+ * Get premium gratitude tools
+ */
+export function getPremiumGratitudeTools(): Tool[] {
+  return gratitudeTools.filter(tool => tool.is_premium && tool.is_active);
+}
+
+/**
+ * Get a gratitude tool by name
+ */
+export function getToolByName(name: string): Tool | undefined {
+  return gratitudeTools.find(tool => tool.name === name && tool.is_active);
+}
+
+/**
+ * Search gratitude tools by keyword in name, description, or tags
+ */
+export function searchGratitudeTools(keyword: string): Tool[] {
+  const lowercaseKeyword = keyword.toLowerCase();
+  return gratitudeTools.filter(
+    tool => 
+      tool.is_active && (
+        tool.name.toLowerCase().includes(lowercaseKeyword) || 
+        tool.description.toLowerCase().includes(lowercaseKeyword) ||
+        tool.metadata.tags.some(tag => tag.toLowerCase().includes(lowercaseKeyword))
+      )
+  );
+}
+
+/**
+ * Get recommended gratitude tools for a specific emotion
+ */
+export function getRecommendedToolsForEmotion(emotion: Emotion, limit: number = 3): Tool[] {
+  return gratitudeTools
+    .filter(tool => tool.target_emotions.includes(emotion) && tool.is_active)
+    .sort(() => Math.random() - 0.5) // Simple shuffle for randomization
+    .slice(0, limit);
+}
+
+/**
+ * Get beginner-friendly gratitude tools
+ */
+export function getBeginnerGratitudeTools(): Tool[] {
+  return gratitudeTools.filter(
+    tool => tool.difficulty === DifficultyLevel.BEGINNER && tool.is_active
+  );
+}
+
+/**
+ * Get tools that can be completed within a short timeframe (5 minutes or less)
+ */
+export function getQuickGratitudeTools(): Tool[] {
+  return gratitudeTools.filter(
+    tool => tool.estimated_duration <= 5 && tool.is_active
+  );
+}
+
+/**
+ * Get total duration of all steps in a guided exercise
+ */
+export function getTotalStepsDuration(tool: Tool): number {
+  if (isGuidedExercise(tool.content)) {
+    return tool.content.steps.reduce((total, step) => total + step.duration, 0);
+  }
+  return 0;
+}
+
+/**
+ * Get all unique tags used across gratitude tools
+ */
+export function getAllGratitudeTags(): string[] {
+  const tagsSet = new Set<string>();
+  
+  gratitudeTools.forEach(tool => {
+    tool.metadata.tags.forEach(tag => tagsSet.add(tag));
+  });
+  
+  return Array.from(tagsSet).sort();
+}
