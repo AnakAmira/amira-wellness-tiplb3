@@ -1,0 +1,32 @@
+# Kubernetes Service manifest for Amira Wellness backend API
+# Version: v1.24+
+apiVersion: v1
+kind: Service
+metadata:
+  name: amira-backend
+  namespace: amira-wellness
+  labels:
+    app: amira-backend
+    component: api
+    part-of: amira-wellness
+  annotations:
+    kubernetes.io/description: "Service for Amira Wellness Backend API"
+    # Prometheus monitoring configuration
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/api/v1/metrics"
+spec:
+  # ClusterIP makes this service only accessible within the cluster
+  # External access is provided through an ingress controller
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80             # Port exposed by the service
+      targetPort: http     # Named port on the pod (defined in deployment)
+      protocol: TCP
+  # Select pods with the label app=amira-backend
+  selector:
+    app: amira-backend
+  # No session affinity - round-robin load balancing
+  # Backend is stateless, so no sticky sessions needed
+  sessionAffinity: None
