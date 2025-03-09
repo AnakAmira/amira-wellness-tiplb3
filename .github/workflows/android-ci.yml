@@ -1,0 +1,252 @@
+name: Android CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/android/**'
+      - '.github/workflows/android-ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/android/**'
+      - '.github/workflows/android-ci.yml'
+
+env:
+  WORKING_DIRECTORY: src/android
+  JAVA_VERSION: '17'
+  GRADLE_VERSION: '8.1.2'
+  ANDROID_SDK_TOOLS: '7583922'
+  ANDROID_COMPILE_SDK: '34'
+  ANDROID_BUILD_TOOLS: '34.0.0'
+
+jobs:
+  lint:
+    name: Run Android lint to ensure code quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Run ktlint
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ktlintCheck
+          build-root-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Run Android Lint
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: lintDebug
+          build-root-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Upload lint reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: lint-reports
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/reports/lint-results-debug.html
+
+  dependency-check:
+    name: Check for vulnerable dependencies
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Run OWASP dependency check
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: dependencyCheckAnalyze
+          build-root-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Upload dependency check report
+        uses: actions/upload-artifact@v3
+        with:
+          name: dependency-check-report
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/reports/dependency-check-report.html
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v2
+        if: success()
+        with:
+          sarif_file: ${{ env.WORKING_DIRECTORY }}/app/build/reports/dependency-check-report.sarif
+
+  unit-test:
+    name: Run unit tests
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Run unit tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: testDebugUnitTest
+          build-root-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: unit-test-results
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/reports/tests/testDebugUnitTest/
+
+      - name: Generate coverage report
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: jacocoTestReport
+          build-root-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        if: success()
+        with:
+          name: coverage-report
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/reports/jacoco/jacocoTestReport/
+
+  instrumented-test:
+    name: Run instrumented tests on emulator
+    runs-on: macos-latest
+    needs: [unit-test]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: ~/.android/avd/*
+          key: avd-${{ env.ANDROID_COMPILE_SDK }}
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: '29'
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run instrumented tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: '29'
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: cd ${{ env.WORKING_DIRECTORY }} && ./gradlew connectedDebugAndroidTest
+
+      - name: Upload instrumented test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: instrumented-test-results
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/reports/androidTests/connected/
+
+  build:
+    name: Build the Android application
+    runs-on: ubuntu-latest
+    needs: [unit-test, dependency-check]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Build APK
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assembleDebug
+          build-root-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Build Bundle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: bundleDebug
+          build-root-directory: ${{ env.WORKING_DIRECTORY }}
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug-${{ env.BRANCH_NAME }}
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload Bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug-bundle-${{ env.BRANCH_NAME }}
+          path: ${{ env.WORKING_DIRECTORY }}/app/build/outputs/bundle/debug/app-debug.aab
+
+  beta-deploy:
+    name: Deploy to Firebase App Distribution
+    runs-on: ubuntu-latest
+    needs: [instrumented-test, build]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Download APK
+        uses: actions/download-artifact@v3
+        with:
+          name: app-debug-develop
+          path: artifacts
+
+      - name: Setup Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Deploy to Firebase App Distribution
+        run: firebase appdistribution:distribute artifacts/app-debug.apk --app ${{ secrets.FIREBASE_APP_ID }} --groups "testers" --release-notes "Build from develop branch"
